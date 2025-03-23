@@ -1,0 +1,149 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model business {
+  BUSINESS_ID        Int      @id @default(autoincrement())
+  CREATION_DATETIME  DateTime @db.DateTime(0)
+  BUSINESS_NAME      String?  @db.VarChar(100)
+  SHORT_NAME         String?  @db.VarChar(20)
+  DESCRIPTION        String?  @db.VarChar(1000)
+  ADDRESS_STREET     String?  @db.VarChar(100)
+  ADDRESS_ZIP        BigInt?
+  ADDRESS_TOWN       String?  @db.VarChar(100)
+  ADDRESS_COUNTRY    String?  @db.VarChar(100)
+  PHONE_NUMBER       String?  @db.VarChar(45)
+  PHONE_NUMBER_SHORT String?  @db.VarChar(45)
+  WHATSAPP_NUMBER    String?  @db.VarChar(45)
+  WEB_ADDRESS        String?  @db.VarChar(1000)
+  LOGO               String?  @db.VarChar(255)
+  FACEBOOK_LINK      String?  @db.VarChar(1000)
+  INSTA_LINK         String?  @db.VarChar(1000)
+  TIKTOK_LINK        String?  @db.VarChar(1000)
+  GOOGLE_PROFILE     String?  @db.VarChar(1000)
+  IMAGE_URL          String?  @db.VarChar(1000)
+  GOOGLE_RATING      String?  @db.VarChar(10)
+  WHATSAPP_LINK      String?  @db.VarChar(255)
+  APPROVED           Int?     @default(0) @db.TinyInt
+  STATUS             Int?     @default(0) @db.TinyInt
+}
+
+model business_2_business_category {
+  BUSINESS_BUSINESS_CATEGORY_ID Int       @id @default(autoincrement())
+  CREATION_DATETIME             DateTime? @db.DateTime(0)
+  BUSINESS_ID                   BigInt?
+  BUSINESS_CATEGORY_ID          BigInt?
+  STATUS                        Int?      @db.TinyInt
+  DISPLAY_SEQ                   Int?
+}
+
+model business_category {
+  BUSINESS_CATEGORY_ID Int       @id @default(autoincrement())
+  CREATION_DATETIME    DateTime? @db.DateTime(0)
+  BUSINESS_CATEGORY    String?   @db.VarChar(45)
+}
+
+model business_owner {
+  BUSINESS_OWNER_ID Int      @id @unique(map: "CUSTOMER_ID_UNIQUE") @default(autoincrement())
+  CREATION_DATETIME DateTime @db.DateTime(0)
+  EMAIL_ADDRESS     String   @unique(map: "EMAIL_ADDRESS_UNIQUE") @db.VarChar(255)
+  PASSWORD          String   @db.VarChar(45)
+  FIRST_NAME        String?  @db.VarChar(100)
+  LAST_NAME         String?  @db.VarChar(100)
+  MOBILE_PHONE      String?  @db.VarChar(45)
+  ADDRESS_STREET    String?  @db.VarChar(100)
+  ADDRESS_NO        Int?
+  ADDRESS_ZIP       BigInt?
+  ADDRESS_TOWN      String?  @db.VarChar(100)
+  ADDRESS_COUNTRY   String?  @db.VarChar(100)
+  PIC               String?  @db.VarChar(255)
+}
+
+model business_rating {
+  BUSINESS_RATING_ID BigInt    @id
+  CREATION_DATETIME  DateTime? @db.DateTime(0)
+  BUSINESS_ID        BigInt?
+  BUSINESS_RATING    Int?
+}
+
+model business_reviews {
+  BUSINESS_REVIEWS_ID BigInt    @id @default(autoincrement())
+  CREATION_DATETIME   DateTime? @db.DateTime(0)
+  REVIEWER_NAME       String?   @db.VarChar(255)
+  RATING              Int?
+  REVIEW              String?   @db.VarChar(1000)
+  PIC_1               String?   @db.VarChar(255)
+  PIC_2               String?   @db.VarChar(255)
+  PIC_3               String?   @db.VarChar(255)
+}
+
+model food_category {
+  FOOD_CATEGORY_ID  BigInt    @id @default(autoincrement())
+  CREATION_DATETIME DateTime? @db.DateTime(0)
+  TITLE             String?   @db.VarChar(45)
+  DESCRIPTION       String?   @db.VarChar(255)
+}
+
+model food_menu {
+  FOOD_MENU_ID      Int       @id @default(autoincrement())
+  CREATION_DATETIME DateTime? @db.DateTime(0)
+  BUSINESS_ID       BigInt?
+  FOOD_CATEGORY_ID  BigInt?
+  TITLE             String?   @db.VarChar(255)
+  STATUS            Int?      @db.TinyInt
+}
+
+model food_menu_items {
+  FOOD_MENU_ITEMS_ID BigInt    @id
+  CREATION_DATETIME  DateTime? @db.DateTime(0)
+  FOOD_MENU_ID       BigInt?
+  MENU_CATEGORY_ID   BigInt?
+  TITLE              String?   @db.VarChar(100)
+  DESCRIPTION        String?   @db.VarChar(255)
+  PRICE              Float?    @db.Float
+  CURRENCY           String?   @db.VarChar(45)
+  PIC_1              String?   @db.VarChar(255)
+  PIC_2              String?   @db.VarChar(255)
+  PIC_3              String?   @db.VarChar(255)
+  APPROVED           Int?      @db.TinyInt
+  DISPLAY            Int?      @db.TinyInt
+}
+
+model foodeez_subscription {
+  FOODEEZ_SUBSCRIPTION_ID BigInt    @id
+  CREATION_DATETIME       DateTime? @db.DateTime(0)
+  EMAIL_ADDRESS           String?   @db.VarChar(255)
+}
+
+model menu_category {
+  MENU_CATEGORY_ID  Int       @id @default(autoincrement())
+  CREATION_DATETIME DateTime? @db.DateTime(0)
+  BUSINESS_ID       Int?
+  TITLE             String?   @db.VarChar(255)
+  SHOW              Int?      @default(1) @db.TinyInt
+  DISPLAY_SEQ       Int?
+}
+
+model owner_2_business {
+  CUSTOMER_BUSINESS_ID Int       @id @default(autoincrement())
+  CREATION_DATETIME    DateTime? @db.DateTime(0)
+  BUSINESS_OWNER_ID    BigInt?
+  BUSINESS_ID          BigInt?
+  STATUS               Int?      @db.TinyInt
+}
+
+model visitors_account {
+  VISITORS_ACCOUNT_ID BigInt    @id
+  CREATION_DATETIME   DateTime? @db.DateTime(0)
+  EMAIL_ADDRESS       String?   @db.VarChar(255)
+  PASSWORD            String?   @db.VarChar(45)
+  FIRST_NAME          String?   @db.VarChar(45)
+  LAST_NAME           String?   @db.VarChar(45)
+  LANGUAGE            String?   @db.VarChar(45)
+  PIC                 String?   @db.VarChar(255)
+}
