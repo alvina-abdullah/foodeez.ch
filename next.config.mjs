@@ -31,6 +31,19 @@ const nextConfig = {
           hostname: 'placehold.co',
           port: '',
           pathname: '/**',
+        },
+        {
+          protocol: 'https',
+          hostname: 'images.trvl-media.com',
+          port: '',
+          pathname: '/**',
+        },
+        {
+
+          protocol: 'https',
+          hostname: 'd2hyz2bfif3cr8.cloudfront.net',
+          port: '',
+          pathname: '/**',
         }
       ],
     },
