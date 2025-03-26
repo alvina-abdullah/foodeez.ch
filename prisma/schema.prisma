@@ -9,6 +9,7 @@ datasource db {
 
 model business {
   BUSINESS_ID        Int      @id @default(autoincrement())
+  SLUG               String?  @db.VarChar(255)
   CREATION_DATETIME  DateTime @db.DateTime(0)
   BUSINESS_NAME      String?  @db.VarChar(100)
   SHORT_NAME         String?  @db.VarChar(20)

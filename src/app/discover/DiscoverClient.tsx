@@ -109,7 +109,7 @@ export default function DiscoverClient({
                 key={business.BUSINESS_NAME}
                 size="md"
                 shadow="lg"
-                restaurant={business}
+                business={business}
               />
             ))}
           </div>
