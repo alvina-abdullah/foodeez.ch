@@ -19,3 +19,19 @@ export async function GET(req: Request) {
       return NextResponse.json({ error: "Failed to fetch business" }, { status: 500 });
     }
   }
+
+
+// import { createConnection } from "@/lib/prisma";
+// import { NextResponse } from "next/server";
+
+// export async function GET() {
+//     try {
+//         const connection = await createConnection();
+//         const [data] = await connection.query("SELECT * FROM foodeez.business LIMIT 10;");
+
+//         return NextResponse.json({ message: "Database connected", data });
+//     } catch (error) {
+//         return NextResponse.json({ message: "Database connection failed" + error }, { status: 500 });
+//     }
+// }
+

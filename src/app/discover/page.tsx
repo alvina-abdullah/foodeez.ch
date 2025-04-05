@@ -9,20 +9,27 @@ export const metadata: Metadata = {
 
 export default async function DiscoverPage() {
   try {
+
     const businesses = await prisma.business.findMany({
       take: 50,
       skip: 90
     });
 
+    console.log("Businesses loaded:", businesses.length);
 
     // Extract unique cuisines and locations
     const cuisines = await prisma.food_category.findMany();
-    const locations = ["Downtown", "Midtown", "Riverside", "Westside", "Southside", "Chinatown"];
+    
+    const locations = await prisma.city.findMany({
+      select: {
+        CITY_NAME: true,
+      },
+    });
 
     return <DiscoverClient
       initialBusinesses={businesses}
       cuisines={['All', ...cuisines.filter(cuisine => cuisine.TITLE !== null).map(cuisine => cuisine.TITLE as string)]}
-      locations={['All', ...locations]}
+      locations={['All', ...locations.filter(location => location.CITY_NAME !== null).map(location => location.CITY_NAME as string)]}
     />;
   } catch (error) {
     console.error("Failed to load businesses:", error);

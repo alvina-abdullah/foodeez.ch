@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { motion } from "framer-motion";
 import RestaurantCard from "@/components/features/BusinessCard";
 import { business } from "@prisma/client";
@@ -16,24 +16,35 @@ export default function DiscoverClient({
   cuisines,
   locations
 }: DiscoverClientProps) {
+  // Initialize with empty values to avoid hydration mismatches
   const [searchTerm, setSearchTerm] = useState("");
-  const [selectedCuisine, setSelectedCuisine] = useState("All");
-  const [selectedLocation, setSelectedLocation] = useState("All");
+  const [selectedCuisine, setSelectedCuisine] = useState("");
+  const [selectedLocation, setSelectedLocation] = useState("");
+  const [isClient, setIsClient] = useState(false);
+  
+  // Set default values after hydration is complete
+  useEffect(() => {
+    setSelectedCuisine("All");
+    setSelectedLocation("All");
+    setIsClient(true);
+  }, []);
 
-// Filter businesses based on search term, cuisine, and location
-
+  // Filter businesses based on search term, cuisine, and location
   const filteredBusinesses = useMemo(() => {
+    if (!isClient) return initialBusinesses;
+    
     return initialBusinesses.filter(business => {
-      const matchesSearch = business.BUSINESS_NAME?.toLowerCase().includes(searchTerm.toLowerCase())
+      const matchesSearch = !searchTerm || 
+        (business.BUSINESS_NAME?.toLowerCase().includes(searchTerm.toLowerCase()) ?? false);
 
-      const matchesCuisine = selectedCuisine === "All" || 
+      const matchesCuisine = selectedCuisine === "All" || selectedCuisine === "" || 
         cuisines.includes(selectedCuisine);
-      const matchesLocation = selectedLocation === "All" || 
+      const matchesLocation = selectedLocation === "All" || selectedLocation === "" || 
         locations.includes(selectedLocation);
 
       return matchesSearch && matchesCuisine && matchesLocation;
     });
-  }, [initialBusinesses, searchTerm, selectedCuisine, selectedLocation]);
+  }, [initialBusinesses, searchTerm, selectedCuisine, selectedLocation, isClient]);
 
   return (
     <div className="min-h-screen bg-gray-50 pt-20">
@@ -68,8 +79,9 @@ export default function DiscoverClient({
                   className="bg-transparent focus:outline-none text-secondary-800"
                   value={selectedCuisine}
                   onChange={(e) => setSelectedCuisine(e.target.value)}
+                  disabled={!isClient}
                 >
-                  {cuisines.map(cuisine => (
+                  {isClient && cuisines.map(cuisine => (
                     <option key={cuisine} value={cuisine}>
                       {cuisine}
                     </option>
@@ -82,8 +94,9 @@ export default function DiscoverClient({
                   className="bg-transparent focus:outline-none text-secondary-800"
                   value={selectedLocation}
                   onChange={(e) => setSelectedLocation(e.target.value)}
+                  disabled={!isClient}
                 >
-                  {locations.map(location => (
+                  {isClient && locations.map(location => (
                     <option key={location} value={location}>
                       {location}
                     </option>
@@ -106,7 +119,7 @@ export default function DiscoverClient({
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {filteredBusinesses.map((business) => (
               <RestaurantCard
-                key={business.BUSINESS_NAME}
+                key={business.BUSINESS_ID}
                 size="md"
                 shadow="lg"
                 business={business}
@@ -127,31 +140,33 @@ export default function DiscoverClient({
         </div>
       </section>
 
-      {/* Popular Searches */}
-      <section className="py-12 bg-accent-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-2xl font-bold text-secondary-800 mb-6">
-            Popular Cuisines
-          </h2>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            {cuisines.slice(1, 9).map((cuisine, index) => (
-              <motion.div
-                key={cuisine}
-                initial={{ opacity: 0, scale: 0.9 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 0.3, delay: index * 0.05 }}
-                className="bg-white rounded-lg p-4 text-center cursor-pointer hover:bg-accent-100 transition-colors shadow-sm"
-                onClick={() => {
-                  setSelectedCuisine(cuisine);
-                  setSearchTerm("");
-                }}
-              >
-                <p className="font-medium text-secondary-800">{cuisine}</p>
-              </motion.div>
-            ))}
+      {/* Popular Cuisines */}
+      {isClient && (
+        <section className="py-12 bg-accent-50">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 className="text-2xl font-bold text-secondary-800 mb-6">
+              Popular Cuisines
+            </h2>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+              {cuisines.slice(1, 9).map((cuisine, index) => (
+                <motion.div
+                  key={cuisine}
+                  initial={{ opacity: 0, scale: 0.9 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ duration: 0.3, delay: index * 0.05 }}
+                  className="bg-white rounded-lg p-4 text-center cursor-pointer hover:bg-accent-100 transition-colors shadow-sm"
+                  onClick={() => {
+                    setSelectedCuisine(cuisine);
+                    setSearchTerm("");
+                  }}
+                >
+                  <p className="font-medium text-secondary-800">{cuisine}</p>
+                </motion.div>
+              ))}
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
+      )}
     </div>
   );
 }

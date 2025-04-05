@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { cva, type VariantProps } from 'class-variance-authority';
@@ -59,7 +59,12 @@ export interface BusinessCardProps extends VariantProps<typeof businessCardVaria
   className?: string;
 }
 
-export const BusinessCard: React.FC<BusinessCardProps> = ({ 
+// Default export for consistent import
+export default function BusinessCard(props: BusinessCardProps) {
+  return <RestaurantCard {...props} />;
+}
+
+export const RestaurantCard: React.FC<BusinessCardProps> = ({ 
   business, 
   size, 
   shadow, 
@@ -69,6 +74,12 @@ export const BusinessCard: React.FC<BusinessCardProps> = ({
   isOpen, 
   hasNfcMenu 
 }) => {
+  const [isClient, setIsClient] = useState(false);
+  
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
+  
   const { 
     BUSINESS_ID,
     BUSINESS_NAME,
@@ -113,7 +124,7 @@ export const BusinessCard: React.FC<BusinessCardProps> = ({
         )}
         
         {/* Status Badge */}
-        {isOpen !== undefined && (
+        {isClient && isOpen !== undefined && (
           <div className="absolute top-2 left-2">
             <Badge variant={isOpen ? "success" : "error"} size="sm">
               {isOpen ? 'Open Now' : 'Closed'}
@@ -122,7 +133,7 @@ export const BusinessCard: React.FC<BusinessCardProps> = ({
         )}
         
         {/* NFC Badge */}
-        {hasNfcMenu && (
+        {isClient && hasNfcMenu && (
           <div className="absolute top-2 right-2">
             <Badge variant="primary" size="sm">
               <span className="flex items-center">
@@ -191,7 +202,7 @@ export const BusinessCard: React.FC<BusinessCardProps> = ({
             )}
           </div>
           
-          {PHONE_NUMBER && (
+          {PHONE_NUMBER && isClient && (
             <a 
               href={`tel:${PHONE_NUMBER}`}
               onClick={handleChildClick}
@@ -203,58 +214,58 @@ export const BusinessCard: React.FC<BusinessCardProps> = ({
         </div>
         
         {/* Social Links */}
-        <div className="mt-4 flex flex-wrap gap-4">
-          {hasWebsite && WEB_ADDRESS && (
-            <a 
-              href={WEB_ADDRESS} 
-              target="_blank" 
-              rel="noopener noreferrer"
-              onClick={handleChildClick}
-              className="inline-flex items-center text-sm font-medium text-primary-600 hover:text-primary-700"
-            >
-              <ExternalLink size={16} className="mr-1" />
-              Website
-            </a>
-          )}
-          
-          {FACEBOOK_LINK && (
-            <a 
-              href={FACEBOOK_LINK} 
-              target="_blank" 
-              rel="noopener noreferrer"
-              onClick={handleChildClick}
-              className="text-sm text-primary-600 hover:text-primary-700"
-            >
-              Facebook
-            </a>
-          )}
-          
-          {INSTA_LINK && (
-            <a 
-              href={INSTA_LINK} 
-              target="_blank" 
-              rel="noopener noreferrer"
-              onClick={handleChildClick}
-              className="text-sm text-primary-600 hover:text-primary-700"
-            >
-              Instagram
-            </a>
-          )}
-          
-          {BUSINESS_ID && (
-            <Link 
-              href={`/businesses/${slug}/reviews`}
-              onClick={handleChildClick}
-              className="text-sm text-secondary-600 hover:text-secondary-700"
-            >
-              <MessageSquare size={16} className="inline mr-1" />
-              Reviews
-            </Link>
-          )}
-        </div>
+        {isClient && (
+          <div className="mt-4 flex flex-wrap gap-4">
+            {hasWebsite && WEB_ADDRESS && (
+              <a 
+                href={WEB_ADDRESS} 
+                target="_blank" 
+                rel="noopener noreferrer"
+                onClick={handleChildClick}
+                className="inline-flex items-center text-sm font-medium text-primary-600 hover:text-primary-700"
+              >
+                <ExternalLink size={16} className="mr-1" />
+                Website
+              </a>
+            )}
+            
+            {FACEBOOK_LINK && (
+              <a 
+                href={FACEBOOK_LINK} 
+                target="_blank" 
+                rel="noopener noreferrer"
+                onClick={handleChildClick}
+                className="text-sm text-primary-600 hover:text-primary-700"
+              >
+                Facebook
+              </a>
+            )}
+            
+            {INSTA_LINK && (
+              <a 
+                href={INSTA_LINK} 
+                target="_blank" 
+                rel="noopener noreferrer"
+                onClick={handleChildClick}
+                className="text-sm text-primary-600 hover:text-primary-700"
+              >
+                Instagram
+              </a>
+            )}
+            
+            {BUSINESS_ID && (
+              <Link 
+                href={`/businesses/${slug}/reviews`}
+                onClick={handleChildClick}
+                className="text-sm text-secondary-600 hover:text-secondary-700"
+              >
+                <MessageSquare size={16} className="inline mr-1" />
+                Reviews
+              </Link>
+            )}
+          </div>
+        )}
       </div>
     </Link>
   );
 };
-
-export default BusinessCard;
