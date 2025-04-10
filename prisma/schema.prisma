@@ -43,6 +43,13 @@ model business_2_business_category {
   DISPLAY_SEQ                   Int?
 }
 
+model business_2_food_type {
+  BUSINESS_FOOD_TYPE_ID Int       @id @default(autoincrement())
+  CREATION_DATETIME     DateTime? @db.DateTime(0)
+  BUSINESS_ID           BigInt?
+  FOOD_TYPE_ID          BigInt?
+}
+
 model business_category {
   BUSINESS_CATEGORY_ID Int       @id @default(autoincrement())
   CREATION_DATETIME    DateTime? @db.DateTime(0)
@@ -83,6 +90,25 @@ model business_reviews {
   PIC_3               String?   @db.VarChar(255)
 }
 
+model city {
+  CITY_ID           BigInt    @id @default(autoincrement())
+  CREATION_DATETIME DateTime? @db.DateTime(0)
+  CITY_CODE         String?   @db.VarChar(2)
+  CITY_NAME         String?   @db.VarChar(100)
+}
+
+model city_town {
+  CITY_TWON_ID      BigInt    @id @default(autoincrement())
+  CREATION_DATETIME DateTime? @db.DateTime(0)
+  CITY_ID           BigInt?
+  CITY_CODE         String?   @db.VarChar(2)
+  ZIPCODE           Int?
+  TOWN              String?   @db.VarChar(100)
+  E                 Float?
+  H                 Float?
+  LANGUAGE          String?   @db.Text
+}
+
 model food_category {
   FOOD_CATEGORY_ID  BigInt    @id @default(autoincrement())
   CREATION_DATETIME DateTime? @db.DateTime(0)
@@ -113,6 +139,21 @@ model food_menu_items {
   PIC_3              String?   @db.VarChar(255)
   APPROVED           Int?      @db.TinyInt
   DISPLAY            Int?      @db.TinyInt
+}
+
+model food_type {
+  FOOD_TYPE_ID      BigInt    @id @default(autoincrement())
+  CREATION_DATETIME DateTime? @db.DateTime(0)
+  TITLE             String?   @db.VarChar(45)
+  DESCRIPTION       String?   @db.VarChar(255)
+}
+
+model foodeez_ranking {
+  FOODEEZ_RANKING    Int       @id @default(autoincrement())
+  foodeez_rankingcol String?   @db.VarChar(45)
+  CREATION_DATETIME  DateTime? @db.DateTime(0)
+  BUSINESS_ID        Int?
+  RANKING            Int?      @default(1)
 }
 
 model foodeez_subscription {
@@ -147,45 +188,4 @@ model visitors_account {
   LAST_NAME           String?   @db.VarChar(45)
   LANGUAGE            String?   @db.VarChar(45)
   PIC                 String?   @db.VarChar(255)
-}
-
-model business_2_food_type {
-  BUSINESS_FOOD_TYPE_ID Int       @id @default(autoincrement())
-  CREATION_DATETIME     DateTime? @db.DateTime(0)
-  BUSINESS_ID           BigInt?
-  FOOD_TYPE_ID          BigInt?
-}
-
-model city {
-  CITY_ID           BigInt    @id @default(autoincrement())
-  CREATION_DATETIME DateTime? @db.DateTime(0)
-  CITY_CODE         String?   @db.VarChar(2)
-  CITY_NAME         String?   @db.VarChar(100)
-}
-
-model city_town {
-  CITY_TWON_ID      BigInt    @id @default(autoincrement())
-  CREATION_DATETIME DateTime? @db.DateTime(0)
-  CITY_ID           BigInt?
-  CITY_CODE         String?   @db.VarChar(2)
-  ZIPCODE           Int?
-  TOWN              String?   @db.VarChar(100)
-  E                 Float?
-  H                 Float?
-  LANGUAGE          String?   @db.Text
-}
-
-model food_type {
-  FOOD_TYPE_ID      BigInt    @id @default(autoincrement())
-  CREATION_DATETIME DateTime? @db.DateTime(0)
-  TITLE             String?   @db.VarChar(45)
-  DESCRIPTION       String?   @db.VarChar(255)
-}
-
-model foodeez_ranking {
-  FOODEEZ_RANKING    Int       @id @default(autoincrement())
-  foodeez_rankingcol String?   @db.VarChar(45)
-  CREATION_DATETIME  DateTime? @db.DateTime(0)
-  BUSINESS_ID        Int?
-  RANKING            Int?      @default(1)
 }

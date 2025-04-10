@@ -1,108 +1,202 @@
 'use client';
 
 import Link from 'next/link';
+import Image from 'next/image';
+import { useState } from 'react';
+import { Send, MapPin, Phone, Mail, ArrowRight } from 'lucide-react';
+import { SocialLinks } from '../core/SocialLinks';
 
-export const Footer = () => {
+export default function Footer() {
+  const socialLinks = {
+    facebook: 'https://facebook.com/foodeez',
+    instagram: 'https://instagram.com/foodeez',
+    twitter: 'https://twitter.com/foodeez',
+    tiktok: 'https://tiktok.com/@foodeez'
+  };
+
+  const [email, setEmail] = useState('');
+  const [subscribed, setSubscribed] = useState(false);
+
+  const handleSubscribe = (e: React.FormEvent) => {
+    e.preventDefault();
+    // In a real implementation, you would connect to your API to handle newsletter subscriptions
+    if (email) {
+      setSubscribed(true);
+      setEmail('');
+      setTimeout(() => setSubscribed(false), 3000);
+    }
+  };
+
   return (
-    <footer className="bg-white border-t border-secondary-200">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-          {/* Company Info */}
-          <div className="space-y-4">
-            <h3 className="text-lg font-bold text-primary-600">Foodeez</h3>
-            <p className="text-secondary-600 text-sm">
-              A Food Discovery, Visit, Order & Review Portal empowering restaurants and food lovers.
+    <footer className="bg-gray-900 text-white pt-16 pb-8">
+      <div className="container-custom">
+        {/* Top Section - Help banner */}
+        <div className="bg-primary rounded-xl p-8 mb-12 flex flex-col md:flex-row md:items-center justify-between">
+          <div>
+            <h3 className="text-2xl font-bold mb-2">Help millions to find the right Place & Food to enjoy</h3>
+            <p className="text-white/80">Join our community and share your experiences</p>
+          </div>
+          <Link 
+            href="/signup" 
+            className="mt-4 md:mt-0 inline-flex items-center px-6 py-3 bg-white text-primary font-medium rounded-full hover:bg-gray-100 transition-colors"
+          >
+            Share your experience
+            <ArrowRight className="ml-2 w-4 h-4" />
+          </Link>
+        </div>
+        
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8 mb-12">
+          {/* Brand and About */}
+          <div className="lg:col-span-2">
+            <div className="mb-6">
+              <h2 className="text-2xl font-bold text-white">Foodeez</h2>
+            </div>
+            <p className="mb-6 max-w-md text-gray-400">
+              Foodeez is a platform that connects food lovers with amazing restaurants. Discover, visit and review food from the best places in your area.
             </p>
+            
+            <div className="space-y-3 mb-6">
+              <div className="flex items-start">
+                <MapPin className="w-5 h-5 text-gray-400 mr-3 mt-0.5" />
+                <div>
+                  <p className="text-gray-400">123 Food Street, Foodville,</p>
+                  <p className="text-gray-400">Zurich, Switzerland</p>
+                </div>
+              </div>
+              <div className="flex items-center">
+                <Phone className="w-5 h-5 text-gray-400 mr-3" />
+                <p className="text-gray-400">+41 23 456 7890</p>
+              </div>
+              <div className="flex items-center">
+                <Mail className="w-5 h-5 text-gray-400 mr-3" />
+                <p className="text-gray-400">info@foodeez.com</p>
+              </div>
+            </div>
+            
+            <div className="flex space-x-3">
+              <SocialLinks
+                {...socialLinks}
+                size="md"
+                color="white"
+                variant="default"
+              />
+            </div>
           </div>
 
           {/* Quick Links */}
           <div>
-            <h4 className="text-sm font-semibold text-secondary-900 mb-4">For Food Lovers</h4>
-            <ul className="space-y-2">
+            <h3 className="text-lg font-semibold mb-5 text-white">For Users</h3>
+            <ul className="space-y-3">
               <li>
-                <Link href="/discover" className="text-secondary-600 hover:text-primary-600 text-sm">
-                  Discover Food
-                </Link>
-              </li>
-              <li>
-                <Link href="/restaurants" className="text-secondary-600 hover:text-primary-600 text-sm">
+                <Link href="/discover" className="text-gray-400 hover:text-primary transition-colors">
                   Find Restaurants
                 </Link>
               </li>
               <li>
-                <Link href="/reviews" className="text-secondary-600 hover:text-primary-600 text-sm">
-                  Leave Reviews
-                </Link>
-              </li>
-            </ul>
-          </div>
-
-          {/* Support */}
-          <div>
-            <h4 className="text-sm font-semibold text-secondary-900 mb-4">For Businesses</h4>
-            <ul className="space-y-2">
-              <li>
-                <Link href="/business/register" className="text-secondary-600 hover:text-primary-600 text-sm">
-                  Register Your Business
-                </Link>
-              </li>
-              <li>
-                <Link href="/business/dashboard" className="text-secondary-600 hover:text-primary-600 text-sm">
-                  Business Dashboard
-                </Link>
-              </li>
-              <li>
-                <Link href="/business/marketing" className="text-secondary-600 hover:text-primary-600 text-sm">
-                  Marketing Tools
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="mailto:partners@foodeez.com"
-                  className="text-secondary-600 hover:text-primary-600 text-sm"
-                >
-                  partners@foodeez.com
-                </Link>
-              </li>
-            </ul>
-          </div>
-
-          {/* Legal */}
-          <div>
-            <h4 className="text-sm font-semibold text-secondary-900 mb-4">Company</h4>
-            <ul className="space-y-2">
-              <li>
-                <Link href="/about" className="text-secondary-600 hover:text-primary-600 text-sm">
+                <Link href="/about" className="text-gray-400 hover:text-primary transition-colors">
                   About Us
                 </Link>
               </li>
               <li>
-                <Link href="/contact" className="text-secondary-600 hover:text-primary-600 text-sm">
-                  Contact Us
+                <Link href="/blog" className="text-gray-400 hover:text-primary transition-colors">
+                  Food Blog
                 </Link>
               </li>
               <li>
-                <Link href="/privacy" className="text-secondary-600 hover:text-primary-600 text-sm">
-                  Privacy Policy
+                <Link href="/help" className="text-gray-400 hover:text-primary transition-colors">
+                  Help Center
                 </Link>
               </li>
               <li>
-                <Link href="/terms" className="text-secondary-600 hover:text-primary-600 text-sm">
-                  Terms of Service
+                <Link href="/mobile-app" className="text-gray-400 hover:text-primary transition-colors">
+                  Mobile App
                 </Link>
               </li>
             </ul>
           </div>
+
+          {/* For Businesses */}
+          <div>
+            <h3 className="text-lg font-semibold mb-5 text-white">For Businesses</h3>
+            <ul className="space-y-3">
+              <li>
+                <Link href="/business/register" className="text-gray-400 hover:text-primary transition-colors">
+                  Register Restaurant
+                </Link>
+              </li>
+              <li>
+                <Link href="/business/login" className="text-gray-400 hover:text-primary transition-colors">
+                  Business Login
+                </Link>
+              </li>
+              <li>
+                <Link href="/advertise" className="text-gray-400 hover:text-primary transition-colors">
+                  Advertise with Us
+                </Link>
+              </li>
+              <li>
+                <Link href="/business/resources" className="text-gray-400 hover:text-primary transition-colors">
+                  Business Resources
+                </Link>
+              </li>
+              <li>
+                <Link href="/pricing" className="text-gray-400 hover:text-primary transition-colors">
+                  Pricing Plans
+                </Link>
+              </li>
+            </ul>
+          </div>
+
+          {/* Newsletter */}
+          <div>
+            <h3 className="text-lg font-semibold mb-5 text-white">Newsletter</h3>
+            <p className="mb-4 text-gray-400">Subscribe to get the latest updates on new restaurants and offers.</p>
+            <form onSubmit={handleSubscribe} className="relative">
+              <input
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="Your email address"
+                className="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg text-gray-200 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+                required
+              />
+              <button
+                type="submit"
+                className="absolute right-1 top-1 bottom-1 px-3 bg-primary rounded-lg flex items-center justify-center hover:bg-primary-dark transition-colors"
+                aria-label="Subscribe"
+              >
+                <Send size={16} />
+              </button>
+            </form>
+            {subscribed && (
+              <p className="mt-2 text-secondary text-sm">
+                Thanks for subscribing!
+              </p>
+            )}
+          </div>
         </div>
 
-        <div className="mt-8 pt-8 border-t border-secondary-200">
-          <p className="text-center text-secondary-600 text-sm">
+        {/* Horizontal divider */}
+        <div className="h-px bg-gray-800 my-8" />
+
+        {/* Bottom section */}
+        <div className="flex flex-col md:flex-row justify-between items-center">
+          <div className="text-sm mb-4 md:mb-0 text-gray-500">
             © {new Date().getFullYear()} Foodeez. All rights reserved.
-          </p>
+          </div>
+          <div className="flex flex-wrap justify-center gap-4 md:gap-6">
+            <Link href="/terms" className="text-gray-500 hover:text-primary text-sm transition-colors">
+              Terms of Service
+            </Link>
+            <Link href="/privacy" className="text-gray-500 hover:text-primary text-sm transition-colors">
+              Privacy Policy
+            </Link>
+            <Link href="/cookies" className="text-gray-500 hover:text-primary text-sm transition-colors">
+              Cookie Policy
+            </Link>
+          </div>
         </div>
       </div>
     </footer>
   );
-};
-
-export default Footer; 
+} 

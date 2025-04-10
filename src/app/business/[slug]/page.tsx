@@ -3,7 +3,7 @@
 import { notFound } from 'next/navigation';
 import { Metadata } from 'next';
 import prisma from '@/lib/prisma';
-import { BusinessDetails } from '@/components/business/BusinessDetails';
+import { BusinessDetails } from '@/features/business/components/BusinessDetails';
 
 type Props = {
   params: { slug: string };

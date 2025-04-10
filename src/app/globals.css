@@ -2,12 +2,40 @@
 @tailwind components;
 @tailwind utilities;
 
-body {
-  font-family: Arial, Helvetica, sans-serif;
+@layer base {
+  body {
+    font-family: var(--font-poppins), Arial, Helvetica, sans-serif;
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-inter), Arial, Helvetica, sans-serif;
+  }
+}
+
+@layer components {
+  .container-custom {
+    @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
+  }
+  
+  .btn-primary {
+    @apply inline-flex items-center justify-center px-6 py-3 border border-transparent rounded-full
+           text-base font-medium text-white bg-primary hover:bg-primary-dark
+           transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary;
+  }
+  
+  .btn-secondary {
+    @apply inline-flex items-center justify-center px-6 py-3 border border-transparent rounded-full
+           text-base font-medium text-white bg-secondary hover:bg-secondary-dark
+           transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-secondary;
+  }
 }
 
 @layer utilities {
   .text-balance {
     text-wrap: balance;
+  }
+  
+  .section-padding {
+    @apply py-12 sm:py-16 md:py-20;
   }
 }

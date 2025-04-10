@@ -2,8 +2,8 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import Input from '../core/Input';
-import Button from '../core/Button';
+import Input from '../../components/core/Input';
+import Button from '../../components/core/Button';
 
 interface FormData {
   businessName: string;

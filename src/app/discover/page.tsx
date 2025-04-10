@@ -1,38 +1,90 @@
 import prisma from "@/lib/prisma";
 import { Metadata } from "next";
 import DiscoverClient from "./DiscoverClient";
+import { getBusinessCategories, getFoodTypes } from "@/services/database/searchService";
 
 export const metadata: Metadata = {
-  title: "Discover Restaurants | FoodFinder",
-  description: "Explore top restaurants and local favorites near you. Filter by cuisine, location, and specialties.",
+  title: "Discover Restaurants | Foodeez",
+  description: "Explore top restaurants and local favorites. Find the perfect dining experience with our advanced search options.",
 };
 
-export default async function DiscoverPage() {
+export default async function DiscoverPage({
+  searchParams
+}: {
+  searchParams?: { [key: string]: string | string[] | undefined }
+}) {
   try {
-
-    const businesses = await prisma.business.findMany({
-      take: 50,
-      skip: 90
-    });
-
-    console.log("Businesses loaded:", businesses.length);
-
-    // Extract unique cuisines and locations
-    const cuisines = await prisma.food_category.findMany();
+    // Get the initial data based on search parameters if available
+    const query = searchParams?.q || '';
+    const cuisine = searchParams?.cuisine || '';
+    const city = searchParams?.city || '';
+    const rating = searchParams?.rating ? Number(searchParams.rating) : undefined;
+    const sortBy = searchParams?.sort || 'relevance';
     
-    const locations = await prisma.city.findMany({
-      select: {
-        CITY_NAME: true,
-      },
+    // Fetch all required data
+    const [businesses, foodTypes, categories, cities] = await Promise.all([
+      // Fetch initial businesses
+      prisma.business.findMany({
+        where: {
+          APPROVED: 1,
+          STATUS: 1,
+        },
+        take: 12,
+        orderBy: {
+          CREATION_DATETIME: 'desc',
+        },
+        include: {
+          business_rating: true,
+          business_2_business_category: {
+            include: {
+              business_category: true,
+            }
+          },
+          business_reviews: {
+            take: 1,
+            orderBy: {
+              CREATION_DATETIME: 'desc'
+            }
+          }
+        }
+      }),
+      // Fetch food types for filtering
+      prisma.food_type.findMany({
+        orderBy: {
+          TITLE: 'asc',
+        },
+      }),
+      // Fetch business categories
+      prisma.business_category.findMany({
+        orderBy: {
+          CATEGORY_NAME: 'asc',
+        },
+      }),
+      // Fetch cities for location filtering
+      prisma.city.findMany({
+        orderBy: {
+          CITY_NAME: 'asc',
+        },
+      })
+    ]);
+    
+    console.log("Data loaded successfully:", {
+      businessesCount: businesses.length,
+      foodTypesCount: foodTypes.length,
+      categoriesCount: categories.length,
+      citiesCount: cities.length
     });
 
-    return <DiscoverClient
-      initialBusinesses={businesses}
-      cuisines={['All', ...cuisines.filter(cuisine => cuisine.TITLE !== null).map(cuisine => cuisine.TITLE as string)]}
-      locations={['All', ...locations.filter(location => location.CITY_NAME !== null).map(location => location.CITY_NAME as string)]}
-    />;
+    return (
+      <DiscoverClient
+        initialBusinesses={businesses}
+        foodTypes={foodTypes}
+        categories={categories}
+        cities={cities}
+      />
+    );
   } catch (error) {
-    console.error("Failed to load businesses:", error);
+    console.error("Failed to load discover page data:", error);
     return (
       <div className="min-h-screen bg-gray-50 pt-20 flex items-center justify-center">
         <div className="text-center p-8 bg-red-50 rounded-lg">

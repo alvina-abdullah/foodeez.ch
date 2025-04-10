@@ -3,11 +3,13 @@
 import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { FaArrowRight } from "react-icons/fa";
+import { FaArrowRight, FaSearch } from "react-icons/fa";
 import { motion, AnimatePresence } from "framer-motion";
+import { useRouter } from "next/navigation";
 
 type Slide = {
   id: number;
+  title: string;
   subtitle: string;
   description: string;
   cta: string;
@@ -19,53 +21,53 @@ type Slide = {
 const slides = [
   {
     id: 1,
-    title: "Fresh Fruits",
-    subtitle: "Nature's Sweet Treats",
-    description: "Enjoy the vibrant flavors and nutritional benefits of fresh fruits from around the world.",
-    cta: "Explore Fruits",
-    image: "https://images.unsplash.com/photo-1552566626-52f8b828add9?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80",
-    alt: "A colorful arrangement of fresh fruits",
-    link: "/categories/fruits"
+    title: "Discover Local Gems",
+    subtitle: "Authentic Dining",
+    description: "Find the best hidden restaurants and cafes in your neighborhood with trusted reviews from real foodies.",
+    cta: "Explore Now",
+    image: "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80",
+    alt: "Cozy restaurant with ambient lighting and happy diners",
+    link: "/discover"
   },
   {
     id: 2,
-    title: "Artisanal Breads",
-    subtitle: "Handcrafted Goodness",
-    description: "Discover the rich textures and flavors of artisanal breads, perfect for any meal.",
-    cta: "Bake with Us",
-    image: "https://images.unsplash.com/photo-1578985545062-69928b1d9587?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80",
-    alt: "A variety of artisanal breads on a wooden table",
-    link: "/categories/breads"
+    title: "Taste of Culture",
+    subtitle: "Global Cuisine",
+    description: "Experience authentic flavors from around the world with our curated selection of multicultural restaurants.",
+    cta: "Find Cuisines",
+    image: "https://images.unsplash.com/photo-1555396273-367ea4eb4db5?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80",
+    alt: "Colorful plate of international cuisine",
+    link: "/discover?category=international"
   },
   {
     id: 3,
-    title: "Specialty Cheeses",
-    subtitle: "A World of Flavors",
-    description: "Explore a diverse selection of specialty cheeses, each with its unique taste and texture.",
-    cta: "Taste the Difference",
-    image: "https://images.unsplash.com/photo-1552566626-52f8b828add9?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80",
-    alt: "An assortment of specialty cheeses on a platter",
-    link: "/categories/cheeses"
+    title: "Farm to Table",
+    subtitle: "Fresh & Sustainable",
+    description: "Support local farms and enjoy the freshest ingredients at restaurants committed to sustainability.",
+    cta: "Eat Fresh",
+    image: "https://images.unsplash.com/photo-1540189549336-e6e99c3679fe?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80",
+    alt: "Farm to table fresh food arrangement",
+    link: "/discover?category=sustainable"
   },
   {
     id: 4,
-    title: "Exotic Spices",
-    subtitle: "Flavors from Around the World",
-    description: "Transform your dishes with our curated selection of exotic spices from every corner of the globe.",
-    cta: "Spice It Up",
-    image: "https://images.unsplash.com/photo-1552566626-52f8b828add9?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80",
-    alt: "A variety of colorful spices in bowls",
-    link: "/categories/spices"
+    title: "Fine Dining Experience",
+    subtitle: "Premium Selection",
+    description: "Indulge in exceptional culinary experiences at the most prestigious restaurants in your city.",
+    cta: "Reserve Now",
+    image: "https://images.unsplash.com/photo-1550966871-3ed3cdb5ed0c?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80",
+    alt: "Elegant fine dining restaurant interior",
+    link: "/discover?category=fine-dining"
   },
   {
     id: 5,
-    title: "Organic Vegetables",
-    subtitle: "Farm-Fresh Goodness",
-    description: "Savor the taste and health benefits of organic vegetables, grown with care and sustainability in mind.",
-    cta: "Shop Veggies",
-    image: "https://images.unsplash.com/photo-1552566626-52f8b828add9?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80",
-    alt: "A basket filled with fresh organic vegetables",
-    link: "/categories/vegetables"
+    title: "Authentic Street Food",
+    subtitle: "Local Favorites",
+    description: "Experience the vibrant flavors of street food from the comfort of established eateries with proper hygiene standards.",
+    cta: "Taste Adventure",
+    image: "https://images.unsplash.com/photo-1565299585323-38d6b0865b47?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80",
+    alt: "Colorful and vibrant street food display",
+    link: "/discover?category=street-food"
   }
 ];
 
@@ -100,6 +102,9 @@ export default function HeroSection() {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isAnimating, setIsAnimating] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
+  const [searchValue, setSearchValue] = useState("");
+
+  const router = useRouter();
 
   const changeSlide = useCallback(
     (index: number) => {
@@ -132,12 +137,19 @@ export default function HeroSection() {
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [currentSlide, changeSlide]);
 
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (searchValue.trim()) {
+      router.push(`/discover?q=${encodeURIComponent(searchValue)}`);
+    }
+  };
+
   return (
     <motion.section
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 1 }}
-      className="relative h-[800px] w-full overflow-hidden"
+      className="relative h-[650px] sm:h-[750px] w-full overflow-hidden"
       aria-roledescription="carousel"
       aria-label="Featured products"
       onMouseEnter={() => setIsHovered(true)}
@@ -145,6 +157,9 @@ export default function HeroSection() {
       onFocus={() => setIsHovered(true)}
       onBlur={() => setIsHovered(false)}
     >
+      {/* Decorative Element */}
+      <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-primary-light via-primary to-accent z-10"></div>
+      
       <AnimatePresence mode="popLayout" initial={false}>
         <motion.div
           key={slides[currentSlide].id}
@@ -165,13 +180,14 @@ export default function HeroSection() {
               priority={currentSlide === 0}
               className="object-cover"
               sizes="(max-width: 768px) 100vw, (max-width: 1200px) 100vw, 100vw"
-              quality={80}
+              quality={85}
             />
-            <div className="absolute inset-0 bg-gradient-to-r from-black/75 via-black/50 to-transparent" />
+            {/* Enhanced gradient overlay */}
+            <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/50 to-transparent" />
           </div>
 
           {/* Content */}
-          <div className="relative h-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center">
+          <div className="relative h-full container-custom flex items-center">
             <motion.div
               variants={contentVariants}
               initial="hidden"
@@ -179,19 +195,19 @@ export default function HeroSection() {
               exit="exit"
               className="max-w-xl text-white"
             >
-              <motion.h2 variants={itemVariants} className="text-secondary font-orbitron uppercase tracking-wider mb-2">
+              <motion.span variants={itemVariants} className="inline-block px-3 py-1 rounded-full bg-accent text-white text-sm font-medium mb-4">
                 {slides[currentSlide].subtitle}
-              </motion.h2>
-              <motion.h1 variants={itemVariants} className="text-4xl md:text-5xl lg:text-6xl font-orbitron font-bold mb-4">
+              </motion.span>
+              <motion.h1 variants={itemVariants} className="text-4xl md:text-5xl lg:text-6xl font-bold mb-4 text-white">
                 {slides[currentSlide].title}
               </motion.h1>
-              <motion.p variants={itemVariants} className="text-lg md:text-xl mb-8 text-gray-200">
+              <motion.p variants={itemVariants} className="text-lg md:text-xl mb-8 text-gray-100">
                 {slides[currentSlide].description}
               </motion.p>
               <motion.div variants={itemVariants}>
                 <Link
                   href={slides[currentSlide].link}
-                  className="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-primary hover:bg-primary-dark transition-colors duration-300 group focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
+                  className="btn-primary"
                 >
                   <span>{slides[currentSlide].cta}</span>
                   <FaArrowRight className="ml-2 transform group-hover:translate-x-1 transition-transform duration-300" />
@@ -202,8 +218,36 @@ export default function HeroSection() {
         </motion.div>
       </AnimatePresence>
 
+      {/* Search Bar Overlay */}
+      <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent py-8">
+        <div className="container-custom">
+          <form 
+            onSubmit={handleSearch}
+            className="max-w-2xl mx-auto flex flex-col sm:flex-row items-center gap-3 bg-white rounded-full p-2 shadow-lg"
+          >
+            <div className="flex-1 flex items-center pl-4">
+              <FaSearch className="text-text-muted mr-3" />
+              <input
+                type="text"
+                value={searchValue}
+                onChange={(e) => setSearchValue(e.target.value)}
+                placeholder="Search for restaurants, cuisines, or dishes..."
+                className="w-full py-2 outline-none text-text-main"
+                aria-label="Search"
+              />
+            </div>
+            <button 
+              type="submit" 
+              className="w-full sm:w-auto px-6 py-3 bg-primary hover:bg-primary-dark text-white font-medium rounded-full transition-colors"
+            >
+              Search
+            </button>
+          </form>
+        </div>
+      </div>
+
       {/* Indicators */}
-      <div className="absolute bottom-6 left-0 right-0 flex justify-center space-x-2">
+      <div className="absolute bottom-32 sm:bottom-28 left-0 right-0 flex justify-center space-x-2 z-10">
         {slides.map((_, index) => (
           <button
             key={index}

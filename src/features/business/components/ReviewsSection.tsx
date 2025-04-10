@@ -1,7 +1,7 @@
 // components/ReviewsSection.tsx
 
 import Link from 'next/link';
-import Button from '../core/Button';
+import Button from '../../../components/core/Button';
 
 interface ReviewsSectionProps {
   businessId: number;

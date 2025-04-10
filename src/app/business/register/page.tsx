@@ -1,5 +1,5 @@
 import { Metadata } from "next";
-import BusinessRegistrationForm from "@/components/business/BusinessRegistrationForm";
+import BusinessRegistrationForm from "@/features/business/BusinessRegistrationForm";
 
 export const metadata: Metadata = {
   title: "Register Your Business | Foodeez",

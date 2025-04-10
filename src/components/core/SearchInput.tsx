@@ -79,7 +79,7 @@ export default function SearchInput({
       setLocalValue('');
     }
     onChange?.('');
-  };
+  };  
   
   const handleSearch = () => {
     onSearch?.(inputValue);
@@ -120,7 +120,7 @@ export default function SearchInput({
       {showSearchButton && (
         <button
           onClick={handleSearch}
-          className="h-full px-4 bg-primary-600 text-white font-medium rounded-r-md hover:bg-primary-700 transition-colors"
+          className="h-full px-4 bg-primary-600 text-white font-medium rounded-r-full hover:bg-primary-700 transition-colors"
           type="button"
         >
           {searchButtonText || (

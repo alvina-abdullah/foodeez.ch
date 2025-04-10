@@ -1,78 +1,125 @@
-import prisma from "@/lib/prisma";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from 'next/server';
+import { searchBusinesses, searchFoodItems, getTrendingSearches, getPopularDishes } from '@/services/database/searchService';
 
-export async function GET(req: Request) {
+/**
+ * Enhanced Search API
+ * Provides advanced search capabilities for businesses and food items
+ */
+export async function GET(request: NextRequest) {
   try {
-    const url = new URL(req.url);
-    const searchQuery = url.searchParams.get('q') || '';
-    const location = url.searchParams.get('location') || '';
-    const cuisine = url.searchParams.get('cuisine') || '';
-    const page = parseInt(url.searchParams.get('page') || '1');
-    const limit = parseInt(url.searchParams.get('limit') || '10');
+    const searchParams = request.nextUrl.searchParams;
+    const query = searchParams.get('query') || '';
+    const type = searchParams.get('type') || 'business'; // business, food, or trending
+    const category = searchParams.get('category') ? Number(searchParams.get('category')) : undefined;
+    const city = searchParams.get('city') || undefined;
+    const foodType = searchParams.get('foodType') || undefined;
+    const businessId = searchParams.get('businessId') ? Number(searchParams.get('businessId')) : undefined;
+    const minPrice = searchParams.get('minPrice') ? Number(searchParams.get('minPrice')) : undefined;
+    const maxPrice = searchParams.get('maxPrice') ? Number(searchParams.get('maxPrice')) : undefined;
+    const rating = searchParams.get('rating') ? Number(searchParams.get('rating')) : undefined;
+    const sortBy = searchParams.get('sortBy') || undefined;
+    const page = Number(searchParams.get('page') || '1');
+    const limit = Number(searchParams.get('limit') || '10');
     
-    const skip = (page - 1) * limit;
-    
-    // Build the where clause with filters
-    const where: any = {
-      APPROVED: 1,
-      STATUS: 1,
-    };
-    
-    // Add search term filter
-    if (searchQuery) {
-      where.OR = [
-        { BUSINESS_NAME: { contains: searchQuery } },
-        { DESCRIPTION: { contains: searchQuery } },
-      ];
+    let results;
+
+    switch (type) {
+      case 'business':
+        // Search for businesses with enhanced features
+        results = await searchBusinesses({
+          query,
+          category,
+          city: city ? isNaN(parseInt(city)) ? city : parseInt(city) : undefined,
+          foodType,
+          rating,
+          page,
+          limit,
+          sortBy: sortBy as any,
+        });
+        
+        return NextResponse.json({
+          success: true,
+          type: 'business',
+          data: results.businesses,
+          pagination: {
+            total: results.pagination.totalCount,
+            page: results.pagination.page,
+            limit: results.pagination.limit,
+            hasMore: results.pagination.page < results.pagination.totalPages,
+            totalPages: results.pagination.totalPages,
+          },
+        });
+        
+      case 'food':
+        // Search for food items
+        results = await searchFoodItems({
+          query,
+          businessId,
+          category,
+          minPrice,
+          maxPrice,
+          page,
+          limit,
+          sortBy: sortBy as any,
+        });
+        
+        return NextResponse.json({
+          success: true,
+          type: 'food',
+          data: results.menuItems,
+          pagination: {
+            total: results.pagination.totalCount,
+            page: results.pagination.page,
+            limit: results.pagination.limit,
+            hasMore: results.pagination.page < results.pagination.totalPages,
+            totalPages: results.pagination.totalPages,
+          },
+        });
+        
+      case 'trending':
+        // Get trending searches
+        const trendingSearches = await getTrendingSearches();
+        
+        return NextResponse.json({
+          success: true,
+          type: 'trending',
+          data: trendingSearches,
+        });
+      
+      case 'popular-dishes':
+        // Get popular dishes
+        const popularDishes = await getPopularDishes(limit);
+        
+        return NextResponse.json({
+          success: true,
+          type: 'popular-dishes',
+          data: popularDishes,
+        });
+        
+      default:
+        return NextResponse.json(
+          { error: 'Invalid search type. Use "business", "food", "trending", or "popular-dishes".' },
+          { status: 400 }
+        );
     }
-    
-    // Add location filter
-    if (location && location !== 'All') {
-      where.ADDRESS_TOWN = location;
-    }
-    
-    // The cuisine filter would ideally use a join with business_category or food_type tables
-    // But for simplicity, we'll use a direct query.
-    // In a real implementation, you might want to create a SQL View for this
-    
-    // Execute the search query
-    const [businesses, totalCount] = await Promise.all([
-      prisma.business.findMany({
-        where,
-        take: limit,
-        skip,
-        orderBy: {
-          CREATION_DATETIME: 'desc',
-        },
-      }),
-      prisma.business.count({ where }),
-    ]);
-    
-    // Calculate pagination info
-    const totalPages = Math.ceil(totalCount / limit);
-    const hasNextPage = page < totalPages;
-    const hasPrevPage = page > 1;
-    
-    return NextResponse.json({
-      results: businesses,
-      pagination: {
-        page,
-        limit,
-        totalCount,
-        totalPages,
-        hasNextPage,
-        hasPrevPage,
-      },
-    });
-    
-  } catch (error) {
-    console.error("Search error:", error);
+  } catch (error: any) {
+    console.error('Search API error:', error);
     return NextResponse.json(
-      { message: "Search failed", error: String(error) },
+      { 
+        success: false,
+        error: 'An error occurred while processing search request',
+        message: error.message || 'Unknown error',
+      },
       { status: 500 }
     );
   }
 }
+
+// Example query parameters:
+// /api/search?query=thai&type=business&city=zurich&foodType=1&rating=4&sortBy=rating&page=1&limit=10
+// /api/search?query=curry&type=food&minPrice=10&maxPrice=20&sortBy=price_asc&page=1&limit=10
+// /api/search?type=trending
+// /api/search?type=popular-dishes&limit=5
 
 // Example of how to create a SQL View for better search performance
 // This would be executed directly in your database, not in this file
