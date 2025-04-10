@@ -1,8 +1,8 @@
 import { notFound } from 'next/navigation';
-import prisma from '@/lib/prisma';
 import RestaurantDetailClient from './RestaurantDetailClient';
 import { Metadata } from 'next';
 import { CloudCog } from 'lucide-react';
+import { prisma } from '@/lib/prisma';
 
 interface RestaurantDetailPageProps {
   params: { businessId: string };
@@ -12,26 +12,25 @@ interface RestaurantDetailPageProps {
 async function getRestaurantDetails(id: number) {
   try {
     const business = await prisma.business.findUnique({
-      where: { BUSINESS_ID: id, APPROVED: 1, STATUS: 1 },
+      where: { id: id, approved: 1, status: 1 },
       include: {
-        // Include all relevant relationships
-        business_2_business_category: {
+        businessCategories: {
           include: {
-            business_category: true,
+            category: true,
           },
         },
-        business_2_food_type: {
+        foodTypes: {
           include: {
-            food_type: true,
-          },
+            foodType: true,
+          }
         },
-        business_rating: true,
-        business_reviews: {
+        businessRating: true,
+        businessReviews: {
           orderBy: {
             CREATION_DATETIME: 'desc',
           },
         },
-        food_menu: {
+        foodMenus: {
           include: {
             food_menu_items: {
               where: { DISPLAY: 1 },
@@ -52,7 +51,7 @@ async function getRestaurantDetails(id: number) {
     }
 
     // Calculate average rating
-    const reviews = business.business_reviews || [];
+    const reviews = business.businessReviews || [];
     const googleRating = parseFloat(business.GOOGLE_RATING || '0') || 0;
     const ratingCount = reviews.length;
     let avgRating = googleRating;

@@ -7,185 +7,288 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model business {
-  BUSINESS_ID        Int      @id @default(autoincrement())
-  CREATION_DATETIME  DateTime @db.DateTime(0)
-  BUSINESS_NAME      String?  @db.VarChar(255)
-  SHORT_NAME         String?  @db.VarChar(20)
-  DESCRIPTION        String?  @db.VarChar(1000)
-  ADDRESS_STREET     String?  @db.VarChar(100)
-  ADDRESS_ZIP        BigInt?
-  ADDRESS_CITY_ID    Int?
-  ADDRESS_TOWN       String?  @db.VarChar(100)
-  ADDRESS_COUNTRY    String?  @db.VarChar(100)
-  PHONE_NUMBER       String?  @db.VarChar(45)
-  PHONE_NUMBER_SHORT String?  @db.VarChar(45)
-  WHATSAPP_NUMBER    String?  @db.VarChar(45)
-  WEB_ADDRESS        String?  @db.VarChar(1000)
-  LOGO               String?  @db.VarChar(255)
-  FACEBOOK_LINK      String?  @db.VarChar(1000)
-  INSTA_LINK         String?  @db.VarChar(1000)
-  TIKTOK_LINK        String?  @db.VarChar(1000)
-  GOOGLE_PROFILE     String?  @db.VarChar(1000)
-  IMAGE_URL          String?  @db.VarChar(1000)
-  GOOGLE_RATING      String?  @db.VarChar(10)
-  WHATSAPP_LINK      String?  @db.VarChar(255)
-  APPROVED           Int?     @default(0) @db.TinyInt
-  STATUS             Int?     @default(0) @db.TinyInt
+model Business {
+  id                Int                      @id @default(autoincrement()) @map("BUSINESS_ID")
+  createdAt         DateTime                 @map("CREATION_DATETIME") @db.DateTime(0)
+  name              String?                  @map("BUSINESS_NAME") @db.VarChar(255)
+  shortName         String?                  @map("SHORT_NAME") @db.VarChar(20)
+  description       String?                  @map("DESCRIPTION") @db.VarChar(1000)
+  addressStreet     String?                  @map("ADDRESS_STREET") @db.VarChar(100)
+  addressZip        BigInt?                  @map("ADDRESS_ZIP")
+  addressCityId     Int?                     @map("ADDRESS_CITY_ID")
+  addressTown       String?                  @map("ADDRESS_TOWN") @db.VarChar(100)
+  addressCountry    String?                  @map("ADDRESS_COUNTRY") @db.VarChar(100)
+  phoneNumber       String?                  @map("PHONE_NUMBER") @db.VarChar(45)
+  phoneNumberShort  String?                  @map("PHONE_NUMBER_SHORT") @db.VarChar(45)
+  whatsappNumber    String?                  @map("WHATSAPP_NUMBER") @db.VarChar(45)
+  webAddress        String?                  @map("WEB_ADDRESS") @db.VarChar(1000)
+  logo              String?                  @map("LOGO") @db.VarChar(255)
+  facebookLink      String?                  @map("FACEBOOK_LINK") @db.VarChar(1000)
+  instaLink         String?                  @map("INSTA_LINK") @db.VarChar(1000)
+  tiktokLink        String?                  @map("TIKTOK_LINK") @db.VarChar(1000)
+  googleProfile     String?                  @map("GOOGLE_PROFILE") @db.VarChar(1000)
+  imageUrl          String?                  @map("IMAGE_URL") @db.VarChar(1000)
+  googleRating      String?                  @map("GOOGLE_RATING") @db.VarChar(10)
+  whatsappLink      String?                  @map("WHATSAPP_LINK") @db.VarChar(255)
+  approved          Int?                     @default(0) @map("APPROVED") @db.TinyInt
+  status            Int?                     @default(0) @map("STATUS") @db.TinyInt
+  
+  // Relations
+  businessCategories BusinessToBusinessCategory[]
+  foodTypes          BusinessToFoodType[]
+  foodMenus          FoodMenu[]
+  menuCategories     MenuCategory[]
+  ownerConnections   OwnerToBusiness[]
+  foodeezRankings    FoodeezRanking[]
+
+  @@map("business")
 }
 
-model business_2_business_category {
-  BUSINESS_BUSINESS_CATEGORY_ID Int       @id @default(autoincrement())
-  CREATION_DATETIME             DateTime? @db.DateTime(0)
-  BUSINESS_ID                   BigInt?
-  BUSINESS_CATEGORY_ID          BigInt?
-  STATUS                        Int?      @db.TinyInt
-  DISPLAY_SEQ                   Int?
+model BusinessToBusinessCategory {
+  id                Int       @id @default(autoincrement()) @map("BUSINESS_BUSINESS_CATEGORY_ID")
+  createdAt         DateTime? @map("CREATION_DATETIME") @db.DateTime(0)
+  businessId        Int?      @map("BUSINESS_ID")
+  businessCategoryId Int?     @map("BUSINESS_CATEGORY_ID")
+  status            Int?      @map("STATUS") @db.TinyInt
+  displaySeq        Int?      @map("DISPLAY_SEQ")
+  
+  // Relations
+  business          Business? @relation(fields: [businessId], references: [id])
+  category          BusinessCategory? @relation(fields: [businessCategoryId], references: [id])
+
+  @@index([businessId])
+  @@index([businessCategoryId])
+  @@map("business_2_business_category")
 }
 
-model business_2_food_type {
-  BUSINESS_FOOD_TYPE_ID Int       @id @default(autoincrement())
-  CREATION_DATETIME     DateTime? @db.DateTime(0)
-  BUSINESS_ID           BigInt?
-  FOOD_TYPE_ID          BigInt?
+model BusinessToFoodType {
+  id           Int       @id @default(autoincrement()) @map("BUSINESS_FOOD_TYPE_ID")
+  createdAt    DateTime? @map("CREATION_DATETIME") @db.DateTime(0)
+  businessId   Int?      @map("BUSINESS_ID")
+  foodTypeId   BigInt?   @map("FOOD_TYPE_ID")
+  
+  // Relations
+  business     Business? @relation(fields: [businessId], references: [id])
+  foodType     FoodType? @relation(fields: [foodTypeId], references: [id])
+
+  @@index([businessId])
+  @@index([foodTypeId])
+  @@map("business_2_food_type")
 }
 
-model business_category {
-  BUSINESS_CATEGORY_ID Int       @id @default(autoincrement())
-  CREATION_DATETIME    DateTime? @db.DateTime(0)
-  CATEGORY_NAME        String?   @db.VarChar(100)
+model BusinessCategory {
+  id              Int       @id @default(autoincrement()) @map("BUSINESS_CATEGORY_ID")
+  createdAt       DateTime? @map("CREATION_DATETIME") @db.DateTime(0)
+  categoryName    String?   @map("CATEGORY_NAME") @db.VarChar(100)
+  
+  // Relations
+  businessCategories BusinessToBusinessCategory[]
+
+  @@map("business_category")
 }
 
-model business_owner {
-  BUSINESS_OWNER_ID Int      @id @unique(map: "CUSTOMER_ID_UNIQUE") @default(autoincrement())
-  CREATION_DATETIME DateTime @db.DateTime(0)
-  EMAIL_ADDRESS     String   @unique(map: "EMAIL_ADDRESS_UNIQUE") @db.VarChar(255)
-  PASSWORD          String   @db.VarChar(45)
-  FIRST_NAME        String?  @db.VarChar(100)
-  LAST_NAME         String?  @db.VarChar(100)
-  MOBILE_PHONE      String?  @db.VarChar(45)
-  ADDRESS_STREET    String?  @db.VarChar(100)
-  ADDRESS_NO        Int?
-  ADDRESS_ZIP       BigInt?
-  ADDRESS_TOWN      String?  @db.VarChar(100)
-  ADDRESS_COUNTRY   String?  @db.VarChar(100)
-  PIC               String?  @db.VarChar(255)
+model BusinessOwner {
+  id              Int      @id @unique(map: "CUSTOMER_ID_UNIQUE") @default(autoincrement()) @map("BUSINESS_OWNER_ID")
+  createdAt       DateTime @map("CREATION_DATETIME") @db.DateTime(0)
+  emailAddress    String   @unique(map: "EMAIL_ADDRESS_UNIQUE") @map("EMAIL_ADDRESS") @db.VarChar(255)
+  password        String   @map("PASSWORD") @db.VarChar(45)
+  firstName       String?  @map("FIRST_NAME") @db.VarChar(100)
+  lastName        String?  @map("LAST_NAME") @db.VarChar(100)
+  mobilePhone     String?  @map("MOBILE_PHONE") @db.VarChar(45)
+  addressStreet   String?  @map("ADDRESS_STREET") @db.VarChar(100)
+  addressNo       Int?     @map("ADDRESS_NO")
+  addressZip      BigInt?  @map("ADDRESS_ZIP")
+  addressTown     String?  @map("ADDRESS_TOWN") @db.VarChar(100)
+  addressCountry  String?  @map("ADDRESS_COUNTRY") @db.VarChar(100)
+  pic             String?  @map("PIC") @db.VarChar(255)
+  
+  // Relations
+  businesses      OwnerToBusiness[]
+
+  @@map("business_owner")
 }
 
-model business_rating {
-  BUSINESS_RATING_ID BigInt    @id
-  CREATION_DATETIME  DateTime? @db.DateTime(0)
-  BUSINESS_ID        BigInt?
-  BUSINESS_RATING    Int?
+model BusinessRating {
+  id              BigInt    @id @map("BUSINESS_RATING_ID")
+  createdAt       DateTime? @map("CREATION_DATETIME") @db.DateTime(0)
+  businessId      BigInt?   @map("BUSINESS_ID")
+  businessRating  Int?      @map("BUSINESS_RATING")
+
+  @@map("business_rating")
 }
 
-model business_reviews {
-  BUSINESS_REVIEWS_ID BigInt    @id @default(autoincrement())
-  CREATION_DATETIME   DateTime? @db.DateTime(0)
-  REVIEWER_NAME       String?   @db.VarChar(255)
-  RATING              Int?
-  REVIEW              String?   @db.VarChar(1000)
-  PIC_1               String?   @db.VarChar(255)
-  PIC_2               String?   @db.VarChar(255)
-  PIC_3               String?   @db.VarChar(255)
+model BusinessReview {
+  id              BigInt    @id @default(autoincrement()) @map("BUSINESS_REVIEWS_ID")
+  createdAt       DateTime? @map("CREATION_DATETIME") @db.DateTime(0)
+  reviewerName    String?   @map("REVIEWER_NAME") @db.VarChar(255)
+  rating          Int?      @map("RATING")
+  review          String?   @map("REVIEW") @db.VarChar(1000)
+  pic1            String?   @map("PIC_1") @db.VarChar(255)
+  pic2            String?   @map("PIC_2") @db.VarChar(255)
+  pic3            String?   @map("PIC_3") @db.VarChar(255)
+
+  @@map("business_reviews")
 }
 
-model city {
-  CITY_ID           BigInt    @id @default(autoincrement())
-  CREATION_DATETIME DateTime? @db.DateTime(0)
-  CITY_CODE         String?   @db.VarChar(2)
-  CITY_NAME         String?   @db.VarChar(100)
+model City {
+  id              BigInt    @id @default(autoincrement()) @map("CITY_ID")
+  createdAt       DateTime? @map("CREATION_DATETIME") @db.DateTime(0)
+  cityCode        String?   @map("CITY_CODE") @db.VarChar(2)
+  cityName        String?   @map("CITY_NAME") @db.VarChar(100)
+  
+  // Relations
+  towns           CityTown[]
+
+  @@map("city")
 }
 
-model city_town {
-  CITY_TWON_ID      BigInt    @id @default(autoincrement())
-  CREATION_DATETIME DateTime? @db.DateTime(0)
-  CITY_ID           BigInt?
-  CITY_CODE         String?   @db.VarChar(2)
-  ZIPCODE           Int?
-  TOWN              String?   @db.VarChar(100)
-  E                 Float?
-  H                 Float?
-  LANGUAGE          String?   @db.Text
+model CityTown {
+  id              BigInt    @id @default(autoincrement()) @map("CITY_TWON_ID")
+  createdAt       DateTime? @map("CREATION_DATETIME") @db.DateTime(0)
+  cityId          BigInt?   @map("CITY_ID")
+  cityCode        String?   @map("CITY_CODE") @db.VarChar(2)
+  zipcode         Int?      @map("ZIPCODE")
+  town            String?   @map("TOWN") @db.VarChar(100)
+  e               Float?    @map("E")
+  h               Float?    @map("H")
+  language        String?   @map("LANGUAGE") @db.Text
+  
+  // Relations
+  city            City?     @relation(fields: [cityId], references: [id])
+
+  @@index([cityId])
+  @@map("city_town")
 }
 
-model food_category {
-  FOOD_CATEGORY_ID  BigInt    @id @default(autoincrement())
-  CREATION_DATETIME DateTime? @db.DateTime(0)
-  TITLE             String?   @db.VarChar(45)
-  DESCRIPTION       String?   @db.VarChar(255)
+model FoodCategory {
+  id              BigInt    @id @default(autoincrement()) @map("FOOD_CATEGORY_ID")
+  createdAt       DateTime? @map("CREATION_DATETIME") @db.DateTime(0)
+  title           String?   @map("TITLE") @db.VarChar(45)
+  description     String?   @map("DESCRIPTION") @db.VarChar(255)
+  
+  // Relations
+  foodMenus       FoodMenu[]
+
+  @@map("food_category")
 }
 
-model food_menu {
-  FOOD_MENU_ID      Int       @id @default(autoincrement())
-  CREATION_DATETIME DateTime? @db.DateTime(0)
-  BUSINESS_ID       BigInt?
-  FOOD_CATEGORY_ID  BigInt?
-  TITLE             String?   @db.VarChar(255)
-  STATUS            Int?      @db.TinyInt
+model FoodMenu {
+  id              Int       @id @default(autoincrement()) @map("FOOD_MENU_ID")
+  createdAt       DateTime? @map("CREATION_DATETIME") @db.DateTime(0)
+  businessId      Int?      @map("BUSINESS_ID")
+  foodCategoryId  BigInt?   @map("FOOD_CATEGORY_ID")
+  title           String?   @map("TITLE") @db.VarChar(255)
+  status          Int?      @map("STATUS") @db.TinyInt
+  
+  // Relations
+  business        Business? @relation(fields: [businessId], references: [id])
+  foodCategory    FoodCategory? @relation(fields: [foodCategoryId], references: [id])
+  menuItems       FoodMenuItem[]
+
+  @@index([businessId])
+  @@index([foodCategoryId])
+  @@map("food_menu")
 }
 
-model food_menu_items {
-  FOOD_MENU_ITEMS_ID BigInt    @id
-  CREATION_DATETIME  DateTime? @db.DateTime(0)
-  FOOD_MENU_ID       BigInt?
-  MENU_CATEGORY_ID   BigInt?
-  TITLE              String?   @db.VarChar(100)
-  DESCRIPTION        String?   @db.VarChar(255)
-  PRICE              Float?    @db.Float
-  CURRENCY           String?   @db.VarChar(45)
-  PIC_1              String?   @db.VarChar(255)
-  PIC_2              String?   @db.VarChar(255)
-  PIC_3              String?   @db.VarChar(255)
-  APPROVED           Int?      @db.TinyInt
-  DISPLAY            Int?      @db.TinyInt
+model FoodMenuItem {
+  id              BigInt    @id @map("FOOD_MENU_ITEMS_ID")
+  createdAt       DateTime? @map("CREATION_DATETIME") @db.DateTime(0)
+  foodMenuId      Int?      @map("FOOD_MENU_ID")
+  menuCategoryId  Int?      @map("MENU_CATEGORY_ID")
+  title           String?   @map("TITLE") @db.VarChar(100)
+  description     String?   @map("DESCRIPTION") @db.VarChar(255)
+  price           Float?    @map("PRICE") @db.Float
+  currency        String?   @map("CURRENCY") @db.VarChar(45)
+  pic1            String?   @map("PIC_1") @db.VarChar(255)
+  pic2            String?   @map("PIC_2") @db.VarChar(255)
+  pic3            String?   @map("PIC_3") @db.VarChar(255)
+  approved        Int?      @map("APPROVED") @db.TinyInt
+  display         Int?      @map("DISPLAY") @db.TinyInt
+  
+  // Relations
+  foodMenu        FoodMenu? @relation(fields: [foodMenuId], references: [id])
+  menuCategory    MenuCategory? @relation(fields: [menuCategoryId], references: [id])
+
+  @@index([foodMenuId])
+  @@index([menuCategoryId])
+  @@map("food_menu_items")
 }
 
-model food_type {
-  FOOD_TYPE_ID      BigInt    @id @default(autoincrement())
-  CREATION_DATETIME DateTime? @db.DateTime(0)
-  TITLE             String?   @db.VarChar(45)
-  DESCRIPTION       String?   @db.VarChar(255)
+model FoodType {
+  id              BigInt    @id @default(autoincrement()) @map("FOOD_TYPE_ID")
+  createdAt       DateTime? @map("CREATION_DATETIME") @db.DateTime(0)
+  title           String?   @map("TITLE") @db.VarChar(45)
+  description     String?   @map("DESCRIPTION") @db.VarChar(255)
+  
+  // Relations
+  businessTypes   BusinessToFoodType[]
+
+  @@map("food_type")
 }
 
-model foodeez_ranking {
-  FOODEEZ_RANKING    Int       @id @default(autoincrement())
-  foodeez_rankingcol String?   @db.VarChar(45)
-  CREATION_DATETIME  DateTime? @db.DateTime(0)
-  BUSINESS_ID        Int?
-  RANKING            Int?      @default(1)
+model FoodeezRanking {
+  id              Int       @id @default(autoincrement()) @map("FOODEEZ_RANKING")
+  rankingCol      String?   @map("foodeez_rankingcol") @db.VarChar(45)
+  createdAt       DateTime? @map("CREATION_DATETIME") @db.DateTime(0)
+  businessId      Int?      @map("BUSINESS_ID")
+  ranking         Int?      @default(1) @map("RANKING")
+  
+  // Relations
+  business        Business? @relation(fields: [businessId], references: [id])
+
+  @@index([businessId])
+  @@map("foodeez_ranking")
 }
 
-model foodeez_subscription {
-  FOODEEZ_SUBSCRIPTION_ID BigInt    @id
-  CREATION_DATETIME       DateTime? @db.DateTime(0)
-  EMAIL_ADDRESS           String?   @db.VarChar(255)
+model FoodeezSubscription {
+  id              BigInt    @id @map("FOODEEZ_SUBSCRIPTION_ID")
+  createdAt       DateTime? @map("CREATION_DATETIME") @db.DateTime(0)
+  emailAddress    String?   @map("EMAIL_ADDRESS") @db.VarChar(255)
+
+  @@map("foodeez_subscription")
 }
 
-model menu_category {
-  MENU_CATEGORY_ID  Int       @id @default(autoincrement())
-  CREATION_DATETIME DateTime? @db.DateTime(0)
-  BUSINESS_ID       Int?
-  TITLE             String?   @db.VarChar(255)
-  SHOW              Int?      @default(1) @db.TinyInt
-  DISPLAY_SEQ       Int?
+model MenuCategory {
+  id              Int       @id @default(autoincrement()) @map("MENU_CATEGORY_ID")
+  createdAt       DateTime? @map("CREATION_DATETIME") @db.DateTime(0)
+  businessId      Int?      @map("BUSINESS_ID")
+  title           String?   @map("TITLE") @db.VarChar(255)
+  show            Int?      @default(1) @map("SHOW") @db.TinyInt
+  displaySeq      Int?      @map("DISPLAY_SEQ")
+  
+  // Relations
+  business        Business? @relation(fields: [businessId], references: [id])
+  menuItems       FoodMenuItem[]
+
+  @@index([businessId])
+  @@map("menu_category")
 }
 
-model owner_2_business {
-  CUSTOMER_BUSINESS_ID Int       @id @default(autoincrement())
-  CREATION_DATETIME    DateTime? @db.DateTime(0)
-  BUSINESS_OWNER_ID    BigInt?
-  BUSINESS_ID          BigInt?
-  STATUS               Int?      @db.TinyInt
+model OwnerToBusiness {
+  id              Int       @id @default(autoincrement()) @map("CUSTOMER_BUSINESS_ID")
+  createdAt       DateTime? @map("CREATION_DATETIME") @db.DateTime(0)
+  businessOwnerId Int?      @map("BUSINESS_OWNER_ID")
+  businessId      Int?      @map("BUSINESS_ID")
+  status          Int?      @map("STATUS") @db.TinyInt
+  
+  // Relations
+  owner           BusinessOwner? @relation(fields: [businessOwnerId], references: [id])
+  business        Business? @relation(fields: [businessId], references: [id])
+
+  @@index([businessOwnerId])
+  @@index([businessId])
+  @@map("owner_2_business")
 }
 
-model visitors_account {
-  VISITORS_ACCOUNT_ID BigInt    @id
-  CREATION_DATETIME   DateTime? @db.DateTime(0)
-  EMAIL_ADDRESS       String?   @db.VarChar(255)
-  PASSWORD            String?   @db.VarChar(45)
-  FIRST_NAME          String?   @db.VarChar(45)
-  LAST_NAME           String?   @db.VarChar(45)
-  LANGUAGE            String?   @db.VarChar(45)
-  PIC                 String?   @db.VarChar(255)
+model VisitorsAccount {
+  id              BigInt    @id @map("VISITORS_ACCOUNT_ID")
+  createdAt       DateTime? @map("CREATION_DATETIME") @db.DateTime(0)
+  emailAddress    String?   @map("EMAIL_ADDRESS") @db.VarChar(255)
+  password        String?   @map("PASSWORD") @db.VarChar(45)
+  firstName       String?   @map("FIRST_NAME") @db.VarChar(45)
+  lastName        String?   @map("LAST_NAME") @db.VarChar(45)
+  language        String?   @map("LANGUAGE") @db.VarChar(45)
+  pic             String?   @map("PIC") @db.VarChar(255)
+
+  @@map("visitors_account")
 }
