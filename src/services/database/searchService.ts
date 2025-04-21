@@ -1,9 +1,11 @@
-import prisma from '@/lib/prisma';
+
 
 /**
  * Advanced Search Database Service
  * Implements full-text search, fuzzy matching, and relevance scoring
  */
+
+import { prisma } from "@/lib/prisma";
 
 /**
  * Search businesses by name, description, or location with advanced features

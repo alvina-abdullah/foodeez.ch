@@ -4,152 +4,271 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { motion } from 'framer-motion';
-import { MapPin, Navigation, Utensils } from 'lucide-react';
+import { MapPin, ChevronDown, Search, Building, X } from 'lucide-react';
+import BusinessCard from '../../features/business/components/BusinessCard';
+import { cn } from '@/lib/utils';
+import { getCities, getBusinessesByLocation, type CityData } from '@/services/database/cityService';
 
-interface City {
-  CITY_ID: number;
-  CITY_NAME: string;
-  restaurantCount?: number;
-  imageUrl?: string;
+interface Business {
+  BUSINESS_ID: number;
+  BUSINESS_NAME: string | null;
+  IMAGE_URL: string | null;
+  ADDRESS_TOWN: string | null;
+  DESCRIPTION: string | null;
+  GOOGLE_RATING: string | null;
+  [key: string]: any;
 }
 
 export default function CitySection() {
-  const [cities, setCities] = useState<City[]>([]);
+  const [cities, setCities] = useState<CityData[]>([]);
+  const [businesses, setBusinesses] = useState<Business[]>([]);
+  const [selectedCity, setSelectedCity] = useState<string>('Zurich');
   const [isLoading, setIsLoading] = useState(true);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [zipCode, setZipCode] = useState<string>('');
+  
+  // List of main Swiss cities to display as buttons
+  const mainCities = ['Zurich', 'Geneva', 'Interlaken', 'Luzern', 'St. Moritz'];
   
   useEffect(() => {
-    const fetchCities = async () => {
-      try {
+    const fetchCitiesData = async () => {
+      try { 
         setIsLoading(true);
-        const response = await fetch('/api/cities?withRestaurantCount=true');
+        // Use the server action directly instead of the API route
+        const data = await getCities(true) as CityData[];
         
-        if (!response.ok) {
-          throw new Error('Failed to fetch cities');
+        if (data && data.length > 0) {
+          setCities(data);
+          setError(null);
+        } else {
+          throw new Error('No city data returned');
         }
-        
-        const data = await response.json();
-        setCities(data);
-        setError(null);
       } catch (err) {
         console.error('Error fetching cities:', err);
-        setError('Could not load cities. Please try again later.');
+        setError('Could not load cities.');
         
-        // Fallback to sample data in case of error
-        setCities([
-          { CITY_ID: 1, CITY_NAME: 'Zurich', restaurantCount: 120 },
-          { CITY_ID: 2, CITY_NAME: 'Geneva', restaurantCount: 85 },
-          { CITY_ID: 3, CITY_NAME: 'Interlaken', restaurantCount: 45 },
-          { CITY_ID: 4, CITY_NAME: 'Luzern', restaurantCount: 67 },
-          { CITY_ID: 5, CITY_NAME: 'St. Moritz', restaurantCount: 38 },
-          { CITY_ID: 6, CITY_NAME: 'Bern', restaurantCount: 72 },
-        ]);
+       
       } finally {
         setIsLoading(false);
       }
     };
     
-    fetchCities();
+    fetchCitiesData();
   }, []);
   
-  // City images - these would ideally come from your database or a CDN
-  const cityImages = {
-    'Zurich': 'https://images.unsplash.com/photo-1515488764276-beab7607c1e6?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1974&q=80',
-    'Geneva': 'https://images.unsplash.com/photo-1588693273928-92231d0bc282?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1974&q=80',
-    'Interlaken': 'https://images.unsplash.com/photo-1531410050434-010ec9fc29a1?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1974&q=80',
-    'Luzern': 'https://images.unsplash.com/photo-1527668752968-14dc70a27c95?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1970&q=80',
-    'St. Moritz': 'https://images.unsplash.com/photo-1504233529578-6d46baba6d34?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1974&q=80',
-    'Bern': 'https://images.unsplash.com/photo-1624105900527-8fccb4386796?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1974&q=80',
+  // Fetch businesses for the selected city
+  useEffect(() => {
+    const fetchBusinessesData = async () => {
+      try {
+        setIsLoading(true);
+        
+        // Use the server action directly instead of the API route
+        const data = await getBusinessesByLocation({
+          city: selectedCity || undefined,
+          zipCode: zipCode || undefined,
+          limit: 9
+        });
+        
+        if (data && Array.isArray(data)) {
+          setBusinesses(data as Business[]);
+          setError(null);
+        } else {
+          throw new Error('Failed to fetch businesses');
+        }
+      } catch (err) {
+        console.error('Error fetching businesses:', err);
+        setError('Could not load businesses.');
+        
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    
+    fetchBusinessesData();
+  }, [selectedCity, zipCode]);
+  
+  // Handle city selection
+  const handleCitySelect = (city: string) => {
+    setSelectedCity(city);
+    setZipCode(''); // Clear zip code when selecting a city
   };
   
+  // Handle zip code search
+  const handleZipSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+    // Validation logic could be added here
+    if (zipCode.trim()) {
+      setSelectedCity(''); // Clear selected city when searching by zip
+    }
+  };
+
   return (
-    <section className="section-padding bg-background-muted">
-      <div className="container-custom">
-        <div className="flex flex-col md:flex-row md:items-end md:justify-between mb-10">
-          <div>
-            <span className="inline-block px-3 py-1 bg-secondary/10 text-secondary text-sm font-medium rounded-full mb-4">
-              <MapPin className="inline-block w-4 h-4 mr-1" />
-              Locations
-            </span>
-            <h2 className="text-3xl md:text-4xl font-bold text-text-main">
-              Explore by City
-            </h2>
+    <section className="container max-w-7xl mx-auto px-4 py-12">
+      <div className="text-center mb-10">
+        <h2 className="text-2xl md:text-3xl font-bold mb-2">
+          Find Restaurants in Your City
+        </h2>
+        <p className="text-gray-600 max-w-2xl mx-auto">
+          Discover incredible dining options in top cities across Switzerland,
+          or search by postal code for local restaurants.
+        </p>
+      </div>
+
+      {/* City tabs navigation */}
+      <div className="flex flex-wrap justify-center gap-2 md:gap-4 mb-6">
+        {mainCities.map((city) => (
+          <button
+            key={city}
+            onClick={() => handleCitySelect(city)}
+            className={cn(
+              'px-4 py-2 rounded-full text-sm md:text-base transition-colors',
+              selectedCity === city
+                ? 'bg-primary text-white font-medium'
+                : 'bg-gray-100 hover:bg-gray-200'
+            )}
+          >
+            {city}
+          </button>
+        ))}
+
+        {/* Other cities dropdown */}
+        <div className="relative">
+          <button
+            onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+            className="flex items-center gap-1 px-4 py-2 rounded-full bg-gray-100 hover:bg-gray-200 text-sm md:text-base transition-colors"
+          >
+            More Cities
+            <ChevronDown size={16} className={isDropdownOpen ? 'rotate-180' : ''} />
+          </button>
+        
+          {isDropdownOpen && (
+            <div className="absolute z-10 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 max-h-60 overflow-y-auto">
+              <div className="py-1">
+                {cities
+                  .filter(city => !mainCities.includes(city.CITY_NAME))
+                  .slice(0, 10) // Limit to 10 additional cities
+                  .map(city => (
+                    <button
+                      key={city.CITY_ID}
+                      onClick={() => {
+                        handleCitySelect(city.CITY_NAME);
+                        setIsDropdownOpen(false);
+                      }}
+                      className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                    >
+                      {city.CITY_NAME}
+              
+                    </button>
+                  ))}
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
+
+      {/* Zip code search */}
+      <div className="max-w-md mx-auto mb-10">
+        <form onSubmit={handleZipSearch} className="flex items-center">
+          <div className="relative w-full">
+            <input
+              type="text"
+              value={zipCode}
+              onChange={(e) => setZipCode(e.target.value)}
+              placeholder="Search by postal code..."
+              className="w-full pl-10 pr-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+            />
+            <div className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">
+              <MapPin size={18} />
+            </div>
+            {zipCode && (
+              <button
+                type="button"
+                onClick={() => setZipCode('')}
+                className="absolute right-10 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
+              >
+                <X size={18} />
+              </button>
+            )}
           </div>
-          
-          <p className="mt-2 md:mt-0 text-text-muted max-w-md">
-            Discover the best restaurants, cafes, and food spots in cities across Switzerland
+          <button
+            type="submit"
+            className="ml-2 px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors"
+          >
+            <Search size={18} />
+          </button>
+        </form>
+      </div>
+
+      {/* City heading with dynamic count */}
+      <div className="mb-8 flex items-center justify-center gap-2">
+        <Building className="text-primary" size={24} />
+        <h3 className="text-xl font-semibold">
+          {selectedCity ? (
+            <>
+              Restaurants in {selectedCity}
+              {cities.find(c => c.CITY_NAME === selectedCity)?.restaurantCount && (
+                <span className="ml-2 text-sm font-normal text-gray-500">
+                  ({cities.find(c => c.CITY_NAME === selectedCity)?.restaurantCount} restaurants)
+                </span>
+              )}
+            </>
+          ) : zipCode ? (
+            <>Restaurants near {zipCode}</>
+          ) : (
+            <>Popular Restaurants</>
+          )}
+        </h3>
+      </div>
+
+      {/* Loading and error states */}
+      {isLoading ? (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {Array(9)
+            .fill(null)
+            .map((_, index) => (
+              <div 
+                key={index} 
+                className="bg-gray-100 rounded-lg overflow-hidden h-64 animate-pulse"
+              />
+            ))}
+        </div>
+      ) : error ? (
+        <div className="text-center py-10">
+          <p className="text-red-500 mb-4">{error}</p>
+        </div>
+      ) : businesses.length === 0 ? (
+        <div className="text-center py-10">
+          <p className="text-gray-500">
+            No restaurants found{selectedCity ? ` in ${selectedCity}` : zipCode ? ` near ${zipCode}` : ''}.
           </p>
         </div>
-        
-        {isLoading ? (
-          <div className="flex justify-center items-center h-64">
-            <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
-          </div>
-        ) : (
-          <>
-            {/* Featured Cities Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {cities.slice(0, 6).map((city, index) => {
-                const cityImage = cityImages[city.CITY_NAME as keyof typeof cityImages] || 
-                  'https://images.unsplash.com/photo-1586108681141-b60183eb7776?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1974&q=80';
-                  
-                return (
-                  <motion.div
-                    key={city.CITY_ID}
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.3, delay: index * 0.1 }}
-                    className="group relative overflow-hidden rounded-xl shadow-md hover:shadow-lg transition-all duration-300"
-                  >
-                    <Link href={`/discover?location=${encodeURIComponent(city.CITY_NAME)}`} className="block">
-                      <div className="aspect-[4/3] relative">
-                        <Image
-                          src={cityImage}
-                          alt={city.CITY_NAME}
-                          fill
-                          className="object-cover transition-transform duration-500 group-hover:scale-105"
-                          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                        />
-                        
-                        {/* Gradient overlay */}
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent" />
-                        
-                        <div className="absolute inset-0 p-6 flex flex-col justify-end text-white">
-                          <div className="transform transition-transform duration-300 group-hover:translate-y-[-8px]">
-                            <h3 className="text-2xl font-bold mb-2">{city.CITY_NAME}</h3>
-                            <div className="flex items-center">
-                              <span className="flex items-center text-sm bg-white/20 backdrop-blur-sm px-3 py-1 rounded-full">
-                                <Utensils className="w-3.5 h-3.5 mr-1.5 text-white" />
-                                {city.restaurantCount} Restaurants
-                              </span>
-                            </div>
-                          </div>
-                        </div>
-                        
-                        {/* Explore CTA */}
-                        <div className="absolute right-6 bottom-6 opacity-0 transform translate-y-2 transition-all duration-300 group-hover:opacity-100 group-hover:translate-y-0">
-                          <div className="flex items-center gap-1 bg-primary text-white px-3 py-1.5 rounded-full text-sm font-medium">
-                            Explore
-                            <Navigation className="w-3.5 h-3.5 ml-1" />
-                          </div>
-                        </div>
-                      </div>
-                    </Link>
-                  </motion.div>
-                );
-              })}
-            </div>
-            
-            {/* View All Cities Button */}
-            <div className="text-center mt-12">
-              <Link href="/discover" className="inline-flex items-center justify-center px-6 py-3 border border-gray-300 rounded-full 
-                        text-base font-medium text-text-main hover:bg-white transition-colors">
-                View All Cities
-                <MapPin className="ml-2 w-4 h-4" />
-              </Link>
-            </div>
-          </>
-        )}
+      ) : (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {businesses.map((business) => (
+            <motion.div
+              key={business.BUSINESS_ID}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.3 }}
+            >
+              <BusinessCard business={business} />
+            </motion.div>
+          ))}
+        </div>
+      )}
+
+      {/* View all link */}
+      <div className="text-center mt-10">
+        <Link 
+          href={selectedCity ? `/restaurants?city=${encodeURIComponent(selectedCity)}` : zipCode ? `/restaurants?zipCode=${zipCode}` : "/restaurants"}
+          className="inline-flex items-center text-primary hover:text-primary/80 font-medium"
+        >
+          View all restaurants
+          <svg className="ml-2 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7"></path>
+          </svg>
+        </Link>
       </div>
     </section>
   );

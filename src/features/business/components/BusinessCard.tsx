@@ -1,14 +1,9 @@
 import React from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import slugify from 'slugify';
 import { Star, MapPin } from 'lucide-react';
 import { SocialLinks } from '../../../components/core/SocialLinks';
-
-// Helper function to generate slug for business URLs
-const generateSlug = (name: string, id: number) => {
-  return `${slugify(name || '', { lower: true, strict: true })}-${id}`;
-};
+import { generateSlug } from '@/lib/utils/genSlug';
 
 interface Business {
   BUSINESS_ID: number;
