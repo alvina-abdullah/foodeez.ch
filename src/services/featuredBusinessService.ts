@@ -10,7 +10,6 @@ type FoodType = 'All' | 'Pizza & Pasta' | 'Fast Food' | 'Kebab & Donner' | 'Comb
 export async function getFeaturedBusiness(
   category: FoodCategory = 'All',
   foodType: FoodType = 'All',
-  searchTerm: string = ''
 ): Promise<BusinessData[]> {
   try {
     // Build the base query
@@ -61,18 +60,7 @@ export async function getFeaturedBusiness(
         `;
       }
     }
-    
-    // Add search term filter
-    if (searchTerm && searchTerm.trim() !== '') {
-      const sanitizedTerm = searchTerm.trim().replace(/'/g, "''");
-      query += `
-        AND (
-          BUSINESS_NAME LIKE '%${sanitizedTerm}%' OR
-          DESCRIPTION LIKE '%${sanitizedTerm}%' OR
-          ADDRESS_TOWN LIKE '%${sanitizedTerm}%'
-        )
-      `;
-    }
+  
     
     // Limit and order the results
     query += `

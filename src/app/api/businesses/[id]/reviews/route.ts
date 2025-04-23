@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getBusinessReviews, createReview, getBusinessAverageRating, updateBusinessRating } from '@/services/database/reviewService';
+import { getBusinessReviews, createReview, getBusinessAverageRating, updateBusinessRating } from '@/services/reviewService';
 
 /**
  * Business Reviews API
