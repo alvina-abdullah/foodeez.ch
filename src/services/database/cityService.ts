@@ -64,22 +64,6 @@ export async function getBusinessesByLocation(options: {
   try {
     const { city, zipCode, limit = 9, offset = 0 } = options;
 
-    // Build where conditions based on provided filters
-    const whereConditions: any = { 
-      STATUS: 1, // Active businesses
-      APPROVED: 1 // Approved businesses
-    };
-
-    // Filter by city if provided
-    if (city) {
-      whereConditions.ADDRESS_TOWN = city;
-    }
-
-    // Filter by ZIP code if provided
-    if (zipCode) {
-      whereConditions.ADDRESS_ZIP = zipCode;
-    }
-
     // Use raw query for better performance with complex filtering
     let query = `
       SELECT * FROM business_detail_view_all

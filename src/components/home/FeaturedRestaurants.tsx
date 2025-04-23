@@ -119,7 +119,7 @@ export default function FeaturedRestaurants() {
         </div>
 
         {/* Search Box */}
-        <div className="relative max-w-md mx-auto mb-8">
+        {/* <div className="relative max-w-md mx-auto mb-8">
           <div className="relative">
             <input
               type="text"
@@ -138,7 +138,7 @@ export default function FeaturedRestaurants() {
               </button>
             )}
           </div>
-        </div>
+        </div> */}
 
         {/* Filter Indicator + Clear Button */}
         {(activeCategory !== 'All' || activeType || searchTerm) && (

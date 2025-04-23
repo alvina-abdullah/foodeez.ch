@@ -71,6 +71,7 @@ export default function CitySection() {
         });
         
         if (data && Array.isArray(data)) {
+          // The data is already filtered at the database level for businesses with complete information
           setBusinesses(data as Business[]);
           setError(null);
         } else {
@@ -240,7 +241,9 @@ export default function CitySection() {
       ) : businesses.length === 0 ? (
         <div className="text-center py-10">
           <p className="text-gray-500">
-            No restaurants found{selectedCity ? ` in ${selectedCity}` : zipCode ? ` near ${zipCode}` : ''}.
+            {selectedCity || zipCode ? 
+              `No restaurants with complete information found${selectedCity ? ` in ${selectedCity}` : zipCode ? ` near ${zipCode}` : ''}.` :
+              'No restaurants with complete information found.'}
           </p>
         </div>
       ) : (
