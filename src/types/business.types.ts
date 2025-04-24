@@ -24,10 +24,16 @@ export interface BusinessDetail {
   GOOGLE_RATING?: string;
   APPROVED?: number;
   STATUS?: number;
-  Ranking: bigint;
+  Ranking?: bigint;
+  // Add compatibility with different view structures
+  IFNULL_d_Ranking__0_?: bigint;
+  Category_name?: string;
 }
 
 export type BusinessCategory = {
-  Business_category_id: string;
-  Category_name: string | null;
+  Business_category_id: number;
+  Category_name: string;
+  // Additional fields that might be in database results
+  id?: number;
+  CNT?: bigint;
 };

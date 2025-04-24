@@ -20,6 +20,7 @@ export interface BusinessCardProps {
 }
 
 const BusinessCard: React.FC<BusinessCardProps> = ({ business }) => {
+  // Use optional chaining to safely access properties
   const {
     BUSINESS_ID,
     BUSINESS_NAME = "Business",
@@ -32,9 +33,14 @@ const BusinessCard: React.FC<BusinessCardProps> = ({ business }) => {
     WEB_ADDRESS,
     FACEBOOK_LINK,
     INSTA_LINK,
-  } = business;
+  } = business || {};
 
-  const slug = generateSlug(BUSINESS_NAME, BUSINESS_ID);
+  // Ensure we have a valid business ID
+  if (!BUSINESS_ID) {
+    return null;
+  }
+
+  const slug = generateSlug(BUSINESS_NAME || "business", BUSINESS_ID);
   const rating = GOOGLE_RATING ? parseFloat(GOOGLE_RATING) : null;
 
   const formatUrl = (url: string | undefined) => {
@@ -65,7 +71,7 @@ const BusinessCard: React.FC<BusinessCardProps> = ({ business }) => {
         {IMAGE_URL ? (
           <Image
             src={IMAGE_URL}
-            alt={BUSINESS_NAME}
+            alt={BUSINESS_NAME || "Business image"}
             fill
             className="object-cover transition-transform duration-500 group-hover:scale-105"
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
@@ -74,7 +80,7 @@ const BusinessCard: React.FC<BusinessCardProps> = ({ business }) => {
         ) : (
           <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-gray-100 to-gray-200">
             <span className="text-2xl font-bold text-gray-400 uppercase">
-              {BUSINESS_NAME.charAt(0)}
+              {(BUSINESS_NAME || "B").charAt(0)}
             </span>
           </div>
         )}
@@ -88,7 +94,7 @@ const BusinessCard: React.FC<BusinessCardProps> = ({ business }) => {
             className="hover:opacity-90 transition-opacity"
           >
             <h3 className="text-lg font-semibold text-gray-900 line-clamp-1">
-              {BUSINESS_NAME}
+              {BUSINESS_NAME || "Business"}
             </h3>
           </Link>
 
