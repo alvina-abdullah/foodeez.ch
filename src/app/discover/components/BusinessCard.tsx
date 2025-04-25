@@ -11,16 +11,16 @@ import {
   Phone,
 } from "lucide-react";
 import { generateSlug } from "@/lib/utils/genSlug";
-import { BusinessDetail } from "@/types/business.types";
 import { SocialLinks } from "@/components/core/SocialLinks";
+import { DiscoverBusiness } from "@/types/discover.types";
 
 export interface BusinessCardProps {
-  business: BusinessDetail;
+  business: DiscoverBusiness;
 }
 
 const BusinessCard: React.FC<BusinessCardProps> = ({ business }) => {
   const {
-    BUSINESS_ID,
+    Business_ID,
     BUSINESS_NAME = "Business",
     IMAGE_URL,
     ADDRESS_TOWN,
@@ -33,9 +33,10 @@ const BusinessCard: React.FC<BusinessCardProps> = ({ business }) => {
     INSTA_LINK,
   } = business || {};
 
-  if (!BUSINESS_ID) return null;
+  if (!Business_ID) return null;
 
-  const slug = generateSlug(BUSINESS_NAME || "business", BUSINESS_ID);
+
+  const slug = generateSlug(BUSINESS_NAME || "business", Business_ID);
   const rating = GOOGLE_RATING ? parseFloat(GOOGLE_RATING) : null;
 
   const formatUrl = (url: string | undefined) => {
@@ -56,7 +57,7 @@ const BusinessCard: React.FC<BusinessCardProps> = ({ business }) => {
   };
 
   const hasSocialLinks = Object.values(socialLinks).some(
-    (link) => link !== null
+    (link) => link !== null && link !== undefined && link !== ''
   );
 
   return (
