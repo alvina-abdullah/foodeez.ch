@@ -3,7 +3,10 @@
 import { useState, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
-import { getBusinessCategories, getBusinessesByTypeAndCategories } from "@/lib/db";
+import {
+  getBusinessCategories,
+  getBusinessesByTypeAndCategories,
+} from "@/lib/db";
 import Link from "next/link";
 import { BusinessCategory, BusinessDetail } from "@/types/business.types";
 import BusinessCard from "../BusinessCard";
@@ -18,7 +21,9 @@ export default function FeaturedBusiness() {
   const [businesses, setBusinesses] = useState<BusinessDetail[]>([]);
   const [categories, setCategories] = useState<BusinessCategory[]>([]);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const [selectedCategoryId, setSelectedCategoryId] = useState<number | undefined>(undefined);
+  const [selectedCategoryId, setSelectedCategoryId] = useState<
+    number | undefined
+  >(undefined);
   const [initialLoading, setInitialLoading] = useState(true);
 
   const [selectedFoodType, setSelectedFoodType] =
@@ -38,7 +43,7 @@ export default function FeaturedBusiness() {
       const categoryData = await getBusinessCategories();
       if (Array.isArray(categoryData) && categoryData.length > 0) {
         setCategories(categoryData);
-        console.log('Categories loaded:', categoryData);
+        console.log("Categories loaded:", categoryData);
       } else {
         console.error("Invalid or empty category data:", categoryData);
         setCategoryError("Could not load categories");
@@ -56,9 +61,13 @@ export default function FeaturedBusiness() {
   // Update selected category ID when category changes
   useEffect(() => {
     if (selectedCategory) {
-      const category = categories.find(cat => cat.Category_name === selectedCategory);
+      const category = categories.find(
+        (cat) => cat.Category_name === selectedCategory
+      );
       if (category) {
-        console.log(`Selected category: ${selectedCategory}, ID: ${category.Business_category_id}`);
+        console.log(
+          `Selected category: ${selectedCategory}, ID: ${category.Business_category_id}`
+        );
         setSelectedCategoryId(category.Business_category_id);
       } else {
         setSelectedCategoryId(undefined);
@@ -74,14 +83,16 @@ export default function FeaturedBusiness() {
       setError(null);
       startTransition(async () => {
         // Log the filtering criteria
-        console.log(`Fetching businesses with food type: ${selectedFoodType}, categoryId: ${selectedCategoryId}`);
-        
+        console.log(
+          `Fetching businesses with food type: ${selectedFoodType}, categoryId: ${selectedCategoryId}`
+        );
+
         const data = await getBusinessesByTypeAndCategories({
           foodType: selectedFoodType,
           categoryId: selectedCategoryId,
           limit: 12,
         });
-        
+
         if (Array.isArray(data)) {
           console.log(`Received ${data.length} businesses`);
           setBusinesses(data);
@@ -89,7 +100,7 @@ export default function FeaturedBusiness() {
           console.error("Invalid business data format:", data);
           setError("Could not load businesses");
         }
-        
+
         // Set initial loading to false after first load
         setInitialLoading(false);
       });
@@ -108,7 +119,7 @@ export default function FeaturedBusiness() {
   // Handlers
   const handleFoodTypeSelect = (type: string) => {
     setSelectedFoodType(type);
-    
+
     // Only reset category selection when switching to "All"
     if (type === "All") {
       setSelectedCategory("");
@@ -132,7 +143,8 @@ export default function FeaturedBusiness() {
 
   // Derived state
   const showSkeleton = isPending || initialLoading;
-  const showEmptyState = !isPending && !initialLoading && !error && businesses.length === 0;
+  const showEmptyState =
+    !isPending && !initialLoading && !error && businesses.length === 0;
 
   return (
     <section className="container max-w-7xl mx-auto px-4 py-12">
@@ -172,8 +184,8 @@ export default function FeaturedBusiness() {
         {categoryError ? (
           <div className="text-center py-2">
             <p className="text-red-500 text-sm">{categoryError}</p>
-            <button 
-              onClick={fetchCategories} 
+            <button
+              onClick={fetchCategories}
               className="mt-2 inline-flex items-center text-sm text-primary hover:text-primary/80"
             >
               <RefreshCw size={14} className="mr-1" /> Reload Categories
@@ -181,9 +193,11 @@ export default function FeaturedBusiness() {
           </div>
         ) : categories.length === 0 ? (
           <div className="py-2 flex justify-center">
-            <div className="animate-pulse bg-gray-200 h-8 w-20 rounded-full mx-1"></div>
             <div className="animate-pulse bg-gray-200 h-8 w-24 rounded-full mx-1"></div>
-            <div className="animate-pulse bg-gray-200 h-8 w-16 rounded-full mx-1"></div>
+            <div className="animate-pulse bg-gray-200 h-8 w-24 rounded-full mx-1"></div>
+            <div className="animate-pulse bg-gray-200 h-8 w-24 rounded-full mx-1"></div>
+            <div className="animate-pulse bg-gray-200 h-8 w-24 rounded-full mx-1"></div>
+            <div className="animate-pulse bg-gray-200 h-8 w-24 rounded-full mx-1"></div>
           </div>
         ) : (
           <div className="flex flex-wrap justify-center gap-2 relative">
@@ -192,7 +206,9 @@ export default function FeaturedBusiness() {
               return (
                 <button
                   key={category.Business_category_id}
-                  onClick={() => handleCategorySelect(category.Category_name || "")}
+                  onClick={() =>
+                    handleCategorySelect(category.Category_name || "")
+                  }
                   className={cn(
                     "px-4 py-2 rounded-full text-sm md:text-base transition-colors relative",
                     isSelected
@@ -208,23 +224,25 @@ export default function FeaturedBusiness() {
                 </button>
               );
             })}
-
             {hiddenCategories.length > 0 && (
               <div className="relative">
                 <button
                   onClick={() => setIsDropdownOpen(!isDropdownOpen)}
                   className={cn(
-                    "px-4 py-2 rounded-full text-sm md:text-base transition-colors relative",
+                    "px-4 py-2 rounded-full text-sm md:text-base transition-colors relative focus:outline-none focus:ring-2 focus:ring-primary/50",
                     isDropdownOpen
-                      ? "bg-primary text-white font-medium"
+                      ? "bg-primary text-white font-semibold"
                       : "bg-gray-100 hover:bg-gray-200"
                   )}
                   disabled={isPending}
                 >
                   More Categories
-                  {isPending && hiddenCategories.some(cat => cat.Category_name === selectedCategory) && (
-                    <span className="absolute -top-1 -right-1 w-3 h-3 bg-green-500 rounded-full animate-pulse"></span>
-                  )}
+                  {isPending &&
+                    hiddenCategories.some(
+                      (cat) => cat.Category_name === selectedCategory
+                    ) && (
+                      <span className="absolute -top-1 -right-1 w-3 h-3 bg-secondary rounded-full animate-pulse" />
+                    )}
                 </button>
 
                 <AnimatePresence>
@@ -234,29 +252,32 @@ export default function FeaturedBusiness() {
                       animate={{ opacity: 1, y: 0 }}
                       exit={{ opacity: 0, y: -10 }}
                       transition={{ duration: 0.2 }}
-                      className="absolute top-full left-0 mt-2 w-48 bg-white rounded-lg shadow-lg border z-10"
+                      className="absolute top-full left-0 mt-2 w-56 max-h-64 overflow-y-auto rounded-xl shadow-lg border border-primary z-50 bg-white scrollbar-thin scrollbar-thumb-accent scrollbar-track-gray-100"
                     >
                       <div className="p-2 space-y-1">
                         {hiddenCategories.map((category) => {
-                          const isSelected = selectedCategory === category.Category_name;
+                          const isSelected =
+                            selectedCategory === category.Category_name;
                           return (
                             <button
                               key={category.Business_category_id}
                               onClick={() => {
-                                handleCategorySelect(category.Category_name || "");
+                                handleCategorySelect(
+                                  category.Category_name || ""
+                                );
                                 setIsDropdownOpen(false);
                               }}
                               className={cn(
-                                "w-full text-left px-3 py-2 rounded-md text-sm relative",
+                                "w-full text-left px-4 py-2 rounded-md text-sm transition-colors relative",
                                 isSelected
                                   ? "bg-primary/10 text-primary font-medium"
-                                  : "hover:bg-gray-100"
+                                  : "hover:bg-accent/10 text-slate-700"
                               )}
                               disabled={isPending}
                             >
                               {category.Category_name}
                               {isPending && isSelected && (
-                                <span className="absolute top-2 right-2 w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
+                                <span className="absolute top-2 right-2 w-2 h-2 bg-secondary rounded-full animate-pulse" />
                               )}
                             </button>
                           );
@@ -293,7 +314,7 @@ export default function FeaturedBusiness() {
               className="text-sm text-primary hover:text-primary/80 font-medium inline-flex items-center"
               disabled={isPending}
             >
-              <RefreshCw size={12} className="mr-1" /> 
+              <RefreshCw size={12} className="mr-1" />
               {isPending ? "Updating..." : "Clear All Filters"}
             </button>
           </>
@@ -313,7 +334,10 @@ export default function FeaturedBusiness() {
           {Array(6)
             .fill(null)
             .map((_, i) => (
-              <div key={i} className="bg-gray-100 rounded-lg overflow-hidden border border-gray-100">
+              <div
+                key={i}
+                className="bg-gray-100 rounded-lg overflow-hidden border border-gray-100"
+              >
                 <div className="h-48 bg-gray-200 animate-pulse" />
                 <div className="p-4 space-y-3">
                   <div className="h-6 bg-gray-200 rounded animate-pulse w-3/4" />
@@ -330,8 +354,8 @@ export default function FeaturedBusiness() {
       {error && (
         <div className="text-center py-10">
           <p className="text-red-500 mb-2">{error}</p>
-          <button 
-            onClick={fetchBusinesses} 
+          <button
+            onClick={fetchBusinesses}
             className="px-4 py-2 bg-primary text-white rounded-md inline-flex items-center"
           >
             <RefreshCw size={16} className="mr-2" /> Try Again
@@ -390,4 +414,4 @@ export default function FeaturedBusiness() {
       </div>
     </section>
   );
-} 
+}

@@ -20,7 +20,6 @@ export interface BusinessCardProps {
 }
 
 const BusinessCard: React.FC<BusinessCardProps> = ({ business }) => {
-  // Use optional chaining to safely access properties
   const {
     BUSINESS_ID,
     BUSINESS_NAME = "Business",
@@ -35,10 +34,7 @@ const BusinessCard: React.FC<BusinessCardProps> = ({ business }) => {
     INSTA_LINK,
   } = business || {};
 
-  // Ensure we have a valid business ID
-  if (!BUSINESS_ID) {
-    return null;
-  }
+  if (!BUSINESS_ID) return null;
 
   const slug = generateSlug(BUSINESS_NAME || "business", BUSINESS_ID);
   const rating = GOOGLE_RATING ? parseFloat(GOOGLE_RATING) : null;
@@ -49,11 +45,10 @@ const BusinessCard: React.FC<BusinessCardProps> = ({ business }) => {
     return url;
   };
 
-  // Prepare social links
   const socialLinks = {
     facebook: formatUrl(FACEBOOK_LINK),
     instagram: formatUrl(INSTA_LINK),
-    whatsapp: WHATSAPP_NUMBER ? `https://wa.me/${WHATSAPP_NUMBER}` : null,
+    whatsapp: formatUrl(WHATSAPP_NUMBER),
     website: formatUrl(WEB_ADDRESS),
   };
 
@@ -62,141 +57,118 @@ const BusinessCard: React.FC<BusinessCardProps> = ({ business }) => {
   );
 
   return (
-    <div className="group bg-white rounded-xl shadow-sm hover:shadow-md transition-all duration-300 overflow-hidden border border-gray-100">
-      {/* Image with link */}
+    <div className="group relative bg-white rounded-xl border border-gray-200 shadow-sm hover:shadow-md transition-all duration-300 overflow-hidden w-full max-w-md h-[420px] flex flex-col">
+      {/* Image */}
       <Link
         href={`/business/${slug}`}
-        className="block relative h-48 w-full bg-gray-50"
+        className="block relative h-40 w-full bg-gray-100"
       >
         {IMAGE_URL ? (
           <Image
             src={IMAGE_URL}
-            alt={BUSINESS_NAME || "Business image"}
+            alt={BUSINESS_NAME}
             fill
             className="object-cover transition-transform duration-500 group-hover:scale-105"
-            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-            priority={false}
+            sizes="100vw"
           />
         ) : (
           <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-gray-100 to-gray-200">
-            <span className="text-2xl font-bold text-gray-400 uppercase">
-              {(BUSINESS_NAME || "B").charAt(0)}
+            <span className="text-3xl font-bold text-gray-400 uppercase">
+              {BUSINESS_NAME.charAt(0)}
             </span>
           </div>
         )}
       </Link>
 
       {/* Content */}
-      <div className="p-4">
-        <div className="flex justify-between items-start gap-2">
-          <Link
-            href={`/business/${slug}`}
-            className="hover:opacity-90 transition-opacity"
-          >
-            <h3 className="text-lg font-semibold text-gray-900 line-clamp-1">
-              {BUSINESS_NAME || "Business"}
-            </h3>
-          </Link>
+      <div className="flex-1 flex flex-col justify-between p-4">
+        <div>
+          {/* Title & Rating */}
+          <div className="flex justify-between items-start">
+            <Link href={`/business/${slug}`}>
+              <h3 className="text-base font-semibold text-primary line-clamp-1">
+                {BUSINESS_NAME}
+              </h3>
+            </Link>
+            {rating && (
+              <div className="flex items-center bg-yellow-50 px-2 py-0.5 rounded-full">
+                <Star size={14} className="text-accent-dark fill-accent" />
+                <span className="ml-1 text-xs text-accent-dark">
+                  {rating.toFixed(1)}
+                </span>
+              </div>
+            )}
+          </div>
 
-          {rating && (
-            <div className="flex items-center bg-yellow-50 px-2 py-1 rounded-full">
-              <Star size={14} className="text-yellow-500 fill-yellow-400" />
-              <span className="ml-1 text-xs font-medium text-yellow-700">
-                {rating.toFixed(1)}
-              </span>
-            </div>
+          {/* Address */}
+          {ADDRESS_TOWN && (
+            <p className="mt-1 flex items-center text-sm text-gray-500">
+              <MapPin size={14} className="mr-1.5 text-primary" />
+              <span className="line-clamp-1">{ADDRESS_TOWN}</span>
+            </p>
           )}
+
+          {/* Description */}
+          {DESCRIPTION && (
+            <p className="mt-2 text-sm text-gray-600 line-clamp-2">
+              {DESCRIPTION}
+            </p>
+          )}
+
+          {/* Contact Info */}
+          <div className="mt-3 space-y-1 text-sm text-gray-700">
+            {PHONE_NUMBER && (
+              <div className="flex items-center">
+                <Phone size={14} className="mr-2 text-primary" />
+                <a
+                  href={`tel:${PHONE_NUMBER}`}
+                  className="hover:text-accent transition-colors"
+                >
+                  {PHONE_NUMBER}
+                </a>
+              </div>
+            )}
+
+            {WEB_ADDRESS && (
+              <div className="flex items-center">
+                <Globe size={14} className="mr-2 text-primary" />
+                <a
+                  href={formatUrl(WEB_ADDRESS) || "#"}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="hover:text-accent transition-colors line-clamp-1"
+                >
+                  {WEB_ADDRESS.replace(/^https?:\/\//, "").split("/")[0]}
+                </a>
+              </div>
+            )}
+          </div>
         </div>
 
-        {ADDRESS_TOWN && (
-          <p className="mt-1 flex items-center text-sm text-gray-500">
-            <MapPin size={14} className="mr-1.5 flex-shrink-0" />
-            <span className="line-clamp-1">{ADDRESS_TOWN}</span>
-          </p>
-        )}
-
-        {DESCRIPTION && (
-          <p className="mt-2 text-sm text-gray-600 line-clamp-2">
-            {DESCRIPTION}
-          </p>
-        )}
-
-        {/* Contact Info */}
-        <div className="mt-4 space-y-2">
-          {PHONE_NUMBER && (
-            <div className="flex items-center text-sm text-gray-700">
-              <Phone size={14} className="mr-2 flex-shrink-0 text-gray-500" />
-              <a
-                href={`tel:${PHONE_NUMBER}`}
-                className="hover:text-blue-600 transition-colors"
-              >
-                {PHONE_NUMBER}
-              </a>
-            </div>
-          )}
-
-          {/* {EMAIL_ADDRESS && (
-            <div className="flex items-center text-sm text-gray-700">
-              <Mail size={14} className="mr-2 flex-shrink-0 text-gray-500" />
-              <a
-                href={`mailto:${EMAIL_ADDRESS}`}
-                className="hover:text-blue-600 transition-colors line-clamp-1"
-              >
-                {EMAIL_ADDRESS}
-              </a>
-            </div>
-          )} */}
-
-          {WEB_ADDRESS && (
-            <div className="flex items-center text-sm text-gray-700">
-              <Globe size={14} className="mr-2 flex-shrink-0 text-blue-500" />
-              <a
-                href={formatUrl(WEB_ADDRESS) || "#"}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="hover:text-blue-600 transition-colors line-clamp-1"
-              >
-                {WEB_ADDRESS.replace(/^https?:\/\//, "").split("/")[0]}
-              </a>
-            </div>
-          )}
-        </div>
-
-        {/* Social Links */}
-        {hasSocialLinks && (
-          <div className="mt-4 pt-4 border-t border-gray-100">
-            <div className="flex flex-wrap gap-3 items-center">
+        {/* Bottom Section */}
+        <div className="mt-4 pt-4 border-t border-gray-100 flex items-center justify-between">
+          {/* Socials */}
+          {hasSocialLinks && (
+            <div className="flex gap-2 items-center">
               <SocialLinks
                 {...socialLinks}
                 size="sm"
-                variant="circle"
                 color="colored"
-                className="flex-wrap gap-3"
+                variant="default"
+                className="mt-2 justify-center"
               />
-
-              {WHATSAPP_NUMBER && (
-                <a
-                  href={`https://wa.me/${WHATSAPP_NUMBER}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="transition-all duration-200 flex items-center justify-center rounded-full border border-green-500 w-8 h-8 group hover:bg-green-50"
-                  aria-label="WhatsApp"
-                >
-                  <MessageCircle className="w-4 h-4 text-green-600" />
-                </a>
-              )}
             </div>
-          </div>
-        )}
+          )}
 
-        {/* Action Button */}
-        <Link
-          href={`/business/${slug}/reservation`}
-          className="mt-4 w-full inline-flex items-center justify-center px-4 py-2.5 bg-primary hover:bg-accent text-white text-sm font-medium rounded-lg transition-colors shadow-sm"
-        >
-          <Calendar size={16} className="mr-2" />
-          Book Now
-        </Link>
+          {/* Reserve Link */}
+          <Link
+            href={`/business/${slug}/reservation`}
+            className="text-sm text-primary font-medium flex items-center gap-1 hover:underline"
+          >
+            <Calendar size={14} />
+            Reserve Table
+          </Link>
+        </div>
       </div>
     </div>
   );

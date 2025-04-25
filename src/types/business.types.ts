@@ -1,5 +1,7 @@
 // types/business.types.ts
 
+import { Prisma } from "@prisma/client";
+
 export interface BusinessDetail {
   BUSINESS_ID: number;
   BUSINESS_NAME?: string;
@@ -31,9 +33,10 @@ export interface BusinessDetail {
 }
 
 export type BusinessCategory = {
-  Business_category_id: number;
-  Category_name: string;
-  // Additional fields that might be in database results
   id?: number;
   CNT?: bigint;
+  Business_category_id: number;
+  Category_name: string;
 };
+
+export type BusinessResult = Prisma.business_detail_view_allGetPayload<{}>[];

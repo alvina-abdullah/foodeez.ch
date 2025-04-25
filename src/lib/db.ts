@@ -2,7 +2,8 @@
 
 import { Prisma } from "@prisma/client";
 import { prisma } from "./prisma"
-import { BusinessCategory, BusinessDetail } from "@/types/business.types";
+import { BusinessDetail, BusinessResult } from "@/types/business.types";
+
 
 // Example function to test the schema
 export async function getBusinesses() {
@@ -57,8 +58,6 @@ interface BusinessQueryParams {
   limit?: number;
 }
 
-type BusinessResult = Prisma.business_detail_view_allGetPayload<{}>[];
-
 export async function getBusinessesByLocation({
   city,
   zipCode,
@@ -101,38 +100,6 @@ export async function getBusinessesByLocation({
 }
 
 
-export async function getFeaturedBusinesses(limit: number = 9): Promise<BusinessResult> {
-  try {
-    // Fetch top businesses based on ranking
-    const businesses = await prisma.business_detail_view_all.findMany({
-      where: {
-        Ranking: {
-          not: undefined // Ensure ranking exists
-        }
-      },
-      orderBy: {
-        Ranking: 'asc'
-      },
-      take: Math.min(limit, 50), // Prevent fetching too many results
-    });
-
-    return businesses;
-  } catch (error) {
-    if (error instanceof Prisma.PrismaClientKnownRequestError) {
-      console.error('Database error fetching featured businesses:', error.code, error.message);
-    } else if (error instanceof Error) {
-      console.error('Unexpected error:', error.message);
-    } else {
-      console.error('Unknown error:', error);
-    }
-
-    return [];
-  }
-}
-
-/**
- * Get categories from the businessCategory table for displaying in the UI
- */
 export async function getBusinessCategories() {
   try {
     // Fetch from the main businessCategory table (not view)
@@ -162,7 +129,7 @@ export async function getBusinessesByType(params: {
   foodType: string;
   category?: string;
   limit?: number;
-}): Promise<any[]> {
+}): Promise<BusinessDetail[]> {
   const { foodType, category, limit = 9 } = params;
   const normalizedType = foodType.toLowerCase();
 
@@ -240,7 +207,7 @@ export async function getBusinessesByTypeAndCategories(params: {
   foodType: string;
   categoryId?: number; // The category ID from businessCategory table
   limit?: number;
-}): Promise<any[]> {
+}): Promise<BusinessDetail[]> {
   const { foodType, categoryId, limit = 12 } = params;
   const normalizedType = foodType.toLowerCase();
   
