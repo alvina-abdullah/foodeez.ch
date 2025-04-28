@@ -143,6 +143,12 @@ export default function ReservationPage() {
     );
   }
 
+  // Meta data
+  const title = business.BUSINESS_NAME ? `Reserve a Table at ${business.BUSINESS_NAME} | Foodeez` : 'Reserve a Table | Foodeez';
+  const description = business.DESCRIPTION ? `Reserve your table at ${business.BUSINESS_NAME} on Foodeez. ${business.DESCRIPTION}` : `Reserve your table at ${business.BUSINESS_NAME} on Foodeez.`;
+  const image = business.IMAGE_URL || '/reservation-default.jpg';
+  const url = typeof window !== 'undefined' ? window.location.href : '';
+
   if (isSuccess) {
     return (
       <div className="max-w-3xl mx-auto px-4 py-12">
@@ -159,52 +165,68 @@ export default function ReservationPage() {
   }
 
   return (
-    <div className="bg-background min-h-screen py-12">
-      <div className="max-w-5xl mx-auto px-4">
-        <div className="mb-6">
-          <Link
-            href={`/business/${slug}`}
-            className="inline-flex items-center text-primary hover:text-primary-dark"
-          >
-            <ChevronLeft size={16} className="mr-1" />
-            Back to {business.BUSINESS_NAME}
-          </Link>
-        </div>
-        <ReservationHero business={business} />
-        <div className="flex flex-col md:flex-row gap-8">
-          {/* Left: Image */}
-          <div className="md:w-1/2 w-full flex flex-col gap-6">
-            <ReservationImage business={business} />
+    <>
+      <head>
+        <title>{title}</title>
+        <meta name="description" content={description} />
+        <meta property="og:title" content={title} />
+        <meta property="og:description" content={description} />
+        <meta property="og:image" content={image} />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content={url} />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content={title} />
+        <meta name="twitter:description" content={description} />
+        <meta name="twitter:image" content={image} />
+        <link rel="canonical" href={url} />
+      </head>
+      <div className="bg-background min-h-screen py-12">
+        <div className="max-w-5xl mx-auto px-4">
+          <div className="mb-6">
+            <Link
+              href={`/business/${slug}`}
+              className="inline-flex items-center text-primary hover:text-primary-dark"
+            >
+              <ChevronLeft size={16} className="mr-1" />
+              Back to {business.BUSINESS_NAME}
+            </Link>
           </div>
-          {/* Right: Contact Info & Form */}
-          <div className="md:w-1/2 w-full flex flex flex-col">
-            <ContactInfoCard business={business} />
-            <div className="bg-white rounded-xl shadow-lg overflow-hidden">
-              <div className="p-6 md:p-8">
-                <ReservationForm
-                  businessName={business.BUSINESS_NAME}
-                  formData={formData}
-                  setFormData={setFormData}
-                  currentStep={currentStep}
-                  setCurrentStep={setCurrentStep}
-                  isSubmitting={isSubmitting}
-                  handleSubmit={handleSubmit}
-                >
-                  {currentStep === 2 && (
-                    <ReservationSummary
-                      business={business}
-                      date={formData.date}
-                      time={formData.time}
-                      guests={formData.guests}
-                      occasion={formData.occasion}
-                    />
-                  )}
-                </ReservationForm>
+          <ReservationHero business={business} />
+          <div className="flex flex-col md:flex-row gap-8">
+            {/* Left: Image */}
+            <div className="md:w-1/2 w-full flex flex-col gap-6">
+              <ReservationImage business={business} />
+            </div>
+            {/* Right: Contact Info & Form */}
+            <div className="md:w-1/2 w-full flex flex flex-col">
+              <ContactInfoCard business={business} />
+              <div className="bg-white rounded-xl shadow-lg overflow-hidden">
+                <div className="p-6 md:p-8">
+                  <ReservationForm
+                    businessName={business.BUSINESS_NAME}
+                    formData={formData}
+                    setFormData={setFormData}
+                    currentStep={currentStep}
+                    setCurrentStep={setCurrentStep}
+                    isSubmitting={isSubmitting}
+                    handleSubmit={handleSubmit}
+                  >
+                    {currentStep === 2 && (
+                      <ReservationSummary
+                        business={business}
+                        date={formData.date}
+                        time={formData.time}
+                        guests={formData.guests}
+                        occasion={formData.occasion}
+                      />
+                    )}
+                  </ReservationForm>
+                </div>
               </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
+    </>
   );
 } 

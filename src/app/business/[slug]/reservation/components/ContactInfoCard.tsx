@@ -1,5 +1,5 @@
 import React from 'react';
-import { MapPin, Phone, Mail } from 'lucide-react';
+import { MapPin, Phone, Globe } from 'lucide-react';
 import type { BusinessData } from '../page';
 
 interface ContactInfoCardProps {
@@ -8,7 +8,7 @@ interface ContactInfoCardProps {
 
 const ContactInfoCard: React.FC<ContactInfoCardProps> = ({ business }) => {
   return (
-    <div className="bg-background-card rounded-xl shadow p-6 mb-6">
+    <div className="p-6">
       <h2 className="text-xl font-semibold text-text-main mb-4">Contact Information</h2>
       <ul className="space-y-3">
         {business.ADDRESS_STREET && (
@@ -25,7 +25,7 @@ const ContactInfoCard: React.FC<ContactInfoCardProps> = ({ business }) => {
         )}
         {business.WEB_ADDRESS && (
           <li className="flex items-center gap-3 text-text-muted">
-            <Mail className="text-primary w-5 h-5" />
+            <Globe className="text-primary w-5 h-5" />
             <span>{business.WEB_ADDRESS}</span>
           </li>
         )}
