@@ -43,7 +43,7 @@ export default function Home() {
       <FaqSection />
 
       {/* Main CTA Section */}
-      <CtaSection />
+      {/* <CtaSection /> */}
     </div>
   );
 }

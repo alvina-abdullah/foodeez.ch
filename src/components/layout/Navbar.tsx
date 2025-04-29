@@ -22,7 +22,7 @@ export const Navbar = () => {
   const router = useRouter();
 
   useEffect(() => {
-    const handleScroll = () => {
+    const handleScroll = () => {  
       setIsScrolled(window.scrollY > 10);
     };
 
@@ -159,7 +159,7 @@ export const Navbar = () => {
               <button
                 type="button"
                 onClick={() => setIsSearchOpen(false)}
-                className="ml-3 text-text-main hover:text-primary transition-colors"
+                className="ml-3 hover:text-primary transition-colors"
               >
                 <X className="w-6 h-6" />
               </button>

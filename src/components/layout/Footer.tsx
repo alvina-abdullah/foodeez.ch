@@ -28,51 +28,51 @@ export default function Footer() {
   };
 
   return (
-    <footer className="bg-gray-900 text-white pt-16 pb-8">
+    <footer className="text-primary pt-16 pb-8">
       <div className="container-custom">
         {/* Top Section - Help banner */}
-        <div className="bg-primary rounded-xl p-8 mb-12 flex flex-col md:flex-row md:items-center justify-between">
+        <div className="bg-primary text-white rounded-xl p-8 mb-12 flex flex-col md:flex-row md:items-center justify-between">
           <div>
             <h3 className="text-2xl font-bold mb-2">Help millions to find the right Place & Food to enjoy</h3>
-            <p className="text-white/80">Join our community and share your experiences</p>
+            <p className="">Join our community and share your experiences</p>
           </div>
-          <Link 
-            href="/signup" 
+          <Link
+            href="/signup"
             className="mt-4 md:mt-0 inline-flex items-center px-6 py-3 bg-white text-primary font-medium rounded-full hover:bg-gray-100 transition-colors"
           >
             Share your experience
             <ArrowRight className="ml-2 w-4 h-4" />
           </Link>
         </div>
-        
+
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8 mb-12">
           {/* Brand and About */}
           <div className="lg:col-span-2">
             <div className="mb-6">
-              <h2 className="text-2xl font-bold text-white">Foodeez</h2>
+              <h2 className="text-2xl font-bold">Foodeez</h2>
             </div>
-            <p className="mb-6 max-w-md text-gray-400">
+            <p className="mb-6 max-w-md">
               Foodeez is a platform that connects food lovers with amazing restaurants. Discover, visit and review food from the best places in your area.
             </p>
-            
+
             <div className="space-y-3 mb-6">
               <div className="flex items-start">
-                <MapPin className="w-5 h-5 text-gray-400 mr-3 mt-0.5" />
+                <MapPin className="w-5 h-5 mr-3 mt-0.5" />
                 <div>
-                  <p className="text-gray-400">123 Food Street, Foodville,</p>
-                  <p className="text-gray-400">Zurich, Switzerland</p>
+                  <p>123 Food Street, Foodville,</p>
+                  <p>Zurich, Switzerland</p>
                 </div>
               </div>
               <div className="flex items-center">
-                <Phone className="w-5 h-5 text-gray-400 mr-3" />
-                <p className="text-gray-400">+41 23 456 7890</p>
+                <Phone className="w-5 h-5 mr-3" />
+                <p>+41 23 456 7890</p>
               </div>
               <div className="flex items-center">
-                <Mail className="w-5 h-5 text-gray-400 mr-3" />
-                <p className="text-gray-400">info@foodeez.com</p>
+                <Mail className="w-5 h-5 mr-3" />
+                <p>info@foodeez.com</p>
               </div>
             </div>
-            
+
             <div className="flex space-x-3">
               <SocialLinks
                 {...socialLinks}
@@ -85,30 +85,30 @@ export default function Footer() {
 
           {/* Quick Links */}
           <div>
-            <h3 className="text-lg font-semibold mb-5 text-white">For Users</h3>
+            <h3 className="text-lg font-semibold mb-5">For Users</h3>
             <ul className="space-y-3">
               <li>
-                <Link href="/discover" className="text-gray-400 hover:text-primary transition-colors">
+                <Link href="/discover" className=" hover:text-primary transition-colors">
                   Find Restaurants
                 </Link>
               </li>
               <li>
-                <Link href="/about" className="text-gray-400 hover:text-primary transition-colors">
+                <Link href="/about" className=" hover:text-primary transition-colors">
                   About Us
                 </Link>
               </li>
               <li>
-                <Link href="/blog" className="text-gray-400 hover:text-primary transition-colors">
+                <Link href="/blog" className=" hover:text-primary transition-colors">
                   Food Blog
                 </Link>
               </li>
               <li>
-                <Link href="/help" className="text-gray-400 hover:text-primary transition-colors">
+                <Link href="/help" className="hover:text-primary transition-colors">
                   Help Center
                 </Link>
               </li>
               <li>
-                <Link href="/mobile-app" className="text-gray-400 hover:text-primary transition-colors">
+                <Link href="/mobile-app" className="hover:text-primary transition-colors">
                   Mobile App
                 </Link>
               </li>
@@ -117,30 +117,30 @@ export default function Footer() {
 
           {/* For Businesses */}
           <div>
-            <h3 className="text-lg font-semibold mb-5 text-white">For Businesses</h3>
+            <h3 className="text-lg font-semibold mb-5">For Businesses</h3>
             <ul className="space-y-3">
               <li>
-                <Link href="/business/register" className="text-gray-400 hover:text-primary transition-colors">
+                <Link href="/business/register" className="hover:text-primary transition-colors">
                   Register Restaurant
                 </Link>
               </li>
               <li>
-                <Link href="/business/login" className="text-gray-400 hover:text-primary transition-colors">
+                <Link href="/business/login" className="hover:text-primary transition-colors">
                   Business Login
                 </Link>
               </li>
               <li>
-                <Link href="/advertise" className="text-gray-400 hover:text-primary transition-colors">
+                <Link href="/advertise" className="hover:text-primary transition-colors">
                   Advertise with Us
                 </Link>
               </li>
               <li>
-                <Link href="/business/resources" className="text-gray-400 hover:text-primary transition-colors">
+                <Link href="/business/resources" className=" hover:text-primary transition-colors">
                   Business Resources
                 </Link>
               </li>
               <li>
-                <Link href="/pricing" className="text-gray-400 hover:text-primary transition-colors">
+                <Link href="/pricing" className=" hover:text-primary transition-colors">
                   Pricing Plans
                 </Link>
               </li>
@@ -149,20 +149,22 @@ export default function Footer() {
 
           {/* Newsletter */}
           <div>
-            <h3 className="text-lg font-semibold mb-5 text-white">Newsletter</h3>
-            <p className="mb-4 text-gray-400">Subscribe to get the latest updates on new restaurants and offers.</p>
+            <h3 className="text-lg font-semibold mb-5 text-text">Newsletter</h3>
+            <p className="mb-4 text-text">
+              Subscribe to get the latest updates on new restaurants and offers.
+            </p>
             <form onSubmit={handleSubscribe} className="relative">
               <input
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="Your email address"
-                className="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg text-gray-200 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+                className="w-full px-4 py-3 bg-background border border-gray-400 rounded-lg text-text focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
                 required
               />
               <button
                 type="submit"
-                className="absolute right-1 top-1 bottom-1 px-3 bg-primary rounded-lg flex items-center justify-center hover:bg-primary-dark transition-colors"
+                className="absolute right-1 top-1 bottom-1 px-3 bg-primary text-white rounded-lg flex items-center justify-center hover:bg-primary/90 transition-colors"
                 aria-label="Subscribe"
               >
                 <Send size={16} />
@@ -174,24 +176,25 @@ export default function Footer() {
               </p>
             )}
           </div>
+
         </div>
 
         {/* Horizontal divider */}
-        <div className="h-px bg-gray-800 my-8" />
+        <div className="h-px bg-black/60 my-8" />
 
         {/* Bottom section */}
         <div className="flex flex-col md:flex-row justify-between items-center">
-          <div className="text-sm mb-4 md:mb-0 text-gray-500">
+          <div className="text-sm mb-4 md:mb-0">
             © {new Date().getFullYear()} Foodeez. All rights reserved.
           </div>
           <div className="flex flex-wrap justify-center gap-4 md:gap-6">
-            <Link href="/terms" className="text-gray-500 hover:text-primary text-sm transition-colors">
+            <Link href="/terms" className="hover:text-primary text-sm transition-colors">
               Terms of Service
             </Link>
-            <Link href="/privacy" className="text-gray-500 hover:text-primary text-sm transition-colors">
+            <Link href="/privacy" className="hover:text-primary text-sm transition-colors">
               Privacy Policy
             </Link>
-            <Link href="/cookies" className="text-gray-500 hover:text-primary text-sm transition-colors">
+            <Link href="/cookies" className="hover:text-primary text-sm transition-colors">
               Cookie Policy
             </Link>
           </div>
