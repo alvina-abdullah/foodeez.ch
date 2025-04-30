@@ -10,7 +10,7 @@ interface SocialLinksProps {
   linkedin?: string | null;
   youtube?: string | null;
   tiktok?: string | null;
-  size?: "sm" | "md" | "lg";
+  size?: "sm" | "md" | "lg" | "xl" | "2xl";
   variant?: "default" | "circle" | "filled";
   className?: string;
 }
@@ -19,6 +19,8 @@ const ICON_SIZE = {
   sm: 16,
   md: 24,
   lg: 32,
+  xl: 40,
+  "2xl": 48,
 };
 
 export function SocialLinks({

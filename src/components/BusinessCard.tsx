@@ -86,7 +86,8 @@ const BusinessCard: React.FC<BusinessCardProps> = ({ business }) => {
           <div className="flex items-center gap-0.5 self-end">
             {[...Array(5)].map((_, i) => {
               const starValue = Math.min(1, Math.max(0, rating - i));
-              return <StarIcon key={i} fillLevel={starValue} size={16} />;
+              
+              return <StarIcon key={i} fillLevel={starValue} size={16}  />;
             })}
           </div>
         )}
@@ -162,7 +163,7 @@ const BusinessCard: React.FC<BusinessCardProps> = ({ business }) => {
             <div className="flex gap-1 items-center">
               <SocialLinks
                 {...socialLinks}
-                size="md"
+                size="lg"
                 variant="default"
                 className="mt-2 justify-center drop-shadow-xl "
               />

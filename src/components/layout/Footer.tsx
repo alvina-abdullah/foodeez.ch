@@ -28,7 +28,7 @@ export default function Footer() {
   };
 
   return (
-    <footer className="text-primary pt-16 pb-8">
+    <footer className="bg-accent text-white pt-16 pb-8">
       <div className="container-custom">
         {/* Top Section - Help banner */}
         <div className="bg-primary text-white rounded-xl p-8 mb-12 flex flex-col md:flex-row md:items-center justify-between">
@@ -76,8 +76,8 @@ export default function Footer() {
             <div className="flex space-x-3">
               <SocialLinks
                 {...socialLinks}
-                size="md"
-                color="white"
+                size="xl"
+               
                 variant="default"
               />
             </div>
