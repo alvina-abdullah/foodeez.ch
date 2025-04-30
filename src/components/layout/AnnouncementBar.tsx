@@ -10,8 +10,8 @@ interface AnnouncementBarProps {
 }
 
 export default function AnnouncementBar({
-  message = "🎉 Limited Time Offer: Get 15% off on your first restaurant review!",
-  bgColor = "bg-accent",
+  message = "Announcment Bar",
+  bgColor = "bg-accent-400",
   textColor = "text-white",
 }: AnnouncementBarProps) {
   const [isVisible, setIsVisible] = useState(true);
@@ -22,7 +22,7 @@ export default function AnnouncementBar({
     <div
       className={`w-full ${bgColor} ${textColor} py-2.5 px-4 relative flex items-center justify-center text-center shadow-sm`}
     >
-      <Bell className="w-4 h-4 mr-2 hidden sm:block" />
+      {/* <Bell className="w-4 h-4 mr-2 hidden sm:block" /> */}
       
       {/* Container for message with max width for readability */}
       <div className="max-w-5xl w-full text-sm sm:text-base font-medium">

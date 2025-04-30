@@ -19,14 +19,14 @@ export default function AccordionMenu({ label, items }: AccordionMenuProps) {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <div className="px-2">
+    <div>
       <button
         onClick={() => setIsOpen((prev) => !prev)}
-        className="w-full flex items-center justify-between text-left px-3 py-2 text-base font-medium text-secondary-600 hover:text-primary-600 transition"
+        className={`w-full flex items-center justify-between text-left px-3 py-2 text-base font-medium ${isOpen ? 'text-primary' : 'text-black'} transition`}
       >
         {label}
         <ChevronDown
-          className={`ml-2 h-5 w-5 transition-transform duration-300 ${isOpen ? 'rotate-180 text-primary-600' : ''}`}
+          className={`h-5 w-5 transition-transform duration-300 ${isOpen ? 'rotate-180 text-primary' : 'rotate-0 text-black'}`}
         />
       </button>
 

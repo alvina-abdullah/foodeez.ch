@@ -330,8 +330,8 @@ export default function FeaturedBusiness() {
 
       {/* Content Section */}
       {showSkeleton && (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {Array(6)
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          {Array(12)
             .fill(null)
             .map((_, i) => (
               <div
@@ -384,7 +384,7 @@ export default function FeaturedBusiness() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.3 }}
-            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6"
           >
             {businesses.map((business, index) => (
               <motion.div

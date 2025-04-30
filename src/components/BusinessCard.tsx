@@ -3,16 +3,11 @@
 import React from "react";
 import Link from "next/link";
 import Image from "next/image";
-import {
-  Star,
-  MapPin,
-  Calendar,
-  Globe,
-  Phone,
-} from "lucide-react";
+import { MapPin, Calendar, Globe, Phone } from "lucide-react";
 import { generateSlug } from "@/lib/utils/genSlug";
 import { BusinessDetail } from "@/types/business.types";
 import { SocialLinks } from "@/components/core/SocialLinks";
+import StarIcon from "./ui/StarIcon";
 
 export interface BusinessCardProps {
   business: BusinessDetail;
@@ -30,6 +25,7 @@ const BusinessCard: React.FC<BusinessCardProps> = ({ business }) => {
     WHATSAPP_NUMBER,
     WEB_ADDRESS,
     FACEBOOK_LINK,
+    GOOGLE_PROFILE,
     INSTA_LINK,
   } = business || {};
 
@@ -39,7 +35,7 @@ const BusinessCard: React.FC<BusinessCardProps> = ({ business }) => {
   const rating = GOOGLE_RATING ? parseFloat(GOOGLE_RATING) : null;
 
   const formatUrl = (url: string | undefined) => {
-    if (!url || url.trim() === '' || url === '0' || url === 'null') return null;
+    if (!url || url.trim() === "" || url === "0" || url === "null") return null;
 
     // Handle regular URLs
     if (!/^https?:\/\//i.test(url)) {
@@ -52,7 +48,6 @@ const BusinessCard: React.FC<BusinessCardProps> = ({ business }) => {
     facebook: formatUrl(FACEBOOK_LINK),
     instagram: formatUrl(INSTA_LINK),
     whatsapp: WHATSAPP_NUMBER,
-    website: formatUrl(WEB_ADDRESS),
   };
 
   const hasSocialLinks = Object.values(socialLinks).some(
@@ -60,11 +55,13 @@ const BusinessCard: React.FC<BusinessCardProps> = ({ business }) => {
   );
 
   return (
-    <div className="group relative bg-white rounded-xl border border-gray-200 shadow-sm hover:shadow-md transition-all duration-300 overflow-hidden w-full max-w-md h-[420px] flex flex-col">
+    <div className="group relative bg-gray-100 rounded-xl border border-gray-200 shadow-sm hover:shadow-md transition-all duration-300 overflow-hidden w-full max-w-md h-[420px] flex flex-col">
       {/* Image */}
       <Link
         href={`/business/${slug}`}
-        className="block relative h-40 w-full bg-gray-100"
+        target="_blank"
+        rel="noopener noreferrer"
+        className="block relative w-full h-48 bg-gray-100 overflow-hidden"
       >
         {IMAGE_URL ? (
           <Image
@@ -85,31 +82,25 @@ const BusinessCard: React.FC<BusinessCardProps> = ({ business }) => {
 
       {/* Content */}
       <div className="flex-1 flex flex-col justify-between p-4">
-        <div>
-          {/* Title & Rating */}
-          <div className="flex justify-between items-start">
-            <Link href={`/business/${slug}`}>
-              <h3 className="text-base font-semibold text-primary line-clamp-1">
-                {BUSINESS_NAME}
-              </h3>
-            </Link>
-            {rating && (
-              <div className="flex items-center bg-yellow-50 px-2 py-0.5 rounded-full">
-                <Star size={14} className="text-accent-dark fill-accent" />
-                <span className="ml-1 text-xs text-accent-dark">
-                  {rating.toFixed(1)}
-                </span>
-              </div>
-            )}
+        {rating !== null && (
+          <div className="flex items-center gap-0.5 self-end">
+            {[...Array(5)].map((_, i) => {
+              const starValue = Math.min(1, Math.max(0, rating - i));
+              return <StarIcon key={i} fillLevel={starValue} size={16} />;
+            })}
           </div>
-
-          {/* Address */}
-          {ADDRESS_TOWN && (
-            <p className="mt-1 flex items-center text-sm text-gray-500">
-              <MapPin size={14} className="mr-1.5 text-primary" />
-              <span className="line-clamp-1">{ADDRESS_TOWN}</span>
-            </p>
-          )}
+        )}
+        <div className="mt-2">
+          {/* Title */}
+          <Link
+            href={`/business/${slug}`}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <h3 className="text-lg font-semibold text-primary  line-clamp-2">
+              {BUSINESS_NAME}
+            </h3>
+          </Link>
 
           {/* Description */}
           {DESCRIPTION && (
@@ -118,8 +109,24 @@ const BusinessCard: React.FC<BusinessCardProps> = ({ business }) => {
             </p>
           )}
 
+          {/* Address */}
+          {ADDRESS_TOWN &&
+            (GOOGLE_PROFILE ? (
+              <Link href={GOOGLE_PROFILE} target="_blank">
+                <p className="mt-6 flex items-center text-sm text-gray-500 hover:text-primary transition">
+                  <MapPin size={14} className="mr-1.5 text-primary" />
+                  <span className="line-clamp-1">{ADDRESS_TOWN}</span>
+                </p>
+              </Link>
+            ) : (
+              <div className="mt-6 flex items-center text-sm text-gray-400 cursor-not-allowed">
+                <MapPin size={14} className="mr-1.5 text-gray-400" />
+                <span className="line-clamp-1">{ADDRESS_TOWN}</span>
+              </div>
+            ))}
+
           {/* Contact Info */}
-          <div className="mt-3 space-y-1 text-sm text-gray-700">
+          <div className="mt-1 space-y-1 text-sm text-gray-700">
             {PHONE_NUMBER && (
               <div className="flex items-center">
                 <Phone size={14} className="mr-2 text-primary" />
@@ -152,13 +159,12 @@ const BusinessCard: React.FC<BusinessCardProps> = ({ business }) => {
         <div className="mt-4 pt-4 border-t border-gray-100 flex items-center justify-between">
           {/* Socials */}
           {hasSocialLinks && (
-            <div className="flex gap-2 items-center">
+            <div className="flex gap-1 items-center">
               <SocialLinks
                 {...socialLinks}
-                size="sm"
-                color="colored"
+                size="md"
                 variant="default"
-                className="mt-2 justify-center"
+                className="mt-2 justify-center drop-shadow-xl "
               />
             </div>
           )}

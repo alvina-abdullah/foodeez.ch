@@ -3,7 +3,8 @@ import { Inter, Poppins } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
-import AnnouncementBar from "@/components/layout/AnnouncementBar";
+// import AnnouncementBar from "@/components/layout/AnnouncementBar";
+import AnnouncementBar2 from "@/components/layout/AnnouncmentBar2";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -30,8 +31,8 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${inter.variable} ${poppins.variable} scroll-smooth`}>
       <body className="min-h-screen flex flex-col font-sans bg-background text-text-main">
-        <AnnouncementBar />
-        {/* <TopHeader /> */}
+        {/* <AnnouncementBar /> */}
+        <AnnouncementBar2 />
         <Navbar />
         {/* Content padding to avoid overlap */}
         <main className="">
