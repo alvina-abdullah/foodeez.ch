@@ -43,7 +43,6 @@ export default function FeaturedBusiness() {
       const categoryData = await getBusinessCategories();
       if (Array.isArray(categoryData) && categoryData.length > 0) {
         setCategories(categoryData);
-        console.log("Categories loaded:", categoryData);
       } else {
         console.error("Invalid or empty category data:", categoryData);
         setCategoryError("Could not load categories");

@@ -172,6 +172,8 @@ const BusinessCard: React.FC<BusinessCardProps> = ({ business }) => {
           {/* Reserve Link */}
           <Link
             href={`/business/${slug}/reservation`}
+            target="_blank"
+            rel="noopener noreferrer"
             className="text-sm text-primary font-medium flex items-center gap-1 hover:underline"
           >
             <Calendar size={14} />

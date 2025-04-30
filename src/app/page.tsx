@@ -10,6 +10,7 @@ import CtaSection from "@/components/home/CtaSection";
 import FaqSection from "@/components/home/FaqSection";
 import HeroSection from "@/components/home/HeroSection";
 import FeaturedBusiness from "@/components/home/FeaturedBusiness";
+import MapSection from "@/components/home/MapSection";
 
 export default function Home() {
   return (
@@ -42,12 +43,15 @@ export default function Home() {
       {/* FAQ Section */}
       <FaqSection />
 
+      {/* Map  Section */}
+      <MapSection />
+
       {/* Main CTA Section */}
+
       {/* <CtaSection /> */}
     </div>
   );
 }
-
 
 /*
 

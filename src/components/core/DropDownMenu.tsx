@@ -75,7 +75,7 @@ export default function DropdownMenu({ label, items }: DropdownMenuProps) {
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
     >
-      <button className="flex items-center px-3 py-2 text-sm font-medium text-secondary-600 hover:text-primary-600 transition-colors">
+      <button className="flex items-center px-3 py-2 text-sm font-medium hover:text-primary transition-colors">
         {label}
         <motion.span
           animate={{ rotate: isOpen ? 180 : 0 }}
