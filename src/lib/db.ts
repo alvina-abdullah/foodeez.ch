@@ -99,105 +99,79 @@ export async function getBusinessesByLocation({
   }
 }
 
+// export async function getBusinessesByType(params: {
+//   foodType: string;
+//   category?: string;
+//   limit?: number;
+// }): Promise<BusinessDetail[]> {
+//   const { foodType, category, limit = 9 } = params;
+//   const normalizedType = foodType.toLowerCase();
 
-export async function getBusinessCategories() {
-  try {
-    // Fetch from the main businessCategory table (not view)
-    const categories = await prisma.businessCategory.findMany({
-      select: {
-        id: true,
-        categoryName: true
-      },
-      orderBy: {
-        categoryName: 'asc'
-      }
-    });
+//   try {
+//     // First fetch businesses based on food type
+//     let businesses: any[] = [];
     
-    
-    // Format for UI display
-    return categories.map(cat => ({
-      Business_category_id: cat.id,
-      Category_name: cat.categoryName || ''
-    }));
-  } catch (error) {
-    console.error('Error fetching business categories:', error);
-    return [];
-  }
-}
+//     if (normalizedType === 'halal') {
+//       businesses = await prisma.business_detail_view_halal.findMany({
+//         take: Math.min(limit, 50),
+//         orderBy: { BUSINESS_NAME: 'asc' }
+//       });
+//     } else if (normalizedType === 'vegan') {
+//       businesses = await prisma.business_detail_view_vegan.findMany({
+//         take: Math.min(limit, 50),
+//         orderBy: { BUSINESS_NAME: 'asc' }
+//       });
+//     } else if (normalizedType === 'vegetarian') {
+//       businesses = await prisma.business_detail_view_vegetarian.findMany({
+//         take: Math.min(limit, 50),
+//         orderBy: { BUSINESS_NAME: 'asc' }
+//       });
+//     } else {
+//       // Default to 'all' businesses
+//       businesses = await prisma.business_detail_view_all.findMany({
+//         take: Math.min(limit, 50),
+//         orderBy: { BUSINESS_NAME: 'asc' }
+//       });
+//     }
 
-export async function getBusinessesByType(params: {
-  foodType: string;
-  category?: string;
-  limit?: number;
-}): Promise<BusinessDetail[]> {
-  const { foodType, category, limit = 9 } = params;
-  const normalizedType = foodType.toLowerCase();
-
-  try {
-    // First fetch businesses based on food type
-    let businesses: any[] = [];
-    
-    if (normalizedType === 'halal') {
-      businesses = await prisma.business_detail_view_halal.findMany({
-        take: Math.min(limit, 50),
-        orderBy: { BUSINESS_NAME: 'asc' }
-      });
-    } else if (normalizedType === 'vegan') {
-      businesses = await prisma.business_detail_view_vegan.findMany({
-        take: Math.min(limit, 50),
-        orderBy: { BUSINESS_NAME: 'asc' }
-      });
-    } else if (normalizedType === 'vegetarian') {
-      businesses = await prisma.business_detail_view_vegetarian.findMany({
-        take: Math.min(limit, 50),
-        orderBy: { BUSINESS_NAME: 'asc' }
-      });
-    } else {
-      // Default to 'all' businesses
-      businesses = await prisma.business_detail_view_all.findMany({
-        take: Math.min(limit, 50),
-        orderBy: { BUSINESS_NAME: 'asc' }
-      });
-    }
-
-    // If category is specified, filter businesses by category
-    if (category) {
-      // Get businesses in this category
-      const businessCategories = await prisma.business_2_business_category_view.findMany({
-        where: {
-          CATEGORY_NAME: category
-        }
-      });
+//     // If category is specified, filter businesses by category
+//     if (category) {
+//       // Get businesses in this category
+//       const businessCategories = await prisma.business_2_business_category_view.findMany({
+//         where: {
+//           CATEGORY_NAME: category
+//         }
+//       });
       
-      // Extract business IDs that belong to this category
-      const businessIdsInCategory = businessCategories
-        .map(bc => bc.BUSINESS_ID)
-        .filter(id => id !== null && id !== undefined);
+//       // Extract business IDs that belong to this category
+//       const businessIdsInCategory = businessCategories
+//         .map(bc => bc.BUSINESS_ID)
+//         .filter(id => id !== null && id !== undefined);
       
-      // Filter the businesses to only include those in the category
-      businesses = businesses.filter(
-        business => businessIdsInCategory.includes(business.BUSINESS_ID)
-      );
-    }
+//       // Filter the businesses to only include those in the category
+//       businesses = businesses.filter(
+//         business => businessIdsInCategory.includes(business.BUSINESS_ID)
+//       );
+//     }
 
-    // Normalize the result format
-    return businesses.map(business => {
-      // Determine the ranking field based on the view type
-      const ranking = business.IFNULL_d_Ranking__0_ !== undefined
-        ? business.IFNULL_d_Ranking__0_
-        : (business.Ranking || 0);
+//     // Normalize the result format
+//     return businesses.map(business => {
+//       // Determine the ranking field based on the view type
+//       const ranking = business.IFNULL_d_Ranking__0_ !== undefined
+//         ? business.IFNULL_d_Ranking__0_
+//         : (business.Ranking || 0);
         
-      // Return a consistent object format
-      return {
-        ...business,
-        Ranking: ranking
-      };
-    });
-  } catch (error) {
-    console.error(`Error fetching ${foodType} businesses:`, error);
-    return [];
-  }
-}
+//       // Return a consistent object format
+//       return {
+//         ...business,
+//         Ranking: ranking
+//       };
+//     });
+//   } catch (error) {
+//     console.error(`Error fetching ${foodType} businesses:`, error);
+//     return [];
+//   }
+// }
 
 /**
  * Fetch businesses by both food type (halal, vegan, etc) and category ID
@@ -205,14 +179,13 @@ export async function getBusinessesByType(params: {
  */
 export async function getBusinessesByTypeAndCategories(params: {
   foodType: string;
-  categoryId?: number; // The category ID from businessCategory table
+  categoryId?: number;
   limit?: number;
 }): Promise<BusinessDetail[]> {
   const { foodType, categoryId, limit = 12 } = params;
   const normalizedType = foodType.toLowerCase();
   
   try {
-    console.log(`Fetching businesses with foodType: ${foodType}, categoryId: ${categoryId}`);
     
     // Step 1: If category is specified, get business IDs that have this category
     let businessIdsInCategory: number[] = [];
@@ -301,39 +274,6 @@ export async function getBusinessesByTypeAndCategories(params: {
     });
   } catch (error) {
     console.error(`Error fetching businesses by type and categories:`, error);
-    return [];
-  }
-}
-
-/**
- * Get all available business categories directly from the view
- */
-export async function getBusinessCategoryIDs() {
-  try {
-    // Get unique categories from the view
-    const categories = await prisma.business_2_business_category_view.findMany({
-      distinct: ['BUSINESS_CATEGORY_ID', 'CATEGORY_NAME'],
-      where: {
-        STATUS: 1 // Only active categories
-      },
-      select: {
-        BUSINESS_CATEGORY_ID: true,
-        CATEGORY_NAME: true
-      },
-      orderBy: {
-        CATEGORY_NAME: 'asc'
-      }
-    });
-    
-    console.log('Available categories:', categories);
-    
-    // Format as expected by the UI
-    return categories.map(cat => ({
-      Business_category_id: cat.BUSINESS_CATEGORY_ID,
-      Category_name: cat.CATEGORY_NAME || ''
-    }));
-  } catch (error) {
-    console.error('Error fetching business category IDs:', error);
     return [];
   }
 }

@@ -55,40 +55,47 @@ const BusinessCard: React.FC<BusinessCardProps> = ({ business }) => {
   );
 
   return (
-    <div className="group relative bg-gray-100 rounded-xl border border-gray-200 shadow-sm hover:shadow-md transition-all duration-300 overflow-hidden w-full max-w-md h-[420px] flex flex-col">
+    <div className="group relative bg-gray-100 rounded-xl border border-gray-200 shadow-sm hover:shadow-md transition-all duration-300 overflow-hidden w-full max-w-md h-[440px] flex flex-col">
       {/* Image */}
-      <Link
-        href={`/business/${slug}`}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="block relative w-full h-48 bg-gray-100 overflow-hidden"
-      >
-        {IMAGE_URL ? (
-          <Image
-            src={IMAGE_URL}
-            alt={BUSINESS_NAME}
-            fill
-            className="object-cover transition-transform duration-500 group-hover:scale-105"
-            sizes="100vw"
-          />
-        ) : (
-          <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-gray-100 to-gray-200">
-            <span className="text-3xl font-bold text-gray-400 uppercase">
-              {BUSINESS_NAME.charAt(0)}
-            </span>
-          </div>
-        )}
-      </Link>
+      <div className="h-[155px]">
+        <Link
+          href={`/business/${slug}`}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="block relative w-full h-[155px] bg-gray-100 overflow-hidden"
+        >
+          {IMAGE_URL ? (
+            <Image
+              src={IMAGE_URL}
+              alt={BUSINESS_NAME}
+              fill
+              className="object-cover transition-transform duration-500 group-hover:scale-105"
+              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
+              priority
+            />
+          ) : (
+            <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-gray-100 to-gray-200">
+              <span className="text-3xl font-bold text-gray-400 uppercase">
+                {BUSINESS_NAME.charAt(0)}
+              </span>
+            </div>
+          )}
+        </Link>
+      </div>
 
       {/* Content */}
       <div className="flex-1 flex flex-col justify-between p-4">
         {rating !== null && (
-          <div className="flex items-center gap-0.5 self-end">
-            {[...Array(5)].map((_, i) => {
-              const starValue = Math.min(1, Math.max(0, rating - i));
-              
-              return <StarIcon key={i} fillLevel={starValue} size={16}  />;
-            })}
+          <div className="flex items-center gap-2 self-end">
+            <div className="flex items-center gap-0.5">
+              {[...Array(5)].map((_, i) => {
+                const starValue = Math.min(1, Math.max(0, rating - i));
+                return <StarIcon key={i} fillLevel={starValue} size={16} />;
+              })}
+            </div>
+            <span className="text-sm font-medium text-accent">
+              {rating.toFixed(1)}
+            </span>
           </div>
         )}
         <div className="mt-2">
@@ -157,7 +164,7 @@ const BusinessCard: React.FC<BusinessCardProps> = ({ business }) => {
         </div>
 
         {/* Bottom Section */}
-        <div className="mt-4 pt-4 border-t border-gray-100 flex items-center justify-between">
+        <div className="pt-4 border-t border-gray-100 flex items-center justify-between">
           {/* Socials */}
           {hasSocialLinks && (
             <div className="flex gap-1 items-center">

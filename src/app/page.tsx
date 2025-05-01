@@ -32,7 +32,7 @@ export default function Home() {
       <AboutSection />
 
       {/* Testimonials from Google Reviews */}
-      <TestimonialsSection />
+      {/* <TestimonialsSection /> */}
 
       {/* Share Experience CTA */}
       <ShareExperience />
