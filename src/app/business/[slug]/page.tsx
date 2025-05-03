@@ -98,7 +98,7 @@ export default function BusinessDetailPage() {
           <Breadcrumb
             items={[
               { label: 'Home', href: '/' },
-              { label: 'Restaurant', href: '/business' },
+              { label: 'Restaurant', href: '/' },
               { label: business.BUSINESS_NAME || 'Restaurant' }
             ]}
             className="mb-6"

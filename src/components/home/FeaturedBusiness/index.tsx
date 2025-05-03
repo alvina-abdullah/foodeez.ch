@@ -7,7 +7,6 @@ import { getBusinessesByTypeAndCategories } from "@/lib/db";
 import FoodTypeFilter from "./FoodTypeFilter";
 import CategoryFilter from "./CategoryFilter";
 import ResultCountInfo from "./ResultCountInfo";
-import ActiveFiltersSummary from "./ActiveFiltersSummary";
 import LoadingSkeleton from "./LoadingSkeleton";
 import ErrorState from "./ErrorState";
 import EmptyState from "./EmptyState";
@@ -53,7 +52,9 @@ const VISIBLE_CATEGORIES_LIMIT = 5;
 
 export default function FeaturedBusiness() {
   const [businesses, setBusinesses] = useState<BusinessDetail[]>([]);
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [isCategoryDropdownOpen, setIsCategoryDropdownOpen] = useState(false);
+  const [isPaginationDropdownOpen, setIsPaginationDropdownOpen] =
+    useState(false);
   const [selectedCategoryId, setSelectedCategoryId] = useState<
     number | undefined
   >(undefined);
@@ -191,19 +192,14 @@ export default function FeaturedBusiness() {
         hiddenCategories={hiddenCategories}
         selectedCategory={selectedCategory}
         onSelect={handleCategorySelect}
-        isDropdownOpen={isDropdownOpen}
-        setIsDropdownOpen={setIsDropdownOpen}
+        isDropdownOpen={isCategoryDropdownOpen}
+        setIsDropdownOpen={setIsCategoryDropdownOpen}
         isPending={isPending}
       />
 
       <ResultCountInfo
         visibleCount={visibleBusinesses.length}
         totalCount={businesses.length}
-        selectedFoodType={selectedFoodType}
-        selectedCategory={selectedCategory}
-      />
-
-      <ActiveFiltersSummary
         selectedFoodType={selectedFoodType}
         selectedCategory={selectedCategory}
         clearAllFilters={clearAllFilters}
@@ -226,8 +222,8 @@ export default function FeaturedBusiness() {
         isPending={isPending}
         handleViewMoreBusiness={handleViewMoreBusiness}
         perPage={perPage}
-        isDropdownOpen={isDropdownOpen}
-        setIsDropdownOpen={setIsDropdownOpen}
+        isDropdownOpen={isPaginationDropdownOpen}
+        setIsDropdownOpen={setIsPaginationDropdownOpen}
         handlePerPageChange={handlePerPageChange}
       />
     </section>

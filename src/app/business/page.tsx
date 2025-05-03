@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 import { Metadata } from "next";
 import { getBusinesses } from "@/lib/db";
 import { BusinessDetail } from "@/types/business.types";
-import BusinessCard from "@/components/BusinessCard"; // Make sure this exists and is default export
+import BusinessCard from "@/components/core/BusinessCard"; // Make sure this exists and is default export
 
 // export const metadata: Metadata = {
 //   title: "Browse Businesses | Foodeez",

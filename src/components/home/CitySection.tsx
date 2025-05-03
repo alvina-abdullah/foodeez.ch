@@ -4,9 +4,9 @@ import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { MapPin, ChevronDown, Search, Building, X } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/utils/utils";
 import { getBusinessesByLocation, getCities } from "@/lib/db";
-import BusinessCard from "../BusinessCard";
+import BusinessCard from "../core/BusinessCard";
 import { BusinessDetail } from "@/types/business.types";
 import { Autocomplete, LoadScript } from "@react-google-maps/api";
 

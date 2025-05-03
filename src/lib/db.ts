@@ -110,7 +110,7 @@ export async function getBusinessesByLocation({
 //   try {
 //     // First fetch businesses based on food type
 //     let businesses: any[] = [];
-    
+
 //     if (normalizedType === 'halal') {
 //       businesses = await prisma.business_detail_view_halal.findMany({
 //         take: Math.min(limit, 50),
@@ -142,12 +142,12 @@ export async function getBusinessesByLocation({
 //           CATEGORY_NAME: category
 //         }
 //       });
-      
+
 //       // Extract business IDs that belong to this category
 //       const businessIdsInCategory = businessCategories
 //         .map(bc => bc.BUSINESS_ID)
 //         .filter(id => id !== null && id !== undefined);
-      
+
 //       // Filter the businesses to only include those in the category
 //       businesses = businesses.filter(
 //         business => businessIdsInCategory.includes(business.BUSINESS_ID)
@@ -160,7 +160,7 @@ export async function getBusinessesByLocation({
 //       const ranking = business.IFNULL_d_Ranking__0_ !== undefined
 //         ? business.IFNULL_d_Ranking__0_
 //         : (business.Ranking || 0);
-        
+
 //       // Return a consistent object format
 //       return {
 //         ...business,
@@ -180,16 +180,16 @@ export async function getBusinessesByLocation({
 export async function getBusinessesByTypeAndCategories(params: {
   foodType: string;
   categoryId?: number;
-  
+
 }): Promise<BusinessDetail[]> {
-  const { foodType, categoryId} = params;
+  const { foodType, categoryId } = params;
   const normalizedType = foodType.toLowerCase();
-  
+
   try {
-    
+
     // Step 1: If category is specified, get business IDs that have this category
     let businessIdsInCategory: number[] = [];
-    
+
     if (categoryId !== undefined) {
       // Get businesses linked to this category through the relation table
       const businessCategoryLinks = await prisma.businessToBusinessCategory.findMany({
@@ -201,25 +201,25 @@ export async function getBusinessesByTypeAndCategories(params: {
           businessId: true
         }
       });
-      
+
       businessIdsInCategory = businessCategoryLinks
         .map(link => link.businessId)
         .filter((id): id is number => id !== null && id !== undefined);
-      
+
       console.log(`Found ${businessIdsInCategory.length} businesses in category ${categoryId}`);
-      
+
       // If no businesses found in this category, return empty array
       if (businessIdsInCategory.length === 0) {
         return [];
       }
     }
-    
+
     // Step 2: Get businesses based on food type and category filter
     let businesses: any[] = [];
     const whereClause = categoryId !== undefined
       ? { BUSINESS_ID: { in: businessIdsInCategory } }
       : {};
-    
+
     try {
       // Select appropriate database view based on food type
       if (normalizedType === 'halal') {
@@ -248,8 +248,7 @@ export async function getBusinessesByTypeAndCategories(params: {
           orderBy: { BUSINESS_NAME: 'asc' }
         });
       }
-      
-      console.log(`Found ${businesses.length} businesses matching criteria`);
+
     } catch (dbError) {
       console.error(`Error querying food type view (${normalizedType}):`, dbError);
       // Fallback to all businesses view if specific view fails
@@ -266,7 +265,7 @@ export async function getBusinessesByTypeAndCategories(params: {
       const ranking = business.IFNULL_d_Ranking__0_ !== undefined
         ? business.IFNULL_d_Ranking__0_
         : (business.Ranking || 0);
-        
+
       return {
         ...business,
         Ranking: ranking

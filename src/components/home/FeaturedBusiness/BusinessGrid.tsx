@@ -1,7 +1,7 @@
 "use client"
 
 import { AnimatePresence , motion} from "framer-motion";
-import BusinessCard from "../../BusinessCard";
+import BusinessCard from "../../core/BusinessCard";
 import { BusinessDetail } from "@/types/business.types";
 
 export default function BusinessGrid({ businesses, isPending, error }: { businesses: BusinessDetail[]; isPending: boolean; error: string | null }) {

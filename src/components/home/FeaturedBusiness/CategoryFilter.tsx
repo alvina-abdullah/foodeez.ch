@@ -1,6 +1,6 @@
 "use client"
 
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/utils/utils";
 import { AnimatePresence , motion} from "framer-motion";
 
 export default function CategoryFilter({ visibleCategories, hiddenCategories, selectedCategory, onSelect, isDropdownOpen, setIsDropdownOpen, isPending }: { visibleCategories: string[]; hiddenCategories: string[]; selectedCategory: string; onSelect: (cat: string) => void; isDropdownOpen: boolean; setIsDropdownOpen: (open: boolean) => void; isPending: boolean; }) {

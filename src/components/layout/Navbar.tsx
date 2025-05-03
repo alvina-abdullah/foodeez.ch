@@ -6,7 +6,7 @@ import { usePathname } from 'next/navigation';
 import { Menu, X } from 'lucide-react';
 import { AnimatePresence } from 'framer-motion';
 import DropdownMenu from '../core/DropDownMenu';
-import MobileMenu from '../MobileMenu';
+import MobileMenu from '../ui/MobileMenu';
 
 export const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);

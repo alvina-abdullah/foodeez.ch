@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import { cn } from "@/lib/utils"; // optional utility for class merging
+import { cn } from "@/lib/utils/utils"; // optional utility for class merging
 
 interface SocialLinksProps {
   facebook?: string | null;

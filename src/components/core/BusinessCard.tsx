@@ -7,7 +7,7 @@ import { MapPin, Calendar, Globe, Phone } from "lucide-react";
 import { generateSlug } from "@/lib/utils/genSlug";
 import { BusinessDetail } from "@/types/business.types";
 import { SocialLinks } from "@/components/core/SocialLinks";
-import StarIcon from "./ui/StarIcon";
+import StarIcon from "../ui/StarIcon";
 
 export interface BusinessCardProps {
   business: BusinessDetail;
