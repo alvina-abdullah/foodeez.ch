@@ -8,6 +8,7 @@ import { cn } from "@/lib/utils";
 import { getBusinessesByLocation, getCities } from "@/lib/db";
 import BusinessCard from "../BusinessCard";
 import { BusinessDetail } from "@/types/business.types";
+import { Autocomplete, LoadScript } from "@react-google-maps/api";
 
 type City = { CITY_NAME: string | null };
 
@@ -23,6 +24,9 @@ export default function CitySection() {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [loading, setLoading] = useState({ cities: true, businesses: true });
   const [error, setError] = useState<string | null>(null);
+  const [autocomplete, setAutocomplete] =
+    useState<google.maps.places.Autocomplete | null>(null);
+  const [isScriptLoaded, setIsScriptLoaded] = useState(false);
 
   // Memoized fetch functions
   const fetchCities = useCallback(async () => {
@@ -101,6 +105,26 @@ export default function CitySection() {
       fetchBusinesses();
     }
   }, [selectedCity, searchZipCode, fetchBusinesses]);
+
+  const onLoad = (autocomplete: google.maps.places.Autocomplete) => {
+    setAutocomplete(autocomplete);
+  };
+
+  const onPlaceChanged = () => {
+    if (autocomplete) {
+      const place = autocomplete.getPlace();
+      if (place.address_components) {
+        const postalCodeComponent = place.address_components.find((component) =>
+          component.types.includes("postal_code")
+        );
+
+        if (postalCodeComponent) {
+          setZipCode(postalCodeComponent.long_name);
+          setSearchZipCode(postalCodeComponent.long_name);
+        }
+      }
+    }
+  };
 
   // Handlers
   const handleCitySelect = (city: string) => {
@@ -190,14 +214,30 @@ export default function CitySection() {
       <div className="max-w-md mx-auto mb-10">
         <form onSubmit={handleZipSearch} className="flex items-center">
           <div className="relative w-full">
-            <input
-              type="text"
-              value={zipCode}
-              onChange={(e) => setZipCode(e.target.value.replace(/\D/g, ""))}
-              placeholder="Search by postal code..."
-              className="w-full pl-10 pr-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
-              maxLength={4}
-            />
+            <LoadScript
+              googleMapsApiKey={process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY!}
+              libraries={["places"]}
+            >
+              <Autocomplete
+                onLoad={onLoad}
+                onPlaceChanged={onPlaceChanged}
+                options={{
+                  types: ["geocode"],
+                  componentRestrictions: { country: "ch" },
+                }}
+              >
+                <input
+                  type="text"
+                  value={zipCode}
+                  onChange={(e) =>
+                    setZipCode(e.target.value.replace(/\D/g, ""))
+                  }
+                  placeholder="Search by postal code..."
+                  className="w-full pl-10 pr-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
+                  maxLength={4}
+                />
+              </Autocomplete>
+            </LoadScript>
             <MapPin
               size={18}
               className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
