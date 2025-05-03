@@ -28,10 +28,10 @@ export default function Footer() {
   };
 
   return (
-    <footer className="bg-accent text-white pt-16 pb-8">
+    <footer className="bg-primary text-white pt-16 pb-8">
       <div className="container-custom">
         {/* Top Section - Help banner */}
-        <div className="bg-primary text-white rounded-xl p-8 mb-12 flex flex-col md:flex-row md:items-center justify-between">
+        <div className="bg-primary border-2 border-white text-white rounded-xl p-8 mb-12 flex flex-col md:flex-row md:items-center justify-between">
           <div>
             <h3 className="text-2xl font-bold mb-2">Help millions to find the right Place & Food to enjoy</h3>
             <p className="">Join our community and share your experiences</p>
@@ -180,7 +180,7 @@ export default function Footer() {
         </div>
 
         {/* Horizontal divider */}
-        <div className="h-px bg-black/60 my-8" />
+        <div className="h-px bg-white my-8" />
 
         {/* Bottom section */}
         <div className="flex flex-col md:flex-row justify-between items-center">

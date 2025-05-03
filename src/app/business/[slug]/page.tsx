@@ -183,10 +183,8 @@ export default function BusinessDetailPage() {
                 facebook={business.FACEBOOK_LINK}
                 instagram={business.INSTA_LINK}
                 whatsapp={business.WHATSAPP_NUMBER}
-                tiktok={business.TIKTOK_LINK}
-                website={business.WEB_ADDRESS}
+                tiktok={business.TIKTOK_LINK}            
                 size="md"
-                color="primary"
                 variant="circle"
               />
             </div>

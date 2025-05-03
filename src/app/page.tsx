@@ -11,6 +11,7 @@ import FaqSection from "@/components/home/FaqSection";
 import HeroSection from "@/components/home/HeroSection";
 import FeaturedBusiness from "@/components/home/FeaturedBusiness";
 import MapSection from "@/components/home/MapSection";
+import QuickSearch from "@/components/home/QuickSearch";
 
 export default function Home() {
   return (
@@ -33,6 +34,8 @@ export default function Home() {
 
       {/* Testimonials from Google Reviews */}
       {/* <TestimonialsSection /> */}
+
+      <QuickSearch />
 
       {/* Share Experience CTA */}
       <ShareExperience />
@@ -65,6 +68,8 @@ From 5 - 2028 April No record
 29 April 1.5 hour
 
 30 April 3.5 hour
+
+1 May 3 hours
 
 
 
