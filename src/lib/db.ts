@@ -180,9 +180,9 @@ export async function getBusinessesByLocation({
 export async function getBusinessesByTypeAndCategories(params: {
   foodType: string;
   categoryId?: number;
-  limit?: number;
+  
 }): Promise<BusinessDetail[]> {
-  const { foodType, categoryId, limit = 12 } = params;
+  const { foodType, categoryId} = params;
   const normalizedType = foodType.toLowerCase();
   
   try {
@@ -225,26 +225,26 @@ export async function getBusinessesByTypeAndCategories(params: {
       if (normalizedType === 'halal') {
         businesses = await prisma.business_detail_view_halal.findMany({
           where: whereClause,
-          take: Math.min(limit, 50),
+          // take: Math.min(limit, 50),
           orderBy: { BUSINESS_NAME: 'asc' }
         });
       } else if (normalizedType === 'vegan') {
         businesses = await prisma.business_detail_view_vegan.findMany({
           where: whereClause,
-          take: Math.min(limit, 50),
+          // take: Math.min(limit, 50),
           orderBy: { BUSINESS_NAME: 'asc' }
         });
       } else if (normalizedType === 'vegetarian') {
         businesses = await prisma.business_detail_view_vegetarian.findMany({
           where: whereClause,
-          take: Math.min(limit, 50),
+          // take: Math.min(limit, 50),
           orderBy: { BUSINESS_NAME: 'asc' }
         });
       } else {
         // Default to 'all' businesses
         businesses = await prisma.business_detail_view_all.findMany({
           where: whereClause,
-          take: Math.min(limit, 50),
+          // take: Math.min(limit, 50),
           orderBy: { BUSINESS_NAME: 'asc' }
         });
       }
@@ -255,7 +255,7 @@ export async function getBusinessesByTypeAndCategories(params: {
       // Fallback to all businesses view if specific view fails
       businesses = await prisma.business_detail_view_all.findMany({
         where: whereClause,
-        take: Math.min(limit, 50),
+        // take: Math.min(limit, 50),
         orderBy: { BUSINESS_NAME: 'asc' }
       });
     }
