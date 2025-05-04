@@ -2,15 +2,10 @@
 
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { Filter, ChevronDown, ChevronUp, Star, X, Search } from "lucide-react";
-import Link from "next/link";
+import { Filter, ChevronDown, ChevronUp, Star, X } from "lucide-react";
 
 interface FiltersProps {
-  categories: { id: number; name: string; count: number }[];
-  dietaryOptions: { id: number; name: string; count: number }[];
   priceRanges: { id: number; name: string; symbol: string }[];
-  selectedCategory: string;
-  selectedFoodType: string;
   selectedPriceRange: string;
   selectedRating: number;
   onChange: (filterType: string, value: string) => void;
@@ -18,35 +13,19 @@ interface FiltersProps {
 }
 
 export default function Filters({
-  categories,
-  dietaryOptions,
   priceRanges,
-  selectedCategory,
-  selectedFoodType,
   selectedPriceRange,
   selectedRating,
   onChange,
   isLoading,
 }: FiltersProps) {
   const [expandedSections, setExpandedSections] = useState({
-    categories: true,
-    dietary: true,
     price: true,
     rating: true,
   });
 
-  // Get popular categories (top 5 by count)
-  const popularCategories = categories.slice(0, 5);
-  const otherCategories = categories.slice(5);
+  const hasActiveFilters = selectedPriceRange !== "All" || selectedRating > 0;
 
-  // Check if any filters are active
-  const hasActiveFilters =
-    selectedCategory !== "All" ||
-    selectedFoodType !== "All" ||
-    selectedPriceRange !== "All" ||
-    selectedRating > 0;
-
-  // Toggle section expand/collapse
   const toggleSection = (section: keyof typeof expandedSections) => {
     setExpandedSections({
       ...expandedSections,
@@ -54,15 +33,11 @@ export default function Filters({
     });
   };
 
-  // Clear all filters
   const clearAllFilters = () => {
-    onChange("category", "All");
-    onChange("foodType", "All");
     onChange("price", "All");
     onChange("rating", "0");
   };
 
-  // Rating stars component
   const RatingStars = ({ rating }: { rating: number }) => (
     <div className="flex">
       {[1, 2, 3, 4, 5].map((star) => (
@@ -70,9 +45,7 @@ export default function Filters({
           key={star}
           size={16}
           className={`${
-            star <= rating
-              ? "text-accent fill-accent"
-              : "text-gray-300"
+            star <= rating ? "text-accent fill-accent" : "text-gray-300"
           }`}
         />
       ))}
@@ -133,70 +106,31 @@ export default function Filters({
         )}
       </div>
 
-      {/* Food Categories */}
-      <FilterSection title="Food Categories" section="categories">
+      {/* Rating */}
+      <FilterSection title="Rating" section="rating">
         <div className="space-y-2">
           <div
             className={`py-1 px-2 rounded cursor-pointer hover:bg-gray-100 ${
-              selectedCategory === "All" ? "bg-primary/10 text-primary font-medium" : ""
+              selectedRating === 0
+                ? "bg-primary/10 text-primary font-medium"
+                : ""
             }`}
-            onClick={() => onChange("category", "All")}
+            onClick={() => onChange("rating", "0")}
           >
-            All Categories
+            Any Rating
           </div>
-          
-          {/* Popular Categories */}
-          {popularCategories.map((category) => (
+          {[5, 4, 3, 2].map((rating) => (
             <div
-              key={category.id}
-              className={`py-1 px-2 rounded cursor-pointer hover:bg-gray-100 flex justify-between items-center ${
-                selectedCategory === category.name ? "bg-primary/10 text-primary font-medium" : ""
+              key={rating}
+              className={`py-1 px-2 rounded cursor-pointer hover:bg-gray-100 flex items-center ${
+                selectedRating === rating
+                  ? "bg-primary/10 text-primary font-medium"
+                  : ""
               }`}
-              onClick={() => onChange("category", category.name)}
+              onClick={() => onChange("rating", rating.toString())}
             >
-              <span>{category.name}</span>
-              <span className="text-xs bg-gray-100 px-2 rounded-full">
-                {category.count}
-              </span>
-            </div>
-          ))}
-
-          {/* See All Categories Button */}
-          {otherCategories.length > 0 && (
-            <Link
-              href="/categories"
-              className="block mt-2 text-sm text-primary hover:text-primary-dark flex items-center"
-            >
-              <Search size={14} className="mr-1" />
-              See all categories
-            </Link>
-          )}
-        </div>
-      </FilterSection>
-
-      {/* Dietary Preferences */}
-      <FilterSection title="Dietary Preferences" section="dietary">
-        <div className="space-y-2">
-          <div
-            className={`py-1 px-2 rounded cursor-pointer hover:bg-gray-100 ${
-              selectedFoodType === "All" ? "bg-primary/10 text-primary font-medium" : ""
-            }`}
-            onClick={() => onChange("foodType", "All")}
-          >
-            All Types
-          </div>
-          {dietaryOptions.map((option) => (
-            <div
-              key={option.id}
-              className={`py-1 px-2 rounded cursor-pointer hover:bg-gray-100 flex justify-between items-center ${
-                selectedFoodType === option.name ? "bg-primary/10 text-primary font-medium" : ""
-              }`}
-              onClick={() => onChange("foodType", option.name)}
-            >
-              <span>{option.name}</span>
-              <span className="text-xs bg-gray-100 px-2 rounded-full">
-                {option.count}
-              </span>
+              <RatingStars rating={rating} />
+              <span className="ml-2">{rating === 5 ? "only" : "& up"}</span>
             </div>
           ))}
         </div>
@@ -207,7 +141,9 @@ export default function Filters({
         <div className="space-y-2">
           <div
             className={`py-1 px-2 rounded cursor-pointer hover:bg-gray-100 ${
-              selectedPriceRange === "All" ? "bg-primary/10 text-primary font-medium" : ""
+              selectedPriceRange === "All"
+                ? "bg-primary/10 text-primary font-medium"
+                : ""
             }`}
             onClick={() => onChange("price", "All")}
           >
@@ -217,7 +153,9 @@ export default function Filters({
             <div
               key={price.id}
               className={`py-1 px-2 rounded cursor-pointer hover:bg-gray-100 flex justify-between items-center ${
-                selectedPriceRange === price.name ? "bg-primary/10 text-primary font-medium" : ""
+                selectedPriceRange === price.name
+                  ? "bg-primary/10 text-primary font-medium"
+                  : ""
               }`}
               onClick={() => onChange("price", price.name)}
             >
@@ -227,32 +165,6 @@ export default function Filters({
           ))}
         </div>
       </FilterSection>
-
-      {/* Rating */}
-      <FilterSection title="Rating" section="rating">
-        <div className="space-y-2">
-          <div
-            className={`py-1 px-2 rounded cursor-pointer hover:bg-gray-100 ${
-              selectedRating === 0 ? "bg-primary/10 text-primary font-medium" : ""
-            }`}
-            onClick={() => onChange("rating", "0")}
-          >
-            Any Rating
-          </div>
-          {[5, 4, 3, 2].map((rating) => (
-            <div
-              key={rating}
-              className={`py-1 px-2 rounded cursor-pointer hover:bg-gray-100 flex items-center ${
-                selectedRating === rating ? "bg-primary/10 text-primary font-medium" : ""
-              }`}
-              onClick={() => onChange("rating", rating.toString())}
-            >
-              <RatingStars rating={rating} />
-              <span className="ml-2">{rating === 5 ? "only" : "& up"}</span>
-            </div>
-          ))}
-        </div>
-      </FilterSection>
     </div>
   );
-} 
+}

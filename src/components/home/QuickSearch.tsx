@@ -45,12 +45,14 @@ export default function QuickSearch() {
         <h3 className="text-lg font-semibold text-primary mb-4">🔥 Trending</h3>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3">
           {trendingItems.map((item, idx) => (
-            <div
+            <button
               key={idx}
-              className="bg-primary/5 text-primary text-sm font-medium px-4 py-2 rounded-md hover:bg-primary/10 transition cursor-pointer"
+              className="bg-primary/5 text-primary text-sm font-medium px-4 py-2 rounded-md hover:bg-primary/10 transition cursor-pointer w-full text-left"
+              onClick={() => window.open(`/discover?q=${encodeURIComponent(item)}`, '_blank')}
+              type="button"
             >
               {item}
-            </div>
+            </button>
           ))}
         </div>
       </motion.div>
@@ -67,11 +69,14 @@ export default function QuickSearch() {
         </h3>
         <ul className="space-y-2">
           {touristFavorites.map((text, idx) => (
-            <li
-              key={idx}
-              className="bg-secondary/5 text-secondary text-sm px-4 py-2 rounded-md hover:bg-secondary/10 transition cursor-pointer"
-            >
-              {text}
+            <li key={idx}>
+              <button
+                className="w-full bg-secondary/5 text-secondary text-sm px-4 py-2 rounded-md hover:bg-secondary/10 transition cursor-pointer text-left"
+                onClick={() => window.open(`/discover?q=${encodeURIComponent(text)}`, '_blank')}
+                type="button"
+              >
+                {text}
+              </button>
             </li>
           ))}
         </ul>

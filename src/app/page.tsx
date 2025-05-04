@@ -1,17 +1,17 @@
 "use client";
 
 import BusinessCTA from "@/components/home/BusinessCTA";
-import CitySection from "@/components/home/CitySection";
 import ShareExperience from "@/components/home/ShareExperience";
 import BenefitsSection from "@/components/home/BenefitsSection";
 import AboutSection from "@/components/home/AboutSection";
-import TestimonialsSection from "@/components/home/TestimonialsSection";
-import CtaSection from "@/components/home/CtaSection";
+// import TestimonialsSection from "@/components/home/TestimonialsSection";
+// import CtaSection from "@/components/home/CtaSection";
 import FaqSection from "@/components/home/FaqSection";
 import HeroSection from "@/components/home/HeroSection";
 import FeaturedBusiness from "@/components/home/FeaturedBusiness";
 import MapSection from "@/components/home/MapSection";
 import QuickSearch from "@/components/home/QuickSearch";
+import CitySection from "@/components/home/CitySection/index";
 
 export default function Home() {
   return (
@@ -27,7 +27,7 @@ export default function Home() {
       <BusinessCTA />
 
       {/* Cities Section */}
-      <CitySection />
+      <CitySection/>
 
       {/* About Section - We Are Foodeez */}
       <AboutSection />
@@ -73,6 +73,8 @@ From 5 - 2028 April No record
 
 2 May 1 hour
 
+3 May 2.5 hour
 
+4 May 2 hour
 
 */

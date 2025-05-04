@@ -5,8 +5,8 @@ import { AnimatePresence , motion} from "framer-motion";
 
 export default function CategoryFilter({ visibleCategories, hiddenCategories, selectedCategory, onSelect, isDropdownOpen, setIsDropdownOpen, isPending }: { visibleCategories: string[]; hiddenCategories: string[]; selectedCategory: string; onSelect: (cat: string) => void; isDropdownOpen: boolean; setIsDropdownOpen: (open: boolean) => void; isPending: boolean; }) {
     return (
-      <div className="border border-black mb-8 bg-primary-100 rounded-lg">
-        <div className="flex flex-wrap gap-4 relative">
+      <div className="border border-black mb-14 bg-primary-100 rounded-lg">
+        <div className="flex flex-wrap gap-4 relative ">
           {visibleCategories.map((category) => {
             const isSelected = selectedCategory === category;
             return (

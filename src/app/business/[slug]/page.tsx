@@ -93,7 +93,7 @@ export default function BusinessDetailPage() {
         <meta name="twitter:image" content={image} />
         <link rel="canonical" href={url} />
       </head>
-      <div className="min-h-screen bg-background py-12 px-4">
+      <div className=" min-h-screen bg-background py-12 px-4">
         <div className="max-w-5xl mx-auto">
           <Breadcrumb
             items={[
@@ -104,7 +104,7 @@ export default function BusinessDetailPage() {
             className="mb-6"
           />
         </div>
-        <div className="max-w-5xl mx-auto flex flex-col gap-6 md:flex-row bg-white rounded-2xl shadow-xl overflow-hidden">
+        <div className="max-w-5xl mx-auto flex flex-col gap-6 md:flex-row bg-white rounded-2xl overflow-hidden">
           {/* Left: Business Image */}
           <motion.div
             className="md:w-1/2 w-full"

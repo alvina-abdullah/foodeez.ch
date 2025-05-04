@@ -23,7 +23,7 @@ export default function ResultCountInfo({
       : selectedCategory;
 
   return (
-    <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 py-2 border-b border-gray-200">
+    <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 py-2 border-gray-200 mb-8">
       <div className="">
         <p className="text-lg sm:text-2xl font-bold text-gray-800">
           Showing{" "}

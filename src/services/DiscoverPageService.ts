@@ -29,18 +29,18 @@ export async function searchBusinesses({
 }: FilterOptions): Promise<{ businesses: DiscoverBusiness[]; total: number }> {
   try {
     const offset = (page - 1) * limit;
-    
+
     // Base query
     let query = `
       SELECT * FROM business_detail_view_all 
       WHERE 1=1
     `;
-    
+
     let countQuery = `
       SELECT COUNT(*) as total FROM business_detail_view_all 
       WHERE 1=1
     `;
-    
+
     // Search term filter
     if (searchTerm) {
       const searchCondition = `
@@ -54,7 +54,7 @@ export async function searchBusinesses({
       query += searchCondition;
       countQuery += searchCondition;
     }
-    
+
     // Category filter
     if (category && category !== 'All') {
       // Map category names to their corresponding business_category_id values
@@ -64,9 +64,9 @@ export async function searchBusinesses({
         'Kebab & Donner': [8],
         'Combo Box': [9, 10, 11]
       };
-      
+
       const categoryIds = categoryMap[category];
-      
+
       if (categoryIds && categoryIds.length > 0) {
         const categoryCondition = `
           AND Business_ID IN (
@@ -78,7 +78,7 @@ export async function searchBusinesses({
         countQuery += categoryCondition;
       }
     }
-    
+
     // Food type filter
     if (foodType && foodType !== 'All') {
       // Map food types to their corresponding food_type_id values
@@ -87,9 +87,9 @@ export async function searchBusinesses({
         'Vegetarian': 2,
         'Vegan': 1
       };
-      
+
       const foodTypeId = foodTypeMap[foodType];
-      
+
       if (foodTypeId) {
         const foodTypeCondition = `
           AND Business_ID IN (
@@ -101,7 +101,7 @@ export async function searchBusinesses({
         countQuery += foodTypeCondition;
       }
     }
-    
+
     // Price range filter
     if (priceRange && priceRange !== 'All') {
       const priceRangeMap: Record<string, number> = {
@@ -110,9 +110,9 @@ export async function searchBusinesses({
         'Premium': 3,
         'Luxury': 4
       };
-      
+
       const priceRangeId = priceRangeMap[priceRange];
-      
+
       if (priceRangeId) {
         const priceCondition = `
           AND Business_ID IN (
@@ -124,7 +124,7 @@ export async function searchBusinesses({
         countQuery += priceCondition;
       }
     }
-    
+
     // Rating filter
     if (rating > 0) {
       const ratingCondition = `
@@ -133,7 +133,7 @@ export async function searchBusinesses({
       query += ratingCondition;
       countQuery += ratingCondition;
     }
-    
+
     // Sorting
     switch (sortBy) {
       case 'rating':
@@ -147,23 +147,23 @@ export async function searchBusinesses({
         query += ` ORDER BY Ranking DESC, CAST(GOOGLE_RATING AS FLOAT) DESC`;
         break;
     }
-    
+
     // Pagination
     query += ` LIMIT ${limit} OFFSET ${offset}`;
-    
+
     // Execute queries
     const [results, countResult] = await Promise.all([
       prisma.$queryRawUnsafe(query),
       prisma.$queryRawUnsafe(countQuery)
     ]);
-    
-    const total = Array.isArray(countResult) && countResult.length > 0 
-      ? Number(countResult[0].total) 
+
+    const total = Array.isArray(countResult) && countResult.length > 0
+      ? Number(countResult[0].total)
       : 0;
-    
-    return { 
-      businesses: results as DiscoverBusiness[], 
-      total 
+
+    return {
+      businesses: results as DiscoverBusiness[],
+      total
     };
   } catch (error) {
     console.error("Error searching businesses:", error);
@@ -215,7 +215,7 @@ export async function getFoodCategories(): Promise<{ id: number; name: string; c
       ORDER BY 
         count DESC
     `;
-    
+
     return categories as { id: number; name: string; count: number }[];
   } catch (error) {
     console.error("Error fetching food categories:", error);
@@ -244,7 +244,7 @@ export async function getDietaryPreferences(): Promise<{ id: number; name: strin
       ORDER BY 
         count DESC
     `;
-    
+
     return preferences as { id: number; name: string; count: number }[];
   } catch (error) {
     console.error("Error fetching dietary preferences:", error);
@@ -262,4 +262,61 @@ export async function getPriceRanges(): Promise<{ id: number; name: string; symb
     { id: 3, name: "Premium", symbol: "£££" },
     { id: 4, name: "Luxury", symbol: "££££" }
   ];
+}
+
+/**
+ * Extracts relevant keywords (food/city) from a query string
+ */
+export async function extractRelevantKeywords(query: string): { food?: string; city?: string } {
+  // List of common stopwords to ignore
+  const stopwords = [
+    'best', 'top', 'most', 'loved', 'famous', 'popular', 'nearby', 'in', 'the', 'of', 'for', 'find', 'places', 'spot', 'spots', 'restaurant', 'restaurants', 'food', 'eat', 'where', 'to', 'a', 'an', 'and', 'on', 'by', 'with', 'here', 'what', 'is', 'are', 'good', 'great', 'awesome', 'amazing', 'delicious', 'tasty', 'yummy', 'hungry', 'around', 'this', 'that', 'these', 'those', 'my', 'your', 'our', 'their', 'his', 'her', 'its', 'from', 'at', 'as', 'it', 'was', 'were', 'be', 'been', 'being', 'will', 'would', 'can', 'could', 'should', 'shall', 'may', 'might', 'must', 'do', 'does', 'did', 'done', 'have', 'has', 'had', 'having', 'get', 'gets', 'got', 'getting', 'make', 'makes', 'made', 'making', 'see', 'seen', 'seeing', 'look', 'looks', 'looked', 'looking', 'go', 'goes', 'went', 'gone', 'going', 'come', 'comes', 'came', 'coming', 'take', 'takes', 'took', 'taken', 'taking', 'give', 'gives', 'gave', 'given', 'giving', 'find', 'finds', 'found', 'finding', 'try', 'tries', 'tried', 'trying', 'want', 'wants', 'wanted', 'wanting', 'like', 'likes', 'liked', 'liking', 'love', 'loves', 'loved', 'loving', 'prefer', 'prefers', 'preferred', 'preferring', 'recommend', 'recommends', 'recommended', 'recommending', 'suggest', 'suggests', 'suggested', 'suggesting', 'search', 'searches', 'searched', 'searching', 'explore', 'explores', 'explored', 'exploring', 'discover', 'discovers', 'discovered', 'discovering', 'visit', 'visits', 'visited', 'visiting', 'try', 'tries', 'tried', 'trying', 'enjoy', 'enjoys', 'enjoyed', 'enjoying', 'experience', 'experiences', 'experienced', 'experiencing', 'order', 'orders', 'ordered', 'ordering', 'buy', 'buys', 'bought', 'buying', 'get', 'gets', 'got', 'getting', 'see', 'sees', 'saw', 'seeing', 'eat', 'eats', 'ate', 'eating', 'drink', 'drinks', 'drank', 'drinking', 'taste', 'tastes', 'tasted', 'tasting', 'try', 'tries', 'tried', 'trying', 'find', 'finds', 'found', 'finding', 'search', 'searches', 'searched', 'searching', 'explore', 'explores', 'explored', 'exploring', 'discover', 'discovers', 'discovered', 'discovering', 'visit', 'visits', 'visited', 'visiting', 'go', 'goes', 'went', 'gone', 'going', 'come', 'comes', 'came', 'coming', 'take', 'takes', 'took', 'taken', 'taking', 'give', 'gives', 'gave', 'given', 'giving', 'show', 'shows', 'showed', 'showing', 'see', 'sees', 'saw', 'seeing', 'look', 'looks', 'looked', 'looking', 'find', 'finds', 'found', 'finding', 'try', 'tries', 'tried', 'trying', 'want', 'wants', 'wanted', 'wanting', 'like', 'likes', 'liked', 'liking', 'love', 'loves', 'loved', 'loving', 'prefer', 'prefers', 'preferred', 'preferring', 'recommend', 'recommends', 'recommended', 'recommending', 'suggest', 'suggests', 'suggested', 'suggesting', 'search', 'searches', 'searched', 'searching', 'explore', 'explores', 'explored', 'exploring', 'discover', 'discovers', 'discovered', 'discovering', 'visit', 'visits', 'visited', 'visiting', 'try', 'tries', 'tried', 'trying', 'enjoy', 'enjoys', 'enjoyed', 'enjoying', 'experience', 'experiences', 'experienced', 'experiencing', 'order', 'orders', 'ordered', 'ordering', 'buy', 'buys', 'bought', 'buying', 'get', 'gets', 'got', 'getting', 'see', 'sees', 'saw', 'seeing', 'eat', 'eats', 'ate', 'eating', 'drink', 'drinks', 'drank', 'drinking', 'taste', 'tastes', 'tasted', 'tasting', 'try', 'tries', 'tried', 'trying', 'find', 'finds', 'found', 'finding', 'search', 'searches', 'searched', 'searching', 'explore', 'explores', 'explored', 'exploring', 'discover', 'discovers', 'discovered', 'discovering', 'visit', 'visits', 'visited', 'visiting', 'go', 'goes', 'went', 'gone', 'going', 'come', 'comes', 'came', 'coming', 'take', 'takes', 'took', 'taken', 'taking', 'give', 'gives', 'gave', 'given', 'giving', 'show', 'shows', 'showed', 'showing', 'see', 'sees', 'saw', 'seeing', 'look', 'looks', 'looked', 'looking', 'find', 'finds', 'found', 'finding', 'try', 'tries', 'tried', 'trying', 'want', 'wants', 'wanted', 'wanting', 'like', 'likes', 'liked', 'liking', 'love', 'loves', 'loved', 'loving', 'prefer', 'prefers', 'preferred', 'preferring', 'recommend', 'recommends', 'recommended', 'recommending', 'suggest', 'suggests', 'suggested', 'suggesting', 'search', 'searches', 'searched', 'searching', 'explore', 'explores', 'explored', 'exploring', 'discover', 'discovers', 'discovered', 'discovering', 'visit', 'visits', 'visited', 'visiting', 'try', 'tries', 'tried', 'trying', 'enjoy', 'enjoys', 'enjoyed', 'enjoying', 'experience', 'experiences', 'experienced', 'experiencing', 'order', 'orders', 'ordered', 'ordering', 'buy', 'buys', 'bought', 'buying', 'get', 'gets', 'got', 'getting', 'see', 'sees', 'saw', 'seeing', 'eat', 'eats', 'ate', 'eating', 'drink', 'drinks', 'drank', 'drinking', 'taste', 'tastes', 'tasted', 'tasting', 'try', 'tries', 'tried', 'trying', 'find', 'finds', 'found', 'finding', 'search', 'searches', 'searched', 'searching', 'explore', 'explores', 'explored', 'exploring', 'discover', 'discovers', 'discovered', 'discovering', 'visit', 'visits', 'visited', 'visiting', 'go', 'goes', 'went', 'gone', 'going', 'come', 'comes', 'came', 'coming', 'take', 'takes', 'took', 'taken', 'taking', 'give', 'gives', 'gave', 'given', 'giving', 'show', 'shows', 'showed', 'showing', 'see', 'sees', 'saw', 'seeing', 'look', 'looks', 'looked', 'looking', 'find', 'finds', 'found', 'finding', 'try', 'tries', 'tried', 'trying', 'want', 'wants', 'wanted', 'wanting', 'like', 'likes', 'liked', 'liking', 'love', 'loves', 'loved', 'loving', 'prefer', 'prefers', 'preferred', 'preferring', 'recommend', 'recommends', 'recommended', 'recommending', 'suggest', 'suggests', 'suggested', 'suggesting', 'search', 'searches', 'searched', 'searching', 'explore', 'explores', 'explored', 'exploring', 'discover', 'discovers', 'discovered', 'discovering', 'visit', 'visits', 'visited', 'visiting', 'try', 'tries', 'tried', 'trying', 'enjoy', 'enjoys', 'enjoyed', 'enjoying', 'experience', 'experiences', 'experienced', 'experiencing', 'order', 'orders', 'ordered', 'ordering', 'buy', 'buys', 'bought', 'buying', 'get', 'gets', 'got', 'getting', 'see', 'sees', 'saw', 'seeing', 'eat', 'eats', 'ate', 'eating', 'drink', 'drinks', 'drank', 'drinking', 'taste', 'tastes', 'tasted', 'tasting', 'try', 'tries', 'tried', 'trying', 'find', 'finds', 'found', 'finding', 'search', 'searches', 'searched', 'searching', 'explore', 'explores', 'explored', 'exploring', 'discover', 'discovers', 'discovered', 'discovering', 'visit', 'visits', 'visited', 'visiting', 'go', 'goes', 'went', 'gone', 'going', 'come', 'comes', 'came', 'coming', 'take', 'takes', 'took', 'taken', 'taking', 'give', 'gives', 'gave', 'given', 'giving', 'show', 'shows', 'showed', 'showing', 'see', 'sees', 'saw', 'seeing', 'look', 'looks', 'looked', 'looking', 'find', 'finds', 'found', 'finding', 'try', 'tries', 'tried', 'trying', 'want', 'wants', 'wanted', 'wanting', 'like', 'likes', 'liked', 'liking', 'love', 'loves', 'loved', 'loving', 'prefer', 'prefers', 'preferred', 'preferring', 'recommend', 'recommends', 'recommended', 'recommending', 'suggest', 'suggests', 'suggested', 'suggesting', 'search', 'searches', 'searched', 'searching', 'explore', 'explores', 'explored', 'exploring', 'discover', 'discovers', 'discovered', 'discovering', 'visit', 'visits', 'visited', 'visiting', 'try', 'tries', 'tried', 'trying', 'enjoy', 'enjoys', 'enjoyed', 'enjoying', 'experience', 'experiences', 'experienced', 'experiencing', 'order', 'orders', 'ordered', 'ordering', 'buy', 'buys', 'bought', 'buying', 'get', 'gets', 'got', 'getting', 'see', 'sees', 'saw', 'seeing', 'eat', 'eats', 'ate', 'eating', 'drink', 'drinks', 'drank', 'drinking', 'taste', 'tastes', 'tasted', 'tasting', 'try', 'tries', 'tried', 'trying', 'find', 'finds', 'found', 'finding', 'search', 'searches', 'searched', 'searching', 'explore', 'explores', 'explored', 'exploring', 'discover', 'discovers', 'discovered', 'discovering', 'visit', 'visits', 'visited', 'visiting', 'go', 'goes', 'went', 'gone', 'going', 'come', 'comes', 'came', 'coming', 'take', 'takes', 'took', 'taken', 'taking', 'give', 'gives', 'gave', 'given', 'giving', 'show', 'shows', 'showed', 'showing', 'see', 'sees', 'saw', 'seeing', 'look', 'looks', 'looked', 'looking', 'find', 'finds', 'found', 'finding', 'try', 'tries', 'tried', 'trying', 'want', 'wants', 'wanted', 'wanting', 'like', 'likes', 'liked', 'liking', 'love', 'loves', 'loved', 'loving', 'prefer', 'prefers', 'preferred', 'preferring', 'recommend', 'recommends', 'recommended', 'recommending', 'suggest', 'suggests', 'suggested', 'suggesting', 'search', 'searches', 'searched', 'searching', 'explore', 'explores', 'explored', 'exploring', 'discover', 'discovers', 'discovered', 'discovering', 'visit', 'visits', 'visited', 'visiting', 'try', 'tries', 'tried', 'trying', 'enjoy', 'enjoys', 'enjoyed', 'enjoying', 'experience', 'experiences', 'experienced', 'experiencing', 'order', 'orders', 'ordered', 'ordering', 'buy', 'buys', 'bought', 'buying', 'get', 'gets', 'got', 'getting', 'see', 'sees', 'saw', 'seeing', 'eat', 'eats', 'ate', 'eating', 'drink', 'drinks', 'drank', 'drinking', 'taste', 'tastes', 'tasted', 'tasting', 'try', 'tries', 'tried', 'trying', 'find', 'finds', 'found', 'finding', 'search', 'searches', 'searched', 'searching', 'explore', 'explores', 'explored', 'exploring', 'discover', 'discovers', 'discovered', 'discovering', 'visit', 'visits', 'visited', 'visiting', 'go', 'goes', 'went', 'gone', 'going', 'come', 'comes', 'came', 'coming', 'take', 'takes', 'took', 'taken', 'taking', 'give', 'gives', 'gave', 'given', 'giving', 'show', 'shows', 'showed', 'showing', 'see', 'sees', 'saw', 'seeing', 'look', 'looks', 'looked', 'looking', 'find', 'finds', 'found', 'finding', 'try', 'tries', 'tried', 'trying', 'want', 'wants', 'wanted', 'wanting', 'like', 'likes', 'liked', 'liking', 'love', 'loves', 'loved', 'loving', 'prefer', 'prefers', 'preferred', 'preferring', 'recommend', 'recommends', 'recommended', 'recommending', 'suggest', 'suggests', 'suggested', 'suggesting', 'search', 'searches', 'searched', 'searching', 'explore', 'explores', 'explored', 'exploring', 'discover', 'discovers', 'discovered', 'discovering', 'visit', 'visits', 'visited', 'visiting', 'try', 'tries', 'tried', 'trying', 'enjoy', 'enjoys', 'enjoyed', 'enjoying', 'experience', 'experiences', 'experienced', 'experiencing', 'order', 'orders', 'ordered', 'ordering', 'buy', 'buys', 'bought', 'buying', 'get', 'gets', 'got', 'getting', 'see', 'sees', 'saw', 'seeing', 'eat', 'eats', 'ate', 'eating', 'drink', 'drinks', 'drank', 'drinking', 'taste', 'tastes', 'tasted', 'tasting', 'try', 'tries', 'tried', 'trying', 'find', 'finds', 'found', 'finding', 'search', 'searches', 'searched', 'searching', 'explore', 'explores', 'explored', 'exploring', 'discover', 'discovers', 'discovered', 'discovering', 'visit', 'visits', 'visited', 'visiting', 'go', 'goes', 'went', 'gone', 'going', 'come', 'comes', 'came', 'coming', 'take', 'takes', 'took', 'taken', 'taking', 'give', 'gives', 'gave', 'given', 'giving', 'show', 'shows', 'showed', 'showing', 'see', 'sees', 'saw', 'seeing', 'look', 'looks', 'looked', 'looking', 'find', 'finds', 'found', 'finding', 'try', 'tries', 'tried', 'trying', 'want', 'wants', 'wanted', 'wanting', 'like', 'likes', 'liked', 'liking', 'love', 'loves', 'loved', 'loving', 'prefer', 'prefers', 'preferred', 'preferring', 'recommend', 'recommends', 'recommended', 'recommending', 'suggest', 'suggests', 'suggested', 'suggesting', 'search', 'searches', 'searched', 'searching', 'explore', 'explores', 'explored', 'exploring', 'discover', 'discovers', 'discovered', 'discovering', 'visit', 'visits', 'visited', 'visiting'];
+
+  // List of known Swiss cities (add more as needed)
+  const swissCities = [
+    'Zurich', 'Geneva', 'Luzern', 'Lucerne', 'Bern', 'Basel', 'Lausanne', 'Winterthur', 'St. Gallen', 'Lugano', 'Biel', 'Thun', 'Köniz', 'La Chaux-de-Fonds', 'Schaffhausen', 'Fribourg', 'Chur', 'Neuchâtel', 'Vernier', 'Uster', 'Sion', 'Emmen', 'Yverdon-les-Bains', 'Zug', 'Kreuzlingen', 'Rapperswil-Jona', 'Montreux', 'Frauenfeld', 'Wil', 'Baar', 'Carouge', 'Bellinzona', 'Aarau', 'Kloten', 'Renens', 'Allschwil', 'Wädenswil', 'Gossau', 'Onex', 'Vevey', 'Dietikon', 'Meyrin', 'Nyon', 'Wetzikon', 'Bulle', 'Muttenz', 'Pully', 'Locarno', 'Olten', 'Riehen', 'Baden', 'Thalwil', 'Burgdorf', 'Steffisburg', 'Morges', 'Buchs', 'Monthey', 'Horw', 'Pratteln', 'Sierre', 'Aigle', 'Martigny', 'Brig-Glis', 'Schlieren', 'Binningen', 'Dübendorf', 'Crissier', 'Mendrisio', 'Arbon', 'La Tour-de-Peilz', 'Spreitenbach', 'Pfäffikon', 'Volketswil', 'Wohlen', 'Wettingen', 'Bex', 'Ecublens', 'Versoix', 'Gland', 'Bulle', 'Le Locle', 'Morges', 'Payerne', 'Samedan', 'Sarnen', 'Sierre', 'Sursee', 'Zofingen', 'Zollikon', 'Zug', 'Zurich'];
+
+  // Tokenize and filter
+  const tokens = query.split(/\s+/).map(t => t.replace(/[^a-zA-ZäöüÄÖÜßéèàçÉÈÀÇ]/g, ''));
+  const filtered = tokens.filter(t => t && !stopwords.includes(t.toLowerCase()));
+
+  // Try to find a city and a food/keyword
+  let city: string | undefined = undefined;
+  let food: string | undefined = undefined;
+  for (const token of filtered) {
+    if (!city && swissCities.some(c => c.toLowerCase() === token.toLowerCase())) {
+      city = token;
+    } else if (!food) {
+      food = token;
+    }
+  }
+  return { food, city };
+}
+
+/**
+ * Search businesses using a quick query string (e.g. from QuickSearch)
+ */
+export async function searchBusinessesByQuickQuery(query: string, limit: number = 12, page: number = 1): Promise<{ businesses: DiscoverBusiness[]; total: number }> {
+  const { food, city } = extractRelevantKeywords(query);
+  let whereClauses = 'WHERE 1=1';
+  if (food) {
+    whereClauses += ` AND (BUSINESS_NAME LIKE '%${food}%' OR DESCRIPTION LIKE '%${food}%' OR CATEGORY_NAME LIKE '%${food}%')`;
+  }
+  if (city) {
+    whereClauses += ` AND (ADDRESS_TOWN LIKE '%${city}%' OR ADDRESS_CITY LIKE '%${city}%')`;
+  }
+  const offset = (page - 1) * limit;
+  const sql = `SELECT * FROM business_detail_view_all ${whereClauses} ORDER BY Ranking DESC, CAST(GOOGLE_RATING AS FLOAT) DESC LIMIT ${limit} OFFSET ${offset}`;
+  const countSql = `SELECT COUNT(*) as total FROM business_detail_view_all ${whereClauses}`;
+  try {
+    const [results, countResult] = await Promise.all([
+      prisma.$queryRawUnsafe(sql),
+      prisma.$queryRawUnsafe(countSql)
+    ]);
+    const total = Array.isArray(countResult) && countResult.length > 0 ? Number(countResult[0].total) : 0;
+    return { businesses: results as DiscoverBusiness[], total };
+  } catch (error) {
+    console.error('Error in searchBusinessesByQuickQuery:', error);
+    return { businesses: [], total: 0 };
+  }
 }

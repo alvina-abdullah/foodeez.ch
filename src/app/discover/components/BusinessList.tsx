@@ -2,11 +2,10 @@
 
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { BusinessDetail } from "@/types/business.types";
-import BusinessCard from "./BusinessCard";
 import { Grid, List } from "lucide-react";
 import BusinessListItem from "./BusinessListItem";
 import { DiscoverBusiness } from "@/types/discover.types";
+import BusinessCard from "./BusinessCard";
 
 interface BusinessListProps {
     businesses: DiscoverBusiness[];
