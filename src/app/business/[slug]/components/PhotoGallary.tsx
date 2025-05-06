@@ -1,11 +1,7 @@
 import { motion } from "framer-motion";
 import Image from "next/image";
+import { GooglePhoto } from "./fetchGooglePlaceDetails";
 
-interface GooglePhoto {
-  photoUrl: string;
-  width: number;
-  height: number;
-}
 
 interface GooglePhotoGalleryProps {
   photos: GooglePhoto[];
@@ -28,7 +24,7 @@ export default function GooglePhotoGallery({
         📸 Photo Gallery {businessName && `of ${businessName}`}
       </h2>
       <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
-        {photos.slice(0, 12).map((photo, index) => (
+        {photos.map((photo, index) => (
           <motion.div
             key={index}
             className="overflow-hidden rounded-xl shadow-lg"

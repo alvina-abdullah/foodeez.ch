@@ -1,28 +1,47 @@
 import React from "react";
-import type { BusinessData } from "../page";
 import Image from "next/image";
+import clsx from "clsx";
 
 interface BusinessImageProps {
-  business: BusinessData;
+  imageUrl?: string;
+  businessName: string;
+  className?: string;
 }
 
-const BusinessImage: React.FC<BusinessImageProps> = ({ business }) => {
-  if (!business.IMAGE_URL) {
-    return (
-      <div className="w-full h-72 md:h-full rounded-xl overflow-hidden shadow bg-background-card flex items-center justify-center text-text-light">
-        No image available
-      </div>
-    );
-  }
+const BusinessImage: React.FC<BusinessImageProps> = ({
+  imageUrl,
+  businessName,
+  className = "",
+}) => {
+
   return (
-    <div className="w-full h-72 md:h-full rounded-xl overflow-hidden shadow">
-      <Image
-        height={288}
-        width={1000}
-        src={business.IMAGE_URL}
-        alt={business.BUSINESS_NAME || "Business"}
-        className="object-cover w-full h-full"
-      />
+    <div
+      className={clsx(
+        "relative w-full aspect-video rounded-2xl overflow-hidden shadow-lg",
+        className
+      )}
+    >
+      {imageUrl ? (
+        <Image
+          src={imageUrl}
+          alt={businessName || "Business"}
+          fill
+          className="object-cover w-full h-full"
+          sizes="(max-width: 768px) 100vw, 50vw"
+          priority
+        />
+      ) : (
+        <div className="flex items-center justify-center w-full h-full bg-gray-100 dark:bg-gray-800 text-gray-500 text-lg font-medium">
+          No image available
+        </div>
+      )}
+
+      {/* Optional gradient overlay */}
+      {imageUrl && (
+        <div className="absolute bottom-0 w-full h-16 bg-gradient-to-t from-black/60 to-transparent px-4 py-2 text-white text-sm flex items-end">
+          {businessName}
+        </div>
+      )}
     </div>
   );
 };
