@@ -15,7 +15,7 @@ import CitySection from "@/components/home/CitySection/index";
 
 export default function Home() {
   return (
-    <div className="min-h-screen bg-white">
+    <div className=" bg-white">
       {/* Hero Section with Search */}
       <HeroSection />
 
@@ -76,5 +76,9 @@ From 5 - 2028 April No record
 3 May 2.5 hour
 
 4 May 2 hour
+
+5 May No work
+
+6 May 4 hours
 
 */

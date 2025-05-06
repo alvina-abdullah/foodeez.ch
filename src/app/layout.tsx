@@ -29,8 +29,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={`${inter.variable} ${poppins.variable} scroll-smooth`}>
-      <body className="min-h-screen flex flex-col font-sans bg-background text-text-main">
+    <html lang="en" className={`${inter.variable} ${poppins.variable} scroll-smooth `}>
+      <body className="flex flex-col font-sans bg-background max-w-[1440px] mx-auto min-h-screen">
         <AnnouncementBar2 />
         <AnnouncementBar />
         <Navbar />

@@ -68,6 +68,7 @@ export default function FeaturedBusiness() {
   const [isPending, startTransition] = useTransition();
   const [error, setError] = useState<string | null>(null);
   const [perPage, setPerPage] = useState(20);
+  const [totalCountofBusiness, setTotalCountOfBusiness ] = useState(0)
 
   const visibleCategories = FOOD_CATEGORIES.slice(0, VISIBLE_CATEGORIES_LIMIT);
   const hiddenCategories = FOOD_CATEGORIES.slice(VISIBLE_CATEGORIES_LIMIT);
@@ -93,11 +94,17 @@ export default function FeaturedBusiness() {
         setError(null);
         startTransition(async () => {
           const limit = (perPageOverride ?? perPage) * batch;
-          const data = await getBusinessesByTypeAndCategories({
+          const response = await getBusinessesByTypeAndCategories({
             foodType: selectedFoodType,
             categoryId: selectedCategoryId,
             // limit,
           });
+
+          const data = response.businesses
+
+          setTotalCountOfBusiness(response.totalCount)
+
+          
 
           if (Array.isArray(data)) {
             setBusinesses(data);
@@ -126,6 +133,7 @@ export default function FeaturedBusiness() {
 
   // Handlers
   const handleFoodTypeSelect = (type: string) => {
+    console.log(type)
     setSelectedFoodType(type);
 
     // Only reset category selection when switching to "All"
@@ -167,7 +175,7 @@ export default function FeaturedBusiness() {
   const showSkeleton = isPending || initialLoading;
   const showEmptyState =
     !isPending && !initialLoading && !error && businesses.length === 0;
-  const visibleBusinesses = businesses.slice(0, perPage * currentBatch);
+  // const visibleBusinesses = businesses.slice(0, perPage * currentBatch);
 
   return (
     <section className="container max-w-7xl mx-auto px-4 py-12">
@@ -198,8 +206,8 @@ export default function FeaturedBusiness() {
       />
 
       <ResultCountInfo
-        visibleCount={visibleBusinesses.length}
-        totalCount={businesses.length}
+        visibleCount={businesses.length}
+        totalCount={totalCountofBusiness}
         selectedFoodType={selectedFoodType}
         selectedCategory={selectedCategory}
         clearAllFilters={clearAllFilters}
@@ -212,7 +220,7 @@ export default function FeaturedBusiness() {
       {showEmptyState && <EmptyState clearAllFilters={clearAllFilters} />}
 
       <BusinessGrid
-        businesses={visibleBusinesses}
+        businesses={businesses}
         isPending={isPending}
         error={error}
       />

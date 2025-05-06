@@ -180,22 +180,25 @@ export async function getBusinessesByLocation({
 export async function getBusinessesByTypeAndCategories(params: {
   foodType: string;
   categoryId?: number;
-
-}): Promise<BusinessDetail[]> {
-  const { foodType, categoryId } = params;
+  limit?: number;
+  skip?: number;
+}): Promise<{ businesses: BusinessDetail[]; totalCount: number }> {
+  const { foodType, categoryId, limit = 20, skip = 0 } = params;
   const normalizedType = foodType.toLowerCase();
 
-  try {
+  console.log(`[DEBUG] getBusinessesByTypeAndCategories called with:`, { foodType, categoryId, limit, skip });
 
-    // Step 1: If category is specified, get business IDs that have this category
+  try {
     let businessIdsInCategory: number[] = [];
 
+    // 🔹 Step 1: Get businesses by category
     if (categoryId !== undefined) {
-      // Get businesses linked to this category through the relation table
+      console.log(`[DEBUG] Fetching business IDs for category ID: ${categoryId}`);
+
       const businessCategoryLinks = await prisma.businessToBusinessCategory.findMany({
         where: {
           businessCategoryId: categoryId,
-          status: 1 // Only active relations
+          status: 1
         },
         select: {
           businessId: true
@@ -206,73 +209,78 @@ export async function getBusinessesByTypeAndCategories(params: {
         .map(link => link.businessId)
         .filter((id): id is number => id !== null && id !== undefined);
 
-      console.log(`Found ${businessIdsInCategory.length} businesses in category ${categoryId}`);
+      console.log(`[DEBUG] Found ${businessIdsInCategory.length} businesses linked to category ${categoryId}`);
 
-      // If no businesses found in this category, return empty array
       if (businessIdsInCategory.length === 0) {
-        return [];
+        console.log(`[DEBUG] No businesses found for category ${categoryId}, returning empty result.`);
+        return { businesses: [], totalCount: 0 };
       }
     }
 
-    // Step 2: Get businesses based on food type and category filter
-    let businesses: any[] = [];
+    // 🔹 Step 2: Prepare view and where clause
     const whereClause = categoryId !== undefined
       ? { BUSINESS_ID: { in: businessIdsInCategory } }
       : {};
 
-    try {
-      // Select appropriate database view based on food type
-      if (normalizedType === 'halal') {
-        businesses = await prisma.business_detail_view_halal.findMany({
-          where: whereClause,
-          // take: Math.min(limit, 50),
-          orderBy: { BUSINESS_NAME: 'asc' }
-        });
-      } else if (normalizedType === 'vegan') {
-        businesses = await prisma.business_detail_view_vegan.findMany({
-          where: whereClause,
-          // take: Math.min(limit, 50),
-          orderBy: { BUSINESS_NAME: 'asc' }
-        });
-      } else if (normalizedType === 'vegetarian') {
-        businesses = await prisma.business_detail_view_vegetarian.findMany({
-          where: whereClause,
-          // take: Math.min(limit, 50),
-          orderBy: { BUSINESS_NAME: 'asc' }
-        });
-      } else {
-        // Default to 'all' businesses
-        businesses = await prisma.business_detail_view_all.findMany({
-          where: whereClause,
-          // take: Math.min(limit, 50),
-          orderBy: { BUSINESS_NAME: 'asc' }
-        });
-      }
+    let businesses: any[] = [];
+    let totalCount = 0;
 
+    const getData = async (model: any, viewName: string) => {
+      console.log(`[DEBUG] Querying view: ${viewName} with whereClause:`, whereClause);
+
+      const [data, count] = await Promise.all([
+        model.findMany({
+          where: whereClause,
+          skip,
+          take: limit,
+          orderBy: { BUSINESS_NAME: 'asc' }
+        }),
+        model.count({
+          where: whereClause
+        })
+      ]);
+
+      console.log(`[DEBUG] View ${viewName} returned ${data.length} businesses (skip: ${skip}, take: ${limit}), totalCount: ${count}`);
+      return { data, count };
+    };
+
+    try {
+      if (normalizedType === 'halal') {
+        ({ data: businesses, count: totalCount } = await getData(prisma.business_detail_view_halal, 'business_detail_view_halal'));
+      } else if (normalizedType === 'vegan') {
+        ({ data: businesses, count: totalCount } = await getData(prisma.business_detail_view_vegan, 'business_detail_view_vegan'));
+      } else if (normalizedType === 'vegetarian') {
+        ({ data: businesses, count: totalCount } = await getData(prisma.business_detail_view_vegetarian, 'business_detail_view_vegetarian'));
+      } else {
+        ({ data: businesses, count: totalCount } = await getData(prisma.business_detail_view_all, 'business_detail_view_all'));
+      }
     } catch (dbError) {
-      console.error(`Error querying food type view (${normalizedType}):`, dbError);
-      // Fallback to all businesses view if specific view fails
-      businesses = await prisma.business_detail_view_all.findMany({
-        where: whereClause,
-        // take: Math.min(limit, 50),
-        orderBy: { BUSINESS_NAME: 'asc' }
-      });
+      console.error(`[ERROR] Error querying food type view (${normalizedType}):`, dbError);
+      console.log(`[DEBUG] Falling back to business_detail_view_all`);
+
+      ({ data: businesses, count: totalCount } = await getData(prisma.business_detail_view_all, 'business_detail_view_all'));
     }
 
-    // Step 3: Normalize results for consistent structure
-    return businesses.map(business => {
-      // Determine the ranking field based on the view type
-      const ranking = business.IFNULL_d_Ranking__0_ !== undefined
-        ? business.IFNULL_d_Ranking__0_
-        : (business.Ranking || 0);
+    // 🔹 Step 3: Normalize and return
+    const normalizedBusinesses = businesses.map(business => ({
+      ...business,
+      Ranking:
+        business.IFNULL_d_Ranking__0_ !== undefined
+          ? business.IFNULL_d_Ranking__0_
+          : (business.Ranking || 0)
+    }));
 
-      return {
-        ...business,
-        Ranking: ranking
-      };
-    });
+    console.log(`[DEBUG] Final business list prepared with ${normalizedBusinesses.length} items.`);
+
+    return {
+      businesses: normalizedBusinesses,
+      totalCount
+    };
   } catch (error) {
-    console.error(`Error fetching businesses by type and categories:`, error);
-    return [];
+    console.error(`[ERROR] Error in getBusinessesByTypeAndCategories:`, error);
+    return {
+      businesses: [],
+      totalCount: 0
+    };
   }
 }

@@ -1,4 +1,4 @@
-import { cn } from "@/lib/utils/utils";
+import { cn } from "@/lib/utils/cn";
 import { Loader2 } from "lucide-react";
 
 const PER_PAGE_OPTIONS = [20, 40, 60, 80, 100];
