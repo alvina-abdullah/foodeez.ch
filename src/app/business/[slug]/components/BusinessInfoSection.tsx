@@ -1,8 +1,8 @@
 import { SocialLinks } from '@/components/core/SocialLinks';
-import { Button } from '@/components/ui/button';
-import { MapPin, Phone, Mail, Globe } from 'lucide-react';
+import { MapPin, Phone, Globe } from 'lucide-react';
+import { BusinessDetail } from '@/types/business.types';
 
-const BusinessInfoSection: React.FC<{ business: any }> = ({ business }) => {
+const BusinessInfoSection: React.FC<{ business: BusinessDetail }> = ({ business }) => {
   return (
     <div className="space-y-6">
       {/* Description Section */}
@@ -54,9 +54,9 @@ const BusinessInfoSection: React.FC<{ business: any }> = ({ business }) => {
          
           className="gap-2 [&>a]:text-primary"
         />
-        <Button className="bg-primary hover:bg-primary/90">
+        <button className="btn-primary">
           Reserve Table
-        </Button>
+        </button>
       </div>
     </div>
   );

@@ -24,6 +24,7 @@ export default function LoginPage() {
       setIsCodeSent(true);
     } catch (err) {
       setError('Failed to send verification code. Please try again.');
+      console.error('Failed to send verification code:', err);
     } finally {
       setIsLoading(false);
     }
@@ -42,6 +43,7 @@ export default function LoginPage() {
       window.location.href = '/dashboard';
     } catch (err) {
       setError('Invalid verification code. Please try again.');
+      console.error('Failed to verify code:', err);
     } finally {
       setIsLoading(false);
     }

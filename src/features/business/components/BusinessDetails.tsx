@@ -1,15 +1,15 @@
 // components/BusinessDetails.tsx
 
-import { business } from '@prisma/client';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Phone, Globe, MapPin, Star } from 'lucide-react';
 import Badge from '../../../components/core/Badge';
 import { SocialLinks } from '../../../components/core/SocialLinks';
 import { ReviewsSection } from './ReviewsSection';
+import { BusinessDetail } from '@/types/business.types';
 
 interface BusinessDetailsProps {
-  business: business;
+  business: BusinessDetail;
 }
 
 export function BusinessDetails({ business }: BusinessDetailsProps) {
@@ -26,10 +26,6 @@ export function BusinessDetails({ business }: BusinessDetailsProps) {
     FACEBOOK_LINK,
     INSTA_LINK,
     GOOGLE_RATING,
-    WHATSAPP_LINK,
-    TWITTER_LINK,
-    LINKEDIN_LINK,
-    YOUTUBE_LINK,
     TIKTOK_LINK,
   } = business;
 
@@ -37,10 +33,6 @@ export function BusinessDetails({ business }: BusinessDetailsProps) {
   const socialLinks = {
     facebook: FACEBOOK_LINK,
     instagram: INSTA_LINK,
-    whatsapp: WHATSAPP_LINK,
-    twitter: TWITTER_LINK,
-    linkedin: LINKEDIN_LINK,
-    youtube: YOUTUBE_LINK,
     tiktok: TIKTOK_LINK,
     website: WEB_ADDRESS,
   };
@@ -151,7 +143,6 @@ export function BusinessDetails({ business }: BusinessDetailsProps) {
           <SocialLinks
             {...socialLinks}
             variant="circle"
-            color="colored"
             size="md"
             className="flex-wrap"
           />

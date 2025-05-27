@@ -1,33 +1,9 @@
 'use client';
 
 import { useState } from 'react';
-import { MapPin, Phone, Mail, Clock } from 'lucide-react';
+import { MapPin, Phone, Mail, Clock, Send } from 'lucide-react';
 import { Input } from '@/components/core/Input';
 import { Button } from '@/components/core/Button';
-
-const offices = [
-  {
-    city: 'New York',
-    address: '123 Business Avenue, New York, NY 10001',
-    phone: '+1 (555) 123-4567',
-    email: 'ny@businesshub.com',
-    hours: 'Mon-Fri 9:00 AM - 6:00 PM EST',
-  },
-  {
-    city: 'London',
-    address: '456 Enterprise Street, London, UK SW1A 1AA',
-    phone: '+44 20 7123 4567',
-    email: 'london@businesshub.com',
-    hours: 'Mon-Fri 9:00 AM - 6:00 PM GMT',
-  },
-  {
-    city: 'Singapore',
-    address: '789 Innovation Road, Singapore 018956',
-    phone: '+65 6789 0123',
-    email: 'singapore@businesshub.com',
-    hours: 'Mon-Fri 9:00 AM - 6:00 PM SGT',
-  },
-];
 
 export default function ContactPage() {
   const [formData, setFormData] = useState({
@@ -65,28 +41,68 @@ export default function ContactPage() {
     }));
   };
 
+  const contactInfo = [
+    {
+      icon: <MapPin className="h-6 w-6" />,
+      title: 'Our Location',
+      description: '8154 Oberglatt, Switzerland',
+    },
+    {
+      icon: <Phone className="h-6 w-6" />,
+      title: 'Phone Number',
+      description: '+41 76 408 94 30',
+    },
+    {
+      icon: <Mail className="h-6 w-6" />,
+      title: 'Email Address',
+      description: 'info@foodeez.ch',
+    },
+ 
+  ];
+
   return (
-    <div className="bg-white">
+    <div className="">
       {/* Header */}
-      <div className="relative isolate bg-secondary-900">
+      <div className="relative isolate overflow-hidden bg-gradient-to-b from-primary to-primary/90">
+        <div className="absolute inset-0 bg-[url('/grid.svg')] bg-center [mask-image:linear-gradient(180deg,white,rgba(255,255,255,0))]"></div>
         <div className="mx-auto max-w-7xl px-6 py-24 sm:py-32 lg:px-8">
           <div className="mx-auto max-w-2xl text-center">
             <h1 className="text-4xl font-bold tracking-tight text-white sm:text-6xl">
-              Contact Us
+              Get in Touch
             </h1>
-            <p className="mt-6 text-lg leading-8 text-secondary-300">
-              Have questions? We're here to help. Get in touch with our team.
+            <p className="mt-6 text-lg leading-8 text-white/90">
+              Have questions? We're here to help. Reach out to our team and we'll get back to you as soon as possible.
             </p>
           </div>
         </div>
       </div>
 
       <div className="mx-auto max-w-7xl px-6 py-16 sm:py-24 lg:px-8">
-        <div className="grid grid-cols-1 gap-x-8 gap-y-16 lg:grid-cols-2">
+        {/* Contact Info Cards */}
+        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 mb-16">
+          {contactInfo.map((info, index) => (
+            <div
+              key={index}
+              className="bg-white rounded-xl p-6 shadow-sm hover:shadow-md transition-shadow duration-300"
+            >
+              <div className="flex items-center gap-4">
+                <div className="p-3 bg-primary/10 rounded-lg text-primary">
+                  {info.icon}
+                </div>
+                <div>
+                  <h3 className="font-semibold text-gray-900">{info.title}</h3>
+                  <p className="mt-1 text-sm text-gray-600">{info.description}</p>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        <div className=" max-w-5xl mx-auto">
           {/* Contact Form */}
-          <div>
-            <h2 className="text-2xl font-bold text-secondary-900">Send us a message</h2>
-            <p className="mt-4 text-lg text-secondary-600">
+          <div className="bg-white rounded-2xl p-8 shadow-sm">
+            <h2 className="text-2xl font-bold text-gray-900">Send us a message</h2>
+            <p className="mt-2 text-gray-600">
               Fill out the form below and we'll get back to you within 24 hours.
             </p>
 
@@ -97,6 +113,7 @@ export default function ContactPage() {
                 value={formData.name}
                 onChange={handleInputChange}
                 required
+                placeholder="John Doe"
               />
               <Input
                 label="Email"
@@ -105,6 +122,7 @@ export default function ContactPage() {
                 value={formData.email}
                 onChange={handleInputChange}
                 required
+                placeholder="john@example.com"
               />
               <Input
                 label="Subject"
@@ -112,11 +130,12 @@ export default function ContactPage() {
                 value={formData.subject}
                 onChange={handleInputChange}
                 required
+                placeholder="How can we help?"
               />
               <div>
                 <label
                   htmlFor="message"
-                  className="block text-sm font-medium text-secondary-700"
+                  className="block text-sm font-medium text-gray-700"
                 >
                   Message
                 </label>
@@ -126,17 +145,23 @@ export default function ContactPage() {
                   rows={4}
                   value={formData.message}
                   onChange={handleInputChange}
-                  className="mt-1 block w-full rounded-md border border-secondary-300 px-4 py-2 text-secondary-900 shadow-sm focus:border-primary-500 focus:ring-2 focus:ring-primary-500"
+                  className="mt-1 block w-full rounded-lg border border-gray-300 px-4 py-2 text-gray-900 shadow-sm focus:border-primary-500 focus:ring-2 focus:ring-primary-500"
+                  placeholder="Your message here..."
                   required
                 />
               </div>
 
-              <Button type="submit" isLoading={isLoading}>
+              <Button 
+                type="submit" 
+                isLoading={isLoading}
+                className="w-full flex items-center justify-center gap-2"
+              >
+                {!isLoading && <Send className="h-4 w-4" />}
                 Send Message
               </Button>
 
               {isSuccess && (
-                <div className="rounded-md bg-green-50 p-4">
+                <div className="rounded-lg bg-green-50 p-4 border border-green-200">
                   <p className="text-sm text-green-800">
                     Thank you for your message. We'll get back to you soon!
                   </p>
@@ -145,44 +170,7 @@ export default function ContactPage() {
             </form>
           </div>
 
-          {/* Office Locations */}
-          <div>
-            <h2 className="text-2xl font-bold text-secondary-900">Our Offices</h2>
-            <p className="mt-4 text-lg text-secondary-600">
-              Visit us at one of our office locations around the world.
-            </p>
-
-            <div className="mt-8 space-y-12">
-              {offices.map((office) => (
-                <div
-                  key={office.city}
-                  className="rounded-lg bg-secondary-50 p-6 shadow-sm"
-                >
-                  <h3 className="text-xl font-semibold text-secondary-900">
-                    {office.city}
-                  </h3>
-                  <div className="mt-4 space-y-3">
-                    <div className="flex items-start">
-                      <MapPin className="mt-1 h-5 w-5 flex-shrink-0 text-secondary-600" />
-                      <p className="ml-3 text-secondary-600">{office.address}</p>
-                    </div>
-                    <div className="flex items-center">
-                      <Phone className="h-5 w-5 flex-shrink-0 text-secondary-600" />
-                      <p className="ml-3 text-secondary-600">{office.phone}</p>
-                    </div>
-                    <div className="flex items-center">
-                      <Mail className="h-5 w-5 flex-shrink-0 text-secondary-600" />
-                      <p className="ml-3 text-secondary-600">{office.email}</p>
-                    </div>
-                    <div className="flex items-center">
-                      <Clock className="h-5 w-5 flex-shrink-0 text-secondary-600" />
-                      <p className="ml-3 text-secondary-600">{office.hours}</p>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
+          
         </div>
       </div>
     </div>

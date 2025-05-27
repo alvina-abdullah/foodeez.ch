@@ -1,5 +1,5 @@
 import { useState, useRef } from "react";
-import { GoogleMap, LoadScript } from "@react-google-maps/api";
+import { GoogleMap, LoadScript, Marker } from "@react-google-maps/api";
 import { Card } from "@/components/ui/card"; // Adjust path as needed
 
 interface MapCardProps {
@@ -41,7 +41,7 @@ export default function MapCard({ placeId }: MapCardProps) {
   };
 
   return (
-    <Card className="bg-gray-100">
+    <Card className="">
       {placeId ? (
         <LoadScript
           googleMapsApiKey={process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY!}
@@ -53,6 +53,7 @@ export default function MapCard({ placeId }: MapCardProps) {
             zoom={center ? 15 : 1}
             onLoad={handleLoad}
           />
+          
         </LoadScript>
       ) : (
         <div className="p-8 flex items-center justify-center h-64">

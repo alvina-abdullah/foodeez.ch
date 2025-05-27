@@ -1,16 +1,15 @@
 "use client";
 
-import { useState, useEffect, useCallback, useTransition } from "react";
+import { useState, useEffect, useCallback, useTransition, Suspense } from "react";
 import {
   searchBusinesses,
   getPopularSearchTerms,
   getFoodCategories,
-  getDietaryPreferences,
   getPriceRanges,
 } from "@/services/DiscoverPageService";
 import SearchHero from "./components/SearchHero";
 
-import { useSearchParams, useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import Filters from "./components/Filters";
 import SearchLoading from "./components/SearchLoading";
 import NoResults from "./components/NoResults";
@@ -18,24 +17,28 @@ import BusinessList from "./components/BusinessList";
 import Pagination from "./components/Pagination";
 import { DiscoverBusiness } from "@/types/discover.types";
 
-export default function DiscoverPage() {
+type Category = {
+  id: number;
+  name: string;
+  count: number;
+};
+
+type PriceRange = {
+  id: number;
+  name: string;
+  symbol: string;
+};
+
+function DiscoverPage() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
 
-  // State
   const [businesses, setBusinesses] = useState<DiscoverBusiness[]>([]);
   const [totalResults, setTotalResults] = useState(0);
   const [popularSearches, setPopularSearches] = useState<string[]>([]);
-  const [categories, setCategories] = useState<
-    { id: number; name: string; count: number }[]
-  >([]);
-  const [dietaryOptions, setDietaryOptions] = useState<
-    { id: number; name: string; count: number }[]
-  >([]);
-  const [priceRanges, setPriceRanges] = useState<
-    { id: number; name: string; symbol: string }[]
-  >([]);
+  const [categories, setCategories] = useState<Category[]>([]);
+  const [priceRanges, setPriceRanges] = useState<PriceRange[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
   // Get search params
@@ -57,16 +60,14 @@ export default function DiscoverPage() {
   useEffect(() => {
     const loadInitialData = async () => {
       try {
-        const [terms, cats, diets, prices] = await Promise.all([
+        const [terms, cats, prices] = await Promise.all([
           getPopularSearchTerms(),
           getFoodCategories(),
-          getDietaryPreferences(),
           getPriceRanges(),
         ]);
 
         setPopularSearches(terms);
         setCategories(cats);
-        setDietaryOptions(diets);
         setPriceRanges(prices);
       } catch (error) {
         console.error("Error loading initial data:", error);
@@ -181,6 +182,7 @@ export default function DiscoverPage() {
         {/* Results Info and Sorting */}
         <div className="flex flex-wrap justify-between items-center mb-6">
           <div>
+          
             <h2 className="text-2xl font-bold text-text-main">
               {isLoading ? (
                 <span className="animate-pulse">Searching...</span>
@@ -258,5 +260,14 @@ export default function DiscoverPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+// Wrap the component with Suspense
+export default function DiscoverPageWithSuspense() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <DiscoverPage />
+    </Suspense>
   );
 }

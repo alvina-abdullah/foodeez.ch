@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { X, Bell } from 'lucide-react';
+import { X } from 'lucide-react';
 
 interface AnnouncementBarProps {
   message?: string;
@@ -10,7 +10,7 @@ interface AnnouncementBarProps {
 }
 
 export default function AnnouncementBar({
-  message = "Announcment Bar",
+  message = "Coming Soon",
   bgColor = "bg-accent-400",
   textColor = "text-white",
 }: AnnouncementBarProps) {
@@ -28,9 +28,7 @@ export default function AnnouncementBar({
       <div className="max-w-5xl w-full text-sm sm:text-base font-medium">
         {message}
         {" "}
-        <a href="/signup" className="underline font-bold hover:text-white/90 transition-colors">
-          Sign up now
-        </a>
+      
       </div>
 
       {/* Close button */}

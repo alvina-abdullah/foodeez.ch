@@ -52,7 +52,6 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
     {
       variant,
       size,
-      withIcon,
       label,
       helperText,
       error,

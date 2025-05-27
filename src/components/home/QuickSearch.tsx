@@ -10,20 +10,20 @@ const trendingItems = [
   "Hungry in Zurich? Here's what's nearby!",
 ];
 
-const touristFavorites = [
-  "Found the best shawarma in Lucerne!",
-  "I didn't expect Thai food this good in the Alps.",
-];
+// const touristFavorites = [
+//   "Found the best shawarma in Lucerne!",
+//   "I didn't expect Thai food this good in the Alps.",
+// ];
 
-const shareIdeas = [
-  "Be a Food Explorer — Earn Points & Badges",
-  "Know a hidden gem? Recommend it!",
-  "Help us serve better! Tell us what's missing.",
-];
+// const shareIdeas = [
+//   "Be a Food Explorer — Earn Points & Badges",
+//   "Know a hidden gem? Recommend it!",
+//   "Help us serve better! Tell us what's missing.",
+// ];
 
 export default function QuickSearch() {
   return (
-    <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-8">
+    <section className="py-10 space-y-8">
       {/* Header */}
       <div className="text-center">
         <h2 className="text-2xl sm:text-3xl font-bold text-primary flex items-center justify-center gap-2">
@@ -58,7 +58,7 @@ export default function QuickSearch() {
       </motion.div>
 
       {/* Tourist Favorites */}
-      <motion.div
+      {/* <motion.div
         className="bg-white shadow rounded-2xl p-6 border border-gray-200"
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -80,10 +80,10 @@ export default function QuickSearch() {
             </li>
           ))}
         </ul>
-      </motion.div>
+      </motion.div> */}
 
       {/* Share Your Favorite */}
-      <motion.div
+      {/* <motion.div
         className="bg-white shadow rounded-2xl p-6 border border-gray-200"
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -102,7 +102,7 @@ export default function QuickSearch() {
             </li>
           ))}
         </ul>
-      </motion.div>
+      </motion.div> */}
     </section>
   );
 }

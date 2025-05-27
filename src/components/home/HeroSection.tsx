@@ -7,16 +7,16 @@ import { FaArrowRight, FaSearch } from "react-icons/fa";
 import { motion, AnimatePresence } from "framer-motion";
 import { useRouter } from "next/navigation";
 
-type Slide = {
-  id: number;
-  title: string;
-  subtitle: string;
-  description: string;
-  cta: string;
-  image: string;
-  alt: string;
-  link: string;
-};
+// type Slide = {
+//   id: number;
+//   title: string;
+//   subtitle: string;
+//   description: string;
+//   cta: string;
+//   image: string;
+//   alt: string;
+//   link: string;
+// };
 
 const slides = [
   {

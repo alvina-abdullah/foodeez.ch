@@ -11,7 +11,7 @@ import LoadingSkeleton from "./LoadingSkeleton";
 import ErrorState from "./ErrorState";
 import EmptyState from "./EmptyState";
 import BusinessGrid from "./BusinessGrid";
-import PaginationControls from "./PaginationControls";
+import PaginationControls, { PER_PAGE_OPTIONS } from "./PaginationControls";
 
 const FOOD_TYPES = ["All", "Halal", "Vegetarian", "Vegan"] as const;
 const FOOD_CATEGORIES = [
@@ -67,8 +67,8 @@ export default function FeaturedBusiness() {
   const [selectedCategory, setSelectedCategory] = useState<string>("");
   const [isPending, startTransition] = useTransition();
   const [error, setError] = useState<string | null>(null);
-  const [perPage, setPerPage] = useState(20);
-  const [totalCountofBusiness, setTotalCountOfBusiness ] = useState(0)
+  const [perPage, setPerPage] = useState(PER_PAGE_OPTIONS[0]);
+  const [totalCountofBusiness, setTotalCountOfBusiness] = useState(0);
 
   const visibleCategories = FOOD_CATEGORIES.slice(0, VISIBLE_CATEGORIES_LIMIT);
   const hiddenCategories = FOOD_CATEGORIES.slice(VISIBLE_CATEGORIES_LIMIT);
@@ -97,14 +97,12 @@ export default function FeaturedBusiness() {
           const response = await getBusinessesByTypeAndCategories({
             foodType: selectedFoodType,
             categoryId: selectedCategoryId,
-            // limit,
+            limit,
           });
 
-          const data = response.businesses
+          const data = response.businesses;
 
-          setTotalCountOfBusiness(response.totalCount)
-
-          
+          setTotalCountOfBusiness(response.totalCount);
 
           if (Array.isArray(data)) {
             setBusinesses(data);
@@ -133,7 +131,7 @@ export default function FeaturedBusiness() {
 
   // Handlers
   const handleFoodTypeSelect = (type: string) => {
-    console.log(type)
+    console.log(type);
     setSelectedFoodType(type);
 
     // Only reset category selection when switching to "All"
@@ -150,6 +148,7 @@ export default function FeaturedBusiness() {
   const clearAllFilters = () => {
     setSelectedFoodType(INITIAL_FOOD_TYPE);
     setSelectedCategory("");
+    setPerPage(PER_PAGE_OPTIONS[0])
   };
 
   const handleViewMoreBusiness = (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -178,7 +177,7 @@ export default function FeaturedBusiness() {
   // const visibleBusinesses = businesses.slice(0, perPage * currentBatch);
 
   return (
-    <section className="container max-w-7xl mx-auto px-4 py-12">
+    <section className="py-12">
       <div className="text-center mb-10">
         <h2 className="text-2xl md:text-3xl font-bold mb-2">
           Foodeez Top Selection

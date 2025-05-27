@@ -7,6 +7,7 @@ import { Menu, X } from "lucide-react";
 import { AnimatePresence } from "framer-motion";
 import DropdownMenu from "../core/DropDownMenu";
 import MobileMenu from "../ui/MobileMenu";
+import Image from "next/image";
 
 export const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -29,7 +30,7 @@ export const Navbar = () => {
 
   return (
     <nav
-      className={`z-50 sticky top-0 transition-all duration-300 border-b-2 ${
+      className={`z-50 h-[90px] sticky top-0 transition-all duration-300 border-b-2 ${
         isScrolled ? "bg-white shadow-md" : "bg-white/90 backdrop-blur-sm"
       }`}
       aria-label="Main Navigation"
@@ -38,18 +39,26 @@ export const Navbar = () => {
       <div className="h-0.5 w-full bg-gradient-to-r from-primary via-accent to-secondary" />
 
       <div className="container-custom">
-        <div className="flex items-center justify-between h-16">
+        <div className="flex items-center justify-between h-20">
           {/* Logo */}
-          <Link
-            href="/"
-            className="text-2xl font-bold text-primary font-heading"
-          >
-            Foodeez
+
+          <Link href="/">
+            <Image
+              src="/Logo/LogoFoodeezMain.svg"
+              alt="Foodeez Logo"
+              height={100}
+              width={100}
+            />
           </Link>
 
           {/* Desktop Nav */}
           <div className="hidden lg:flex items-center space-x-5">
-            {[{ label: "Share your Experiance", href: "/reviews" }].map(
+            {[
+              
+              // { label: "Share your Experiance", href: "/review" }
+              { label: "Share your Experiance", href: "/coming-soon" }
+
+            ].map( 
               (link) => (
                 <Link
                   key={link.href}
@@ -68,20 +77,25 @@ export const Navbar = () => {
             <DropdownMenu
               label="Be Foodeez Partner"
               items={[
-                { label: "Register Your Business", href: "/business/register" },
-                { label: "Pricing Plans", href: "/pricing" },
+                // { label: "Register Your Business", href: "/business/register" },
+                // { label: "Pricing Plans", href: "/pricing" },
+                // { label: "Contact Sales", href: "/contact" },
+                { label: "Register Your Business", href: "/coming-soon" },
+                { label: "Pricing Plans", href: "/coming-soon" },
                 { label: "Contact Sales", href: "/contact" },
               ]}
             />
 
             <Link
-              href="/signin"
+              // href="/signin"
+              href="/coming-soon"
               className="text-sm font-medium text-primary hover:text-primary-dark transition"
             >
               Sign in
             </Link>
             <Link
-              href="/signup"
+              // href="/signup"
+               href="/coming-soon"
               className="text-sm font-medium bg-primary text-white px-4 py-2 rounded-full hover:bg-primary-dark transition-colors"
             >
               Sign Up

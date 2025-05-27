@@ -17,7 +17,7 @@ const BusinessImage: React.FC<BusinessImageProps> = ({
   return (
     <div
       className={clsx(
-        "relative w-full aspect-video rounded-2xl overflow-hidden shadow-lg",
+        "relative w-full aspect-video overflow-hidden shadow-lg",
         className
       )}
     >
@@ -25,13 +25,14 @@ const BusinessImage: React.FC<BusinessImageProps> = ({
         <Image
           src={imageUrl}
           alt={businessName || "Business"}
-          fill
+          width={1000}
+          height={1000}
           className="object-cover w-full h-full"
           sizes="(max-width: 768px) 100vw, 50vw"
           priority
         />
       ) : (
-        <div className="flex items-center justify-center w-full h-full bg-gray-100 dark:bg-gray-800 text-gray-500 text-lg font-medium">
+        <div className="flex items-center justify-center w-full h-full  text-gray-500 text-lg font-medium">
           No image available
         </div>
       )}

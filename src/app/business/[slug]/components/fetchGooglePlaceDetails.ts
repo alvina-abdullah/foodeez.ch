@@ -18,6 +18,7 @@ export interface GooglePlaceDetails {
   totalReviews: number;
   reviews: GoogleReview[];
   photos: GooglePhoto[];
+  openingHours : any
 }
 
 export async function fetchGooglePlaceDetails(placeId: string): Promise<GooglePlaceDetails> {
@@ -35,6 +36,8 @@ export async function fetchGooglePlaceDetails(placeId: string): Promise<GooglePl
     if (data.status !== "OK") {
       throw new Error(data.error_message || "Failed to fetch place details");
     }
+
+    console.log(data)
 
     const result = data.result;
 
@@ -58,6 +61,7 @@ export async function fetchGooglePlaceDetails(placeId: string): Promise<GooglePl
       totalReviews: result.user_ratings_total,
       reviews,
       photos,
+      openingHours : result.openingHours
     };
   } catch (err) {
     console.error("Error fetching place details:", err);

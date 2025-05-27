@@ -5,7 +5,6 @@ import Link from "next/link";
 import Image from "next/image";
 import { MapPin, Calendar, Globe, Phone } from "lucide-react";
 import { generateSlug } from "@/lib/utils/genSlug";
-import { BusinessDetail } from "@/types/business.types";
 import { SocialLinks } from "@/components/core/SocialLinks";
 import StarIcon from "@/components/ui/StarIcon";
 import { DiscoverBusiness } from "@/types/discover.types";

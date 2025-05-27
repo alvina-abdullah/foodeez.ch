@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { ArrowLeft, ArrowRight, MessageSquareQuote, Star } from 'lucide-react';
 import { motion } from 'framer-motion';
 import ReviewCard, { ReviewData } from '../../features/reviews/components/ReviewCard';
-import { getHighRatedReviews } from '@/services/reviewService';
+// import { getHighRatedReviews } from '@/services/reviewService';
 
 export default function TestimonialsSection() {
   const [reviews, setReviews] = useState<ReviewData[]>([]);
@@ -37,7 +37,8 @@ export default function TestimonialsSection() {
       try {
         setIsLoading(true);
         // Fetch top-rated reviews from our service
-        const reviewData = await getHighRatedReviews(8);
+        // const reviewData = await getHighRatedReviews(8);
+        const reviewData = await []
         setReviews(reviewData);
         setError(null);
       } catch (err) {

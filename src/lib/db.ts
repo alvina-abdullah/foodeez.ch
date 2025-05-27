@@ -3,6 +3,7 @@
 import { Prisma } from "@prisma/client";
 import { prisma } from "./prisma"
 import { BusinessDetail, BusinessResult } from "@/types/business.types";
+import { PER_PAGE_OPTIONS } from "@/components/home/FeaturedBusiness/PaginationControls";
 
 
 // Example function to test the schema
@@ -87,7 +88,33 @@ export async function getBusinessesByLocation({
     return await prisma.business_detail_view_all.findMany({
       where: { OR: conditions },
       take: Math.min(limit ?? 9, 50), // Prevent excessive limits
-      orderBy: { BUSINESS_NAME: 'asc' }
+      orderBy: { BUSINESS_NAME: 'asc' },
+      select: {
+        BUSINESS_ID: true,
+        BUSINESS_NAME: true,
+        SHORT_NAME: true,
+        DESCRIPTION: true,
+        ADDRESS_STREET: true,
+        ADDRESS_ZIP: true,
+        ADDRESS_TOWN: true,
+        ADDRESS_CITY_ID: true,
+        CITY_CODE: true,
+        CITY_NAME: true,
+        ADDRESS_COUNTRY: true,
+        PHONE_NUMBER: true,
+        WHATSAPP_NUMBER: true,
+        WEB_ADDRESS: true,
+        LOGO: true,
+        FACEBOOK_LINK: true,
+        INSTA_LINK: true,
+        TIKTOK_LINK: true,
+        GOOGLE_PROFILE: true,
+        IMAGE_URL: true,
+        GOOGLE_RATING: true,
+        APPROVED: true,
+        STATUS: true,
+        Ranking: true,
+      }
     });
   } catch (error) {
     if (error instanceof Prisma.PrismaClientKnownRequestError) {
@@ -183,17 +210,15 @@ export async function getBusinessesByTypeAndCategories(params: {
   limit?: number;
   skip?: number;
 }): Promise<{ businesses: BusinessDetail[]; totalCount: number }> {
-  const { foodType, categoryId, limit = 20, skip = 0 } = params;
+  const { foodType, categoryId, limit, skip = 0 } = params;
   const normalizedType = foodType.toLowerCase();
-
-  console.log(`[DEBUG] getBusinessesByTypeAndCategories called with:`, { foodType, categoryId, limit, skip });
 
   try {
     let businessIdsInCategory: number[] = [];
 
     // 🔹 Step 1: Get businesses by category
     if (categoryId !== undefined) {
-      console.log(`[DEBUG] Fetching business IDs for category ID: ${categoryId}`);
+
 
       const businessCategoryLinks = await prisma.businessToBusinessCategory.findMany({
         where: {
@@ -209,10 +234,10 @@ export async function getBusinessesByTypeAndCategories(params: {
         .map(link => link.businessId)
         .filter((id): id is number => id !== null && id !== undefined);
 
-      console.log(`[DEBUG] Found ${businessIdsInCategory.length} businesses linked to category ${categoryId}`);
+
 
       if (businessIdsInCategory.length === 0) {
-        console.log(`[DEBUG] No businesses found for category ${categoryId}, returning empty result.`);
+        console.log(`No businesses found for category ${categoryId}, returning empty result.`);
         return { businesses: [], totalCount: 0 };
       }
     }
@@ -226,7 +251,7 @@ export async function getBusinessesByTypeAndCategories(params: {
     let totalCount = 0;
 
     const getData = async (model: any, viewName: string) => {
-      console.log(`[DEBUG] Querying view: ${viewName} with whereClause:`, whereClause);
+
 
       const [data, count] = await Promise.all([
         model.findMany({
@@ -239,8 +264,6 @@ export async function getBusinessesByTypeAndCategories(params: {
           where: whereClause
         })
       ]);
-
-      console.log(`[DEBUG] View ${viewName} returned ${data.length} businesses (skip: ${skip}, take: ${limit}), totalCount: ${count}`);
       return { data, count };
     };
 
@@ -255,8 +278,7 @@ export async function getBusinessesByTypeAndCategories(params: {
         ({ data: businesses, count: totalCount } = await getData(prisma.business_detail_view_all, 'business_detail_view_all'));
       }
     } catch (dbError) {
-      console.error(`[ERROR] Error querying food type view (${normalizedType}):`, dbError);
-      console.log(`[DEBUG] Falling back to business_detail_view_all`);
+
 
       ({ data: businesses, count: totalCount } = await getData(prisma.business_detail_view_all, 'business_detail_view_all'));
     }
@@ -270,7 +292,7 @@ export async function getBusinessesByTypeAndCategories(params: {
           : (business.Ranking || 0)
     }));
 
-    console.log(`[DEBUG] Final business list prepared with ${normalizedBusinesses.length} items.`);
+
 
     return {
       businesses: normalizedBusinesses,

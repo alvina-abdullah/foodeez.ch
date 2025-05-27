@@ -1,5 +1,6 @@
 import React from 'react';
 import type { BusinessData } from '../page';
+import Image from 'next/image';
 
 interface ReservationImageProps {
   business: BusinessData;
@@ -15,10 +16,13 @@ const ReservationImage: React.FC<ReservationImageProps> = ({ business }) => {
   }
   return (
     <div className="w-full h-64 md:h-full rounded-xl overflow-hidden shadow mb-6 md:mb-0">
-      <img
+      <Image
         src={business.IMAGE_URL}
         alt={business.BUSINESS_NAME || 'Reservation'}
+        width={1000}
+        height={1000}
         className="object-cover w-full h-full"
+        priority
       />
     </div>
   );

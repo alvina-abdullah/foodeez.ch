@@ -6,7 +6,7 @@ type StarIconProps = {
 };
 
 const StarIcon: React.FC<StarIconProps> = ({ fillLevel, size = 20 }) => {
-  const clipId = `clip-${Math.round(fillLevel * 10)}`;
+  // const clipId = `clip-${Math.round(fillLevel * 10)}`;
 
   const clipPaths = (
     <defs>

@@ -2,10 +2,9 @@
 
 import { useParams } from "next/navigation";
 import { getBusinessById } from "@/lib/db";
-import { generateSlug, parseSlug } from "@/lib/utils/genSlug";
+import { parseSlug } from "@/lib/utils/genSlug";
 import BusinessImage from "./components/BusinessImage";
 import BusinessSkeleton from "./components/BusinessSkeleton";
-import Breadcrumb from "@/components/core/Breadcrumb";
 import React, { useState, useEffect } from "react";
 import { Separator } from "@/components/ui/separator";
 import MapCard from "./components/MapSectionBusinesProfile";
@@ -18,7 +17,6 @@ import { extractPlaceIdFromUrl } from "@/lib/utils/google";
 import GoogleReviews from "./components/GoogleReviews";
 import { ActionButtons } from "./components/action-buttons";
 import OpeningHours from "./components/OpeningHoursSection";
-import BusinessInfo from "./components/BusinessInfoSection";
 import BusinessInfoSection from "./components/BusinessInfoSection";
 
 export interface BusinessData {
@@ -58,11 +56,11 @@ const BusinessDetailPage = () => {
   const slug = useParams();
   const parsedId = parseSlug(slug?.slug as unknown as string);
 
+  const id = parsedId.id;
+
   useEffect(() => {
     async function fetchBusiness() {
-      if (!parsedId) return;
-
-      const data = await getBusinessById(Number(parsedId.id));
+      const data = await getBusinessById(Number(id));
 
       const mapped = data
         ? Object.fromEntries(
@@ -89,7 +87,7 @@ const BusinessDetailPage = () => {
     }
 
     fetchBusiness();
-  }, []); // 👈 runs once parsedId changes
+  }, [id]);
 
   useEffect(() => {
     let isMounted = true;
@@ -132,20 +130,20 @@ const BusinessDetailPage = () => {
   const image = business.IMAGE_URL || "/default-business.jpg";
   const url = typeof window !== "undefined" ? window.location.href : "";
 
-  const genslug = generateSlug(
-    business?.BUSINESS_NAME || "business",
-    business?.BUSINESS_ID
-  );
+  // const genslug = generateSlug(
+  //   business?.BUSINESS_NAME || "business",
+  //   business?.BUSINESS_ID
+  // );
 
-  const mockOpeningHours = [
-    { day: "Monday", hours: "10:00 AM - 10:00 PM" },
-    { day: "Tuesday", hours: "10:00 AM - 10:00 PM" },
-    { day: "Wednesday", hours: "10:00 AM - 10:00 PM" },
-    { day: "Thursday", hours: "10:00 AM - 10:00 PM" },
-    { day: "Friday", hours: "10:00 AM - 11:00 PM" },
-    { day: "Saturday", hours: "11:00 AM - 11:00 PM" },
-    { day: "Sunday", hours: "11:00 AM - 9:00 PM" },
-  ];
+  // const mockOpeningHours = [
+  //   { day: "Monday", hours: "10:00 AM - 10:00 PM" },
+  //   { day: "Tuesday", hours: "10:00 AM - 10:00 PM" },
+  //   { day: "Wednesday", hours: "10:00 AM - 10:00 PM" },
+  //   { day: "Thursday", hours: "10:00 AM - 10:00 PM" },
+  //   { day: "Friday", hours: "10:00 AM - 11:00 PM" },
+  //   { day: "Saturday", hours: "11:00 AM - 11:00 PM" },
+  //   { day: "Sunday", hours: "11:00 AM - 9:00 PM" },
+  // ];
 
   return (
     <>
@@ -164,19 +162,24 @@ const BusinessDetailPage = () => {
         <link rel="canonical" href={url} />
       </head>
 
-      <div className="min-h-screen bg-gray-50 pb-10">
+      <div className="">
         {/* Header with Restaurant Name and City */}
-        <div className="w-full bg-white shadow-sm py-4">
-          <div className="container mx-auto px-4">
-            <h1 className="text-xl md:text-2xl font-bold">
-              {business.BUSINESS_NAME} •{" "}
-              <span className="text-gray-600">{business.CITY_NAME}</span>
+        <div className=" p-4">
+          <div className="">
+            <h1 className="text-xl md:text-2xl lg:text-4xl font-bold">
+              {business.BUSINESS_NAME}
+              {business.CITY_NAME && (
+                <>
+                  {" "}
+                  • <span className="text-gray-600">{business.CITY_NAME}</span>
+                </>
+              )}
             </h1>
           </div>
         </div>
 
         {/* Main Content */}
-        <div className="container mx-auto px-4 mt-6">
+        <div className="">
           {/* Restaurant Profile Picture */}
           <div>
             <BusinessImage
@@ -195,7 +198,7 @@ const BusinessDetailPage = () => {
           />
 
           {/* Opening Hours */}
-          <OpeningHours openingHours={mockOpeningHours} />
+          <OpeningHours openingHours={googleBusinessData?.openingHours || []} />
 
           {/* Action Buttons */}
           <ActionButtons
@@ -213,12 +216,12 @@ const BusinessDetailPage = () => {
           />
 
           {/* Foodeez Reviews */}
-          <div className="relative mb-6">
+          <div className="relative my-6">
             <div className="absolute inset-0 flex items-center">
-              <Separator className="w-full bg-blue-200" />
+              <Separator className="w-full bg-gray-300" />
             </div>
             <div className="relative flex justify-center">
-              <span className="bg-blue-500 text-white px-6 py-1 rounded-full text-sm font-medium">
+              <span className="bg-primary text-white px-8 py-2 rounded-full text-sm font-medium">
                 {business.BUSINESS_NAME} Reviews
               </span>
             </div>
@@ -227,6 +230,17 @@ const BusinessDetailPage = () => {
           {/* Reviews */}
           <div className="">
             <GoogleReviews reviews={googleBusinessData?.reviews || []} />
+          </div>
+
+          <div className="relative my-6">
+            <div className="absolute inset-0 flex items-center">
+              <Separator className="w-full bg-gray-300" />
+            </div>
+            <div className="relative flex justify-center">
+              <span className="bg-primary text-white px-8 py-2 rounded-full text-sm font-medium">
+                 Location
+              </span>
+            </div>
           </div>
 
           {/* Google Map */}

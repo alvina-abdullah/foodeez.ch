@@ -13,7 +13,7 @@ const config: Config = {
 
         // 🍓 Primary Brand Color - for buttons, links, highlights
         primary: {
-          DEFAULT: '#EF4444',     // Crimson Red
+          DEFAULT: '#ff4d00',     // Crimson Red
           light: '#F87171',       // Light Red
           dark: '#DC2626',        // Dark Red
           50: '#FEF2F2',          // Very light red (backgrounds)

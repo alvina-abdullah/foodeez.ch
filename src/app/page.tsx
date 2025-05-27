@@ -3,9 +3,9 @@
 import BusinessCTA from "@/components/home/BusinessCTA";
 import ShareExperience from "@/components/home/ShareExperience";
 import BenefitsSection from "@/components/home/BenefitsSection";
-import AboutSection from "@/components/home/AboutSection";
+// import AboutSection from "@/components/home/AboutSection";
 // import TestimonialsSection from "@/components/home/TestimonialsSection";
-// import CtaSection from "@/components/home/CtaSection";
+import CtaSection from "@/components/home/CtaSection";
 import FaqSection from "@/components/home/FaqSection";
 import HeroSection from "@/components/home/HeroSection";
 import FeaturedBusiness from "@/components/home/FeaturedBusiness";
@@ -17,7 +17,7 @@ export default function Home() {
   return (
     <div className=" bg-white">
       {/* Hero Section with Search */}
-      <HeroSection />
+      {/* <HeroSection /> */}
 
       {/* Featured Business Grid */}
 
@@ -30,7 +30,7 @@ export default function Home() {
       <CitySection/>
 
       {/* About Section - We Are Foodeez */}
-      <AboutSection />
+      {/* <AboutSection /> */}
 
       {/* Testimonials from Google Reviews */}
       {/* <TestimonialsSection /> */}
@@ -41,17 +41,19 @@ export default function Home() {
       <ShareExperience />
 
       {/* Benefits Section */}
-      <BenefitsSection />
+      {/* <BenefitsSection />/ */}
 
       {/* FAQ Section */}
       <FaqSection />
 
-      {/* Map  Section */}
-      <MapSection />
-
       {/* Main CTA Section */}
+      <CtaSection />
 
-      {/* <CtaSection /> */}
+
+      {/* Map  Section */}
+      {/* <MapSection /> */}
+
+
     </div>
   );
 }
@@ -59,7 +61,7 @@ export default function Home() {
 /*
 
 
-Started 5 April
+Proper Started 5 April
 
 From 5 - 2028 April No record
 
@@ -80,5 +82,9 @@ From 5 - 2028 April No record
 5 May No work
 
 6 May 4 hours
+
+9 - 25 May No Work
+
+
 
 */

@@ -1,6 +1,6 @@
 'use client';
 
-import Image from 'next/image';
+// import Image from 'next/image';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { Users, Star, BarChart3, Award } from 'lucide-react';
@@ -92,9 +92,7 @@ export default function AboutSection() {
     <section className="section-padding bg-gradient-to-b from-background to-background-card">
       <div className="container-custom">
         <div className="text-center mb-16 max-w-3xl mx-auto">
-          <span className="inline-block px-3 py-1 bg-primary/10 text-primary text-sm font-medium rounded-full mb-4">
-            Our Story
-          </span>
+    
           <h2 className="text-3xl md:text-4xl font-bold text-text-main mb-6">
             The Food Discovery Platform You'll Love
           </h2>
@@ -167,4 +165,4 @@ export default function AboutSection() {
       </div>
     </section>
   );
-} 
+}

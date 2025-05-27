@@ -1,7 +1,6 @@
 'use client';
 
 import { Award, ShieldCheck, Gift, Check } from 'lucide-react';
-import Link from 'next/link';
 
 interface BenefitProps {
   icon: React.ReactNode;
@@ -11,18 +10,20 @@ interface BenefitProps {
 
 function BenefitCard({ icon, title, items }: BenefitProps) {
   return (
-    <div className="bg-white p-6 rounded-lg shadow-sm">
+    <div className="bg-white/80  backdrop-blur-md p-6 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-[1.02]">
       <div className="flex justify-center mb-4">
-        <div className="text-orange-500 w-12 h-12">
+        <div className="text-orange-500 bg-orange-100 rounded-full p-3">
           {icon}
         </div>
       </div>
-      <h3 className="text-lg font-bold text-secondary-900 mb-3 text-center">{title}</h3>
-      <ul className="space-y-2">
+      <h3 className="text-xl font-semibold text-center text-gray-900  mb-4">
+        {title}
+      </h3>
+      <ul className="space-y-3">
         {items.map((item, index) => (
-          <li key={index} className="flex items-start">
-            <Check size={16} className="text-green-600 mt-1 flex-shrink-0 mr-2" />
-            <span className="text-sm text-gray-700">{item}</span>
+          <li key={index} className="flex items-start text-gray-700 text-sm">
+            <Check size={18} className="text-green-600 mt-1 mr-2 flex-shrink-0" />
+            <span>{item}</span>
           </li>
         ))}
       </ul>
@@ -32,38 +33,51 @@ function BenefitCard({ icon, title, items }: BenefitProps) {
 
 export default function BenefitsSection() {
   return (
-    <section className="py-12 bg-white border-t border-gray-100">
-      <div className="container mx-auto px-4">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+    <section
+      className="py-16 px-4 sm:px-6 lg:px-8 "
+    >
+      <div className="max-w-7xl mx-auto">
+        {/* <div className="mb-12 text-center">
+          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 ">
+            Why Choose Foodeez?
+          </h2>
+          <p className="mt-2 text-gray-700  text-lg max-w-2xl mx-auto">
+            We go the extra mile to bring you the best experience in food delivery and discovery.
+          </p>
+        </div> */}
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           <BenefitCard 
-            icon={<Award size={48} />}
-            title="Treueprogramme"
+            icon={<Award size={36} />}
+            title="Loyalty Programs"
             items={[
-              "Sammle Stempel und erfahre mehr über Gewinnspiele, Rabatte, Neuigkeiten und mehr über unsere Newsletter und Sozialen Medien"
+              "Collect stamps & rewards",
+              "Get notified about contests & discounts",
+              "Stay updated via newsletter & social media"
             ]}
           />
           
           <BenefitCard 
-            icon={<ShieldCheck size={48} />}
-            title="Unsere Garantie"
+            icon={<ShieldCheck size={36} />}
+            title="Our Guarantee"
             items={[
-              "Ausgezeichneter Service",
-              "Echte Kundenbewertungen",
-              "Die grösste Auswahl an Restaurants in der Schweiz."
+              "Outstanding customer service",
+              "Real reviews you can trust",
+              "Switzerland’s largest restaurant network"
             ]}
           />
           
           <BenefitCard 
-            icon={<Gift size={48} />}
-            title="Deine Vorteile"
+            icon={<Gift size={36} />}
+            title="Your Benefits"
             items={[
-              "Wähle Dein Essen von mehr als 5.000 Partner aus",
-              "Bezahle online oder in bar",
-              "Bestell wann, wo und wie Du willst"
+              "Browse 5,000+ partner restaurants",
+              "Pay with card or cash",
+              "Order wherever and whenever you want"
             ]}
           />
         </div>
       </div>
     </section>
   );
-} 
+}

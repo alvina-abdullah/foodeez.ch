@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Search, MapPin, X } from "lucide-react";
+import { Search, X } from "lucide-react";
 import { motion } from "framer-motion";
 
 interface SearchHeroProps {

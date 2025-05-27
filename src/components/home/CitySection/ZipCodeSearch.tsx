@@ -3,6 +3,10 @@
 import { MapPin, Search, X } from "lucide-react";
 import { Autocomplete, LoadScript } from "@react-google-maps/api";
 
+const libraries: ("places" | "geometry" | "drawing" | "visualization")[] = [
+  "places",
+];
+
 interface ZipCodeSearchProps {
   zipCode: string;
   setZipCode: (zip: string) => void;
@@ -32,7 +36,7 @@ export default function ZipCodeSearch({
         <div className="relative w-full">
           <LoadScript
             googleMapsApiKey={process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY!}
-            libraries={["places"]}
+            libraries={libraries}
           >
             <Autocomplete
               onLoad={onLoad}
@@ -78,4 +82,4 @@ export default function ZipCodeSearch({
       </form>
     </div>
   );
-} 
+}

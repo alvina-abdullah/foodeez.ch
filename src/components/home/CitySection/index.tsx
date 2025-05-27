@@ -8,7 +8,7 @@ import ZipCodeSearch from "./ZipCodeSearch";
 import ContentHeader from "./ContentHeader";
 import LoadingSkeleton from "./LoadingSkeleton";
 import BusinessGrid from "./BusinessGrid";
-import ViewAllLink from "./ViewAllLink";
+
 
 type City = { CITY_NAME: string | null };
 
@@ -150,7 +150,7 @@ export default function CitySection() {
   const showEmptyState = !isLoading && !error && businesses.length === 0;
 
   return (
-    <section className="container max-w-7xl mx-auto px-4 py-12">
+    <section className="py-12">
       <div className="text-center mb-10">
         <h2 className="text-2xl md:text-3xl font-bold mb-2">
           Find Restaurants in Your City

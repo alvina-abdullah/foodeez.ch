@@ -119,7 +119,6 @@ export default function BusinessListItem({ business }: Props) {
             <SocialLinks
               {...socialLinks}
               size="sm"
-              color="colored"
               variant="default"
             />
           )}

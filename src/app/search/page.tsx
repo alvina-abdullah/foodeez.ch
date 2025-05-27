@@ -1,7 +1,5 @@
 import { Metadata } from "next";
 import { redirect } from "next/navigation";
-import prisma from "@/lib/prisma";
-import { searchBusinesses } from "@/services/database/searchService";
 
 export const metadata: Metadata = {
   title: "Search Results | Foodeez",
@@ -23,12 +21,6 @@ export default async function SearchPage({
   
   try {
     // Use our enhanced search service
-    const results = await searchBusinesses({
-      query: typeof query === 'string' ? query : query[0],
-      page: 1,
-      limit: 20,
-      sortBy: 'relevance',
-    });
     
     // Redirect to the discover page with the search query
     const redirectUrl = `/discover?q=${encodeURIComponent(typeof query === 'string' ? query : query[0])}`;

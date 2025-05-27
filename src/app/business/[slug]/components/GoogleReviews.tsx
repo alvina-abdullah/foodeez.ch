@@ -2,8 +2,9 @@
 import { Card } from "@/components/ui/card";
 import { Star, ChevronLeft, ChevronRight } from "lucide-react";
 import Image from "next/image";
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
 import { GoogleReview } from "./fetchGooglePlaceDetails";
+import { motion } from "framer-motion";
 
 interface GoogleReviewsProps {
   reviews: GoogleReview[];
@@ -22,58 +23,59 @@ export default function GoogleReviews({ reviews }: GoogleReviewsProps) {
     }
   };
 
+  useEffect(() => {
+    checkScrollPosition();
+  }, [reviews]);
+
   const scroll = (direction: "left" | "right") => {
     if (scrollRef.current) {
-      const scrollAmount = scrollRef.current.clientWidth * 0.8;
+      const scrollAmount = scrollRef.current.clientWidth * 0.9;
       scrollRef.current.scrollBy({
         left: direction === "left" ? -scrollAmount : scrollAmount,
         behavior: "smooth",
       });
-      
-      // Check position after scroll completes
       setTimeout(checkScrollPosition, 300);
     }
   };
 
   if (!reviews || reviews.length === 0) {
     return (
-      <div className="p-4 bg-gray-50 rounded-lg mb-6 text-center">
+      <div className="p-4  mb-6">
         <p className="text-gray-600">No reviews available.</p>
       </div>
     );
   }
 
   return (
-    <div className="relative w-full">
-      <h2 className="text-xl sm:text-2xl font-semibold mb-6 flex items-center px-4">
-        Customer Reviews
-      </h2>
-
+    <div className="relative w-full mb-8">
       <div className="relative group">
-        {/* Left button - only shown when needed */}
+        {/* Left button */}
         {showLeftButton && (
           <button
             onClick={() => scroll("left")}
-            className="absolute left-2 top-1/2 z-10 -translate-y-1/2 bg-white shadow-lg rounded-full p-2 hover:bg-gray-100 transition-opacity duration-300"
+            className="absolute left-0 top-1/2 z-10 -translate-y-1/2 bg-white shadow-md rounded-full p-2 hover:bg-gray-100 transition"
+            aria-label="Scroll Left"
           >
             <ChevronLeft className="h-6 w-6 text-gray-700" />
           </button>
         )}
 
-        {/* Review Cards */}
+        {/* Review Cards Carousel */}
         <div
+        id="no-scrollbar"
           ref={scrollRef}
-          className="flex overflow-x-auto space-x-6 px-6 py-2 scrollbar-hide scroll-smooth"
+          className="flex overflow-x-auto scroll-smooth px-6 space-x-4 py-2 scrollbar-hide"
           onScroll={checkScrollPosition}
         >
           {reviews.map((review, idx) => (
-            <Card
+            <motion.div
               key={idx}
-              className="min-w-[300px] w-[300px] h-[300px] flex-shrink-0 p-6 rounded-xl border bg-white shadow-sm hover:shadow-md transition-shadow"
+              whileHover={{ scale: 1.02 }}
+              className="flex-shrink-0"
             >
-              <div className="flex flex-col h-full">
-                {/* Header with avatar and name */}
-                <div className="flex items-center gap-4 mb-4">
+              <Card className="w-[350px] h-[340px] rounded-2xl border border-gray-200 bg-white p-5 shadow-md hover:shadow-lg transition-all flex flex-col">
+                {/* Top: Avatar + Name */}
+                <div className="flex items-center gap-4 mb-3">
                   {review.profile_photo_url ? (
                     <Image
                       src={review.profile_photo_url}
@@ -83,14 +85,14 @@ export default function GoogleReviews({ reviews }: GoogleReviewsProps) {
                       className="rounded-full object-cover h-12 w-12"
                     />
                   ) : (
-                    <div className="h-12 w-12 rounded-full bg-gray-200 flex items-center justify-center">
-                      <span className="text-gray-500 text-lg">
+                    <div className="h-12 w-12 rounded-full bg-gray-300 flex items-center justify-center">
+                      <span className="text-gray-600 text-lg">
                         {review.author_name.charAt(0).toUpperCase()}
                       </span>
                     </div>
                   )}
                   <div>
-                    <p className="font-medium text-gray-800">
+                    <p className="font-semibold text-gray-800">
                       {review.author_name}
                     </p>
                     <p className="text-sm text-gray-500">
@@ -99,8 +101,8 @@ export default function GoogleReviews({ reviews }: GoogleReviewsProps) {
                   </div>
                 </div>
 
-                {/* Rating stars */}
-                <div className="flex items-center gap-1 mb-4">
+                {/* Stars */}
+                <div className="flex items-center gap-1 mb-2">
                   {[...Array(5)].map((_, i) => (
                     <Star
                       key={i}
@@ -111,27 +113,28 @@ export default function GoogleReviews({ reviews }: GoogleReviewsProps) {
                       }`}
                     />
                   ))}
-                  <span className="ml-1 text-sm text-gray-600">
+                  <span className="text-sm text-gray-600 ml-1">
                     {review.rating.toFixed(1)}
                   </span>
                 </div>
 
-                {/* Review text */}
-                <div className="flex-grow overflow-y-auto">
-                  <p className="text-gray-700 leading-relaxed">
+                {/* Text (scrollable vertically if too long) */}
+                <div id="no-scrollbar" className="flex-grow overflow-y-auto pr-1 hide-scrollbar">
+                  <p className="text-gray-700 leading-relaxed text-sm">
                     {review.text}
                   </p>
                 </div>
-              </div>
-            </Card>
+              </Card>
+            </motion.div>
           ))}
         </div>
 
-        {/* Right button - only shown when needed */}
+        {/* Right button */}
         {showRightButton && (
           <button
             onClick={() => scroll("right")}
-            className="absolute right-2 top-1/2 z-10 -translate-y-1/2 bg-white shadow-lg rounded-full p-2 hover:bg-gray-100 transition-opacity duration-300"
+            className="absolute right-0 top-1/2 z-10 -translate-y-1/2 bg-white shadow-md rounded-full p-2 hover:bg-gray-100 transition"
+            aria-label="Scroll Right"
           >
             <ChevronRight className="h-6 w-6 text-gray-700" />
           </button>

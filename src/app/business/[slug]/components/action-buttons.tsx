@@ -24,22 +24,23 @@ export function ActionButtons({ onFavorite, onShare, onReview }: ActionButtonsPr
 
   const handleShare = async () => {
     setIsSharing(true);
-    try {
-      if (navigator.share) {
-        await navigator.share({
-          title: document.title,
-          url: window.location.href
-        });
-      } else {
-        await navigator.clipboard.writeText(window.location.href);
-        // toast.success('Link copied to clipboard!');
-      }
-      onShare?.();
-    } catch (error) {
-    //   toast.error('Sharing failed');
-    } finally {
+    // try {
+    //   if (navigator.share) {
+    //     await navigator.share({
+    //       title: document.title,
+    //       url: window.location.href
+    //     });
+    //   } else {
+    //     await navigator.clipboard.writeText(window.location.href);
+    //     // toast.success('Link copied to clipboard!');
+    //   }
+    //   onShare?.();
+    // } catch (error: any) {
+    //   console.error('Sharing failed:', error);
+    //   // toast.error('Sharing failed');
+    // } finally {
       setIsSharing(false);
-    }
+    
   };
 
   const handleReview = () => {

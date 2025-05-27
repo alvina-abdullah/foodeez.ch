@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState } from "react";
 import { GoogleMap, LoadScript, Marker } from "@react-google-maps/api";
 
 const containerStyle = {
@@ -10,13 +10,14 @@ const containerStyle = {
 
 const defaultZoom = 14;
 
+const libraries: ("places" | "geometry" | "drawing" | "visualization")[] = ["places"];
+
 export default function MapSection() {
   const [hasPermission, setHasPermission] = useState<boolean | null>(null);
   const [userLocation, setUserLocation] = useState<{
     lat: number;
     lng: number;
   } | null>(null);
-  const mapRef = useRef<google.maps.Map | null>(null);
 
   const requestLocation = () => {
     if (!navigator.geolocation) {
@@ -43,20 +44,6 @@ export default function MapSection() {
     requestLocation();
   }, []);
 
-  const handleZoomIn = () => {
-    if (mapRef.current) {
-      const currentZoom = mapRef.current.getZoom() ?? defaultZoom;
-      mapRef.current.setZoom(currentZoom + 1);
-    }
-  };
-
-  const handleZoomOut = () => {
-    if (mapRef.current) {
-      const currentZoom = mapRef.current.getZoom() ?? defaultZoom;
-      mapRef.current.setZoom(currentZoom - 1);
-    }
-  };
-
   return (
     <div className="relative w-full h-[600px] mt-10 rounded-xl overflow-hidden shadow-md">
       {hasPermission === null && (
@@ -69,6 +56,7 @@ export default function MapSection() {
         <>
           <LoadScript
             googleMapsApiKey={process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY!}
+            libraries={libraries}
           >
             <GoogleMap
               mapContainerStyle={containerStyle}

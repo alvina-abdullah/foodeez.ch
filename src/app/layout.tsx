@@ -33,6 +33,7 @@ export default function RootLayout({
       <body className="flex flex-col font-sans bg-background max-w-[1440px] mx-auto min-h-screen">
         <AnnouncementBar2 />
         <AnnouncementBar />
+   
         <Navbar />
         {/* Content padding to avoid overlap */}
         <main className="">

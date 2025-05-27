@@ -4,7 +4,6 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useState } from 'react';
 import { Star, Plus, MapPin, ExternalLink } from 'lucide-react';
-import { motion } from 'framer-motion';
 import slugify from 'slugify';
 
 interface ReviewImage {
@@ -59,7 +58,7 @@ const formatRelativeTime = (dateString: string) => {
   return `${Math.floor(diffInDays / 365)} years ago`;
 };
 
-export default function ReviewCard({ review, showBusinessInfo = false, variant = 'light', className = '' }: ReviewCardProps) {
+export default function ReviewCard({ review, showBusinessInfo = false, className = '' }: ReviewCardProps) {
   const [isExpanded, setIsExpanded] = useState(false);
   
   const toggleExpand = () => {

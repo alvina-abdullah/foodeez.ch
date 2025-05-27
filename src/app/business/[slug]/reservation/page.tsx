@@ -82,15 +82,15 @@ export default function ReservationPage() {
     if (businessId) {
       fetchBusiness();
     }
-  }, [businessId, slug]);
+  }, [businessId, slug , parsedId.id]);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: value
-    }));
-  };
+  // const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+  //   const { name, value } = e.target;
+  //   setFormData(prev => ({
+  //     ...prev,
+  //     [name]: value
+  //   }));
+  // };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -108,17 +108,17 @@ export default function ReservationPage() {
     }
   };
 
-  const nextStep = () => {
-    setCurrentStep(prev => prev + 1);
-    // Scroll to top on step change
-    window.scrollTo(0, 0);
-  };
+  // const nextStep = () => {
+  //   setCurrentStep(prev => prev + 1);
+  //   // Scroll to top on step change
+  //   window.scrollTo(0, 0);
+  // };
 
-  const prevStep = () => {
-    setCurrentStep(prev => Math.max(1, prev - 1));
-    // Scroll to top on step change
-    window.scrollTo(0, 0);
-  };
+  // const prevStep = () => {
+  //   setCurrentStep(prev => Math.max(1, prev - 1));
+  //   // Scroll to top on step change
+  //   window.scrollTo(0, 0);
+  // };
 
   if (loading) {
     return (

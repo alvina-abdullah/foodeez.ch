@@ -13,7 +13,6 @@ interface ReservationFormProps {
 }
 
 const ReservationForm: React.FC<ReservationFormProps> = ({
-  businessName,
   formData,
   setFormData,
   currentStep,
