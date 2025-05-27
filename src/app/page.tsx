@@ -85,6 +85,10 @@ From 5 - 2028 April No record
 
 9 - 25 May No Work
 
+26 May 5.5 Hours 
+
+27 May 3 hours
+
 
 
 */
