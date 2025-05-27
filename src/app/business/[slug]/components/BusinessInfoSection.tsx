@@ -1,14 +1,25 @@
-import { SocialLinks } from '@/components/core/SocialLinks';
-import { MapPin, Phone, Globe } from 'lucide-react';
-import { BusinessDetail } from '@/types/business.types';
+import { SocialLinks } from "@/components/core/SocialLinks";
+import { MapPin, Phone, Globe } from "lucide-react";
+import { BusinessDetail } from "@/types/business.types";
+import { generateSlug } from "@/lib/utils/genSlug";
+import Link from "next/link";
 
-const BusinessInfoSection: React.FC<{ business: BusinessDetail }> = ({ business }) => {
+const BusinessInfoSection: React.FC<{ business: BusinessDetail }> = ({
+  business,
+}) => {
+  const genslug = generateSlug(
+    business?.BUSINESS_NAME || "business",
+    business?.BUSINESS_ID
+  );
+
   return (
     <div className="space-y-6">
       {/* Description Section */}
       <div className="space-y-2">
-        <h2 className="text-xl font-semibold text-primary">Description</h2>
-        <p className="text-gray-700">{business.DESCRIPTION}</p>
+        <h2 className="sub-heading">Description</h2>
+        <p className="sub-heading-description !text-start !max-w-none !text-text-main">
+          {business.DESCRIPTION}
+        </p>
       </div>
 
       {/* Address & Contact */}
@@ -16,7 +27,9 @@ const BusinessInfoSection: React.FC<{ business: BusinessDetail }> = ({ business 
         <div className="flex items-start gap-4">
           <MapPin className="text-primary mt-1 h-5 w-5" />
           <div className="space-y-1">
-            <p className="font-medium text-gray-900">{business.ADDRESS_STREET}</p>
+            <p className="font-medium text-gray-900">
+              {business.ADDRESS_STREET}
+            </p>
             <p className="text-gray-600">
               {/* {business.ADDRESS_TOWN && `${business.ADDRESS_TOWN}, `} */}
               {business.CITY_NAME && `${business.CITY_NAME}, `}
@@ -51,12 +64,11 @@ const BusinessInfoSection: React.FC<{ business: BusinessDetail }> = ({ business 
           tiktok={business.TIKTOK_LINK}
           whatsapp={business.WHATSAPP_NUMBER}
           size="xl"
-         
           className="gap-2 [&>a]:text-primary"
         />
-        <button className="btn-primary">
-          Reserve Table
-        </button>
+        <Link href={`/business/${genslug}/reservation`} target="_blank">
+          <button className="btn-primary">Reserve Table</button>
+        </Link>
       </div>
     </div>
   );

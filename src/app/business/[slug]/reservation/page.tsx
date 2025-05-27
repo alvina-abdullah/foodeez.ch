@@ -1,18 +1,18 @@
-'use client';
+"use client";
 
-import { useState, useEffect } from 'react';
-import Link from 'next/link';
-import { useParams } from 'next/navigation';
-import { ChevronLeft } from 'lucide-react';
-import { extractBusinessId, parseSlug } from '@/lib/utils/genSlug';
-import LoadingSpinner from '@/components/core/LoadingSpinner';
-import { getBusinessById } from '@/lib/db';
-import ReservationHero from './components/ReservationHero';
-import ContactInfoCard from './components/ContactInfoCard';
-import ReservationImage from './components/ReservationImage';
-import ReservationForm from './components/ReservationForm';
-import ReservationSummary from './components/ReservationSummary';
-import ReservationSuccess from './components/ReservationSuccess';
+import { useState, useEffect } from "react";
+import Link from "next/link";
+import { useParams } from "next/navigation";
+import { ChevronLeft } from "lucide-react";
+import { extractBusinessId, parseSlug } from "@/lib/utils/genSlug";
+import LoadingSpinner from "@/components/core/LoadingSpinner";
+import { getBusinessById } from "@/lib/db";
+import ReservationHero from "./components/ReservationHero";
+import ContactInfoCard from "./components/ContactInfoCard";
+import ReservationImage from "./components/ReservationImage";
+import ReservationForm from "./components/ReservationForm";
+import ReservationSummary from "./components/ReservationSummary";
+import ReservationSuccess from "./components/ReservationSuccess";
 
 export interface BusinessData {
   BUSINESS_ID: number;
@@ -50,14 +50,14 @@ export default function ReservationPage() {
   const [business, setBusiness] = useState<any>();
   const [loading, setLoading] = useState(true);
   const [formData, setFormData] = useState({
-    date: '',
-    time: '',
-    guests: '2',
-    name: '',
-    email: '',
-    phone: '',
-    specialRequests: '',
-    occasion: ''
+    date: "",
+    time: "",
+    guests: "2",
+    name: "",
+    email: "",
+    phone: "",
+    specialRequests: "",
+    occasion: "",
   });
 
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -73,7 +73,7 @@ export default function ReservationPage() {
         const data = await getBusinessById(parsedId.id);
         setBusiness(data);
       } catch (error) {
-        console.error('Error fetching business:', error);
+        console.error("Error fetching business:", error);
       } finally {
         setLoading(false);
       }
@@ -82,7 +82,7 @@ export default function ReservationPage() {
     if (businessId) {
       fetchBusiness();
     }
-  }, [businessId, slug , parsedId.id]);
+  }, [businessId, slug, parsedId.id]);
 
   // const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
   //   const { name, value } = e.target;
@@ -99,10 +99,10 @@ export default function ReservationPage() {
     // In a real app, this would send data to an API
     try {
       // Simulate API call to book reservation
-      await new Promise(resolve => setTimeout(resolve, 1500));
+      await new Promise((resolve) => setTimeout(resolve, 1500));
       setIsSuccess(true);
     } catch (error) {
-      console.error('Error submitting reservation:', error);
+      console.error("Error submitting reservation:", error);
     } finally {
       setIsSubmitting(false);
     }
@@ -131,11 +131,16 @@ export default function ReservationPage() {
   if (!business) {
     return (
       <div className="max-w-3xl mx-auto px-4 py-12 text-center">
-        <h2 className="text-2xl font-bold text-red-600 mb-4">Business Not Found</h2>
+        <h2 className="text-2xl font-bold text-red-600 mb-4">
+          Business Not Found
+        </h2>
         <p className="text-gray-600 mb-6">
           Sorry, we couldn't find the business you're looking for.
         </p>
-        <Link href="/business" className="inline-flex items-center text-primary-600 hover:text-primary-700">
+        <Link
+          href="/business"
+          className="inline-flex items-center text-primary-600 hover:text-primary-700"
+        >
           <ChevronLeft size={16} className="mr-1" />
           Return to businesses
         </Link>
@@ -144,10 +149,14 @@ export default function ReservationPage() {
   }
 
   // Meta data
-  const title = business.BUSINESS_NAME ? `Reserve a Table at ${business.BUSINESS_NAME} | Foodeez` : 'Reserve a Table | Foodeez';
-  const description = business.DESCRIPTION ? `Reserve your table at ${business.BUSINESS_NAME} on Foodeez. ${business.DESCRIPTION}` : `Reserve your table at ${business.BUSINESS_NAME} on Foodeez.`;
-  const image = business.IMAGE_URL || '/reservation-default.jpg';
-  const url = typeof window !== 'undefined' ? window.location.href : '';
+  const title = business.BUSINESS_NAME
+    ? `Reserve a Table at ${business.BUSINESS_NAME} | Foodeez`
+    : "Reserve a Table | Foodeez";
+  const description = business.DESCRIPTION
+    ? `Reserve your table at ${business.BUSINESS_NAME} on Foodeez. ${business.DESCRIPTION}`
+    : `Reserve your table at ${business.BUSINESS_NAME} on Foodeez.`;
+  const image = business.IMAGE_URL || "/reservation-default.jpg";
+  const url = typeof window !== "undefined" ? window.location.href : "";
 
   if (isSuccess) {
     return (
@@ -158,7 +167,7 @@ export default function ReservationPage() {
           date={formData.date}
           time={formData.time}
           guests={formData.guests}
-          onBack={() => window.location.href = `/business/${slug}`}
+          onBack={() => (window.location.href = `/business/${slug}`)}
         />
       </div>
     );
@@ -180,8 +189,8 @@ export default function ReservationPage() {
         <meta name="twitter:image" content={image} />
         <link rel="canonical" href={url} />
       </head>
-      <div className="bg-background min-h-screen py-12">
-        <div className="max-w-5xl mx-auto px-4">
+      <div className=" py-12">
+        <div className="">
           <div className="mb-6">
             <Link
               href={`/business/${slug}`}
@@ -229,4 +238,4 @@ export default function ReservationPage() {
       </div>
     </>
   );
-} 
+}

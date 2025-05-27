@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
 import Image from "next/image";
 import { GooglePhoto } from "./fetchGooglePlaceDetails";
+import { Camera } from "lucide-react";
 
 interface GooglePhotoGalleryProps {
   photos: GooglePhoto[];
@@ -23,10 +24,18 @@ export default function GooglePhotoGallery({
   }
 
   return (
-    <div className="p-4">
-      <h2 className="text-2xl font-bold mb-6 text-center">
-        📸 Photo Gallery {businessName && `of ${businessName}`}
-      </h2>
+    <div className="py-8">
+      <div className="flex items-center sub-heading !mb-10">
+        <h2 className="flex items-center">
+          Photo Gallery{" "}
+          {businessName && (
+            <>
+              of&nbsp;<span className="text-secondary">{businessName}</span>
+            </>
+          )}
+        </h2>
+        <Camera className="ml-2" size={48} />
+      </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
         {photos.map((photo, index) => (

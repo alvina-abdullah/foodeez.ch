@@ -180,7 +180,7 @@ export default function FeaturedBusiness() {
     <section className="py-12">
       <div className="text-center mb-10">
         <h2 className="main-heading">
-          Foodeez Top Selection
+          Foodeez's Top Selection
         </h2>
         <p className="main-heading-description">
           Discover restaurants by dietary preferences and food categories

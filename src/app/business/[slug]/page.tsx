@@ -2,7 +2,7 @@
 
 import { useParams } from "next/navigation";
 import { getBusinessById } from "@/lib/db";
-import { parseSlug } from "@/lib/utils/genSlug";
+import { generateSlug, parseSlug } from "@/lib/utils/genSlug";
 import BusinessImage from "./components/BusinessImage";
 import BusinessSkeleton from "./components/BusinessSkeleton";
 import React, { useState, useEffect } from "react";
@@ -130,21 +130,7 @@ const BusinessDetailPage = () => {
   const image = business.IMAGE_URL || "/default-business.jpg";
   const url = typeof window !== "undefined" ? window.location.href : "";
 
-  // const genslug = generateSlug(
-  //   business?.BUSINESS_NAME || "business",
-  //   business?.BUSINESS_ID
-  // );
-
-  // const mockOpeningHours = [
-  //   { day: "Monday", hours: "10:00 AM - 10:00 PM" },
-  //   { day: "Tuesday", hours: "10:00 AM - 10:00 PM" },
-  //   { day: "Wednesday", hours: "10:00 AM - 10:00 PM" },
-  //   { day: "Thursday", hours: "10:00 AM - 10:00 PM" },
-  //   { day: "Friday", hours: "10:00 AM - 11:00 PM" },
-  //   { day: "Saturday", hours: "11:00 AM - 11:00 PM" },
-  //   { day: "Sunday", hours: "11:00 AM - 9:00 PM" },
-  // ];
-
+ 
   return (
     <>
       <head>
@@ -162,35 +148,33 @@ const BusinessDetailPage = () => {
         <link rel="canonical" href={url} />
       </head>
 
-      <div className="">
+      <div className="py-4">
         {/* Header with Restaurant Name and City */}
-        <div className=" p-4">
-          <div className="">
-            <h1 className="text-xl md:text-2xl lg:text-4xl font-bold">
-              {business.BUSINESS_NAME}
-              {business.CITY_NAME && (
-                <>
-                  {" "}
-                  • <span className="text-gray-600">{business.CITY_NAME}</span>
-                </>
-              )}
-            </h1>
-          </div>
+
+        <div className="">
+          <h1 className="sub-heading">
+            {business.BUSINESS_NAME}
+            {business.CITY_NAME && (
+              <>
+                {" "}
+                • <span className="text-secondary">{business.CITY_NAME}</span>
+              </>
+            )}
+          </h1>
         </div>
 
         {/* Main Content */}
         <div className="">
           {/* Restaurant Profile Picture */}
-          <div>
-            <BusinessImage
-              imageUrl={business.IMAGE_URL || ""}
-              businessName={business.BUSINESS_NAME || ""}
-              className="mb-6"
-            />
-          </div>
+
+          <BusinessImage
+            imageUrl={business.IMAGE_URL || ""}
+            businessName={business.BUSINESS_NAME || ""}
+            className="mb-6"
+          />
 
           {/* Info Section */}
-          <BusinessInfoSection business={business} />
+          <BusinessInfoSection business={business}  />
 
           <GooglePhotoGallery
             photos={googleBusinessData?.photos || []}
@@ -198,22 +182,23 @@ const BusinessDetailPage = () => {
           />
 
           {/* Opening Hours */}
-          <OpeningHours openingHours={googleBusinessData?.openingHours || []} />
+          <OpeningHours
+            openingHours={googleBusinessData?.openingHours || []}
+            isOpenNow={googleBusinessData?.isOpenNow || false}
+          />
 
           {/* Action Buttons */}
-          <ActionButtons
-            onFavorite={(isFavorite) => {
-              console.log("Favorite status:", isFavorite);
+          {/* <ActionButtons
+            onFavorite={() => {
+              console.log("Favorite status:");
             }}
             onShare={() => {
-              // Additional share logic if needed
               console.log("Share button clicked");
             }}
             onReview={() => {
-              // Custom review handling logic
               console.log("Review button clicked");
             }}
-          />
+          /> */}
 
           {/* Foodeez Reviews */}
           <div className="relative my-6">
@@ -238,7 +223,7 @@ const BusinessDetailPage = () => {
             </div>
             <div className="relative flex justify-center">
               <span className="bg-primary text-white px-8 py-2 rounded-full text-sm font-medium">
-                 Location
+                Location
               </span>
             </div>
           </div>

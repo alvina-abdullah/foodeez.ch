@@ -32,17 +32,12 @@ const BusinessImage: React.FC<BusinessImageProps> = ({
           priority
         />
       ) : (
-        <div className="flex items-center justify-center w-full h-full  text-gray-500 text-lg font-medium">
+        <div className="flex items-center justify-center w-full h-full text-text-main text-lg font-medium">
           No image available
         </div>
       )}
 
-      {/* Optional gradient overlay */}
-      {imageUrl && (
-        <div className="absolute bottom-0 w-full h-16 bg-gradient-to-t from-black/60 to-transparent px-4 py-2 text-white text-sm flex items-end">
-          {businessName}
-        </div>
-      )}
+      
     </div>
   );
 };

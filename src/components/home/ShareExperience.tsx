@@ -14,7 +14,7 @@ export default function ShareExperience() {
       }}
     >
       {/* Gradient Overlay */}
-      <div className="absolute inset-0 bg-gradient-to-r from-black/60 via-primary/50 to-accent-light/40 backdrop-blur-sm z-0" />
+      <div className="absolute inset-0 bg-black/30 backdrop-blur-sm z-0" />
 
       <div className="relative z-10 max-w-3xl mx-auto text-center text-white">
         {/* Heading */}

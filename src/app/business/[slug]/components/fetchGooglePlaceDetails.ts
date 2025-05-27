@@ -12,13 +12,35 @@ export interface GoogleReview {
   profile_photo_url?: string;
 }
 
+export interface GoogleTimeObject {
+  day: number; // 0 (Sunday) to 6 (Saturday)
+  time: string; // "HHmm" format
+}
+
+export interface GooglePeriod {
+  open: GoogleTimeObject;
+  close: GoogleTimeObject;
+}
+
+export interface GoogleOpeningHours {
+  open_now: boolean;
+  periods: GooglePeriod[];
+  weekday_text: string[];
+}
+
+export interface OpeningHourDay {
+  day: string; // e.g. "Monday"
+  hours: string; // e.g. "11:45 AM – 2:15 PM, 6:00 – 10:00 PM"
+}
+
 export interface GooglePlaceDetails {
   name: string;
   rating: number;
   totalReviews: number;
   reviews: GoogleReview[];
   photos: GooglePhoto[];
-  openingHours : any
+  openingHours: OpeningHourDay[];
+  isOpenNow: boolean;
 }
 
 export async function fetchGooglePlaceDetails(placeId: string): Promise<GooglePlaceDetails> {
@@ -27,7 +49,7 @@ export async function fetchGooglePlaceDetails(placeId: string): Promise<GooglePl
   if (!placeId) throw new Error("Place ID is required");
 
   const proxy = "https://cors-anywhere.herokuapp.com/";
-  const url = `https://maps.googleapis.com/maps/api/place/details/json?place_id=${placeId}&fields=name,photos,reviews,rating,user_ratings_total&key=${apiKey}`;
+  const url = `https://maps.googleapis.com/maps/api/place/details/json?place_id=${placeId}&fields=name,rating,user_ratings_total,reviews,url,opening_hours,formatted_phone_number,website,photos&key=${apiKey}`;
 
   try {
     const res = await fetch(proxy + url);
@@ -37,11 +59,7 @@ export async function fetchGooglePlaceDetails(placeId: string): Promise<GooglePl
       throw new Error(data.error_message || "Failed to fetch place details");
     }
 
-    console.log(data)
-
-    const result = data.result;
-
-    const reviews: GoogleReview[] = (result.reviews || []).map((review: any) => ({
+    const reviews: GoogleReview[] = (data.result.reviews || []).map((review: any) => ({
       author_name: review.author_name,
       rating: review.rating,
       text: review.text,
@@ -49,19 +67,35 @@ export async function fetchGooglePlaceDetails(placeId: string): Promise<GooglePl
       profile_photo_url: review.profile_photo_url,
     }));
 
-    const photos: GooglePhoto[] = (result.photos || []).map((photo: any) => ({
+    const photos: GooglePhoto[] = (data.result.photos || []).map((photo: any) => ({
       photoUrl: `https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=${photo.photo_reference}&key=${apiKey}`,
       width: photo.width,
       height: photo.height,
     }));
 
+    // Parse opening hours
+    let openingHours: OpeningHourDay[] = [];
+    if (data.result.opening_hours && data.result.opening_hours.weekday_text) {
+      openingHours = data.result.opening_hours.weekday_text.map((text: string) => {
+        // text: "Monday: 11:45 AM – 2:15 PM, 6:00 – 10:00 PM"
+        const [day, ...hoursArr] = text.split(": ");
+        return {
+          day,
+          hours: hoursArr.join(": ") || "Closed",
+        };
+      });
+    }
+
+    const isOpenNow = data.result.opening_hours?.open_now ?? false;
+
     return {
-      name: result.name,
-      rating: result.rating,
-      totalReviews: result.user_ratings_total,
+      name: data.result.name,
+      rating: data.result.rating,
+      totalReviews: data.result.user_ratings_total,
       reviews,
       photos,
-      openingHours : result.openingHours
+      openingHours,
+      isOpenNow,
     };
   } catch (err) {
     console.error("Error fetching place details:", err);

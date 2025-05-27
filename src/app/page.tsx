@@ -15,7 +15,7 @@ import CitySection from "@/components/home/CitySection/index";
 
 export default function Home() {
   return (
-    <div className=" bg-white">
+    <div className="">
       {/* Hero Section with Search */}
       {/* <HeroSection /> */}
 
