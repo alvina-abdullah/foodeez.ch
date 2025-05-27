@@ -95,7 +95,7 @@ export default function CtaSection() {
           className="object-cover"
           priority
         />
-        <div className="absolute inset-0 bg-gradient-to-r from-black/70 via-primary/60 to-accent-light/60 backdrop-blur-sm z-0"></div>
+        <div className="absolute inset-0 bg-gradient-to-r backdrop-blur-sm z-0"></div>
       </div>
 
       {/* Foreground content */}

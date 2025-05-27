@@ -51,14 +51,14 @@ export default function ZipCodeSearch({
                 value={zipCode}
                 onChange={(e) => setZipCode(e.target.value.replace(/\D/g, ""))}
                 placeholder="Search by postal code..."
-                className="w-full pl-10 pr-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
+                className="w-full pl-10 pr-4 py-2 border border-primary rounded-tl-lg rounded-bl-lg focus:outline-none focus:ring-2 focus:ring-primary"
                 maxLength={4}
               />
             </Autocomplete>
           </LoadScript>
           <MapPin
             size={18}
-            className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
+            className="absolute left-3 top-1/2 -translate-y-1/2 text-text-light"
           />
           {zipCode && (
             <button
@@ -67,7 +67,7 @@ export default function ZipCodeSearch({
                 setZipCode("");
                 setSearchZipCode("");
               }}
-              className="absolute right-10 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+              className="absolute right-5 top-1/2 -translate-y-1/2 text-text-light hover:text-text-main"
             >
               <X size={18} />
             </button>
@@ -75,7 +75,7 @@ export default function ZipCodeSearch({
         </div>
         <button
           type="submit"
-          className="ml-2 px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors"
+          className="px-4 py-3 bg-primary text-white rounded-tr-lg rounded-br-lg hover:bg-primary/80 transition-colors"
         >
           <Search size={18} />
         </button>

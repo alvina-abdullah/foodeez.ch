@@ -12,7 +12,7 @@ export default function BusinessCTA() {
       }}
     >
       {/* Overlay */}
-      <div className="absolute inset-0 bg-gradient-to-r from-black/70 via-primary/60 to-accent-light/60 backdrop-blur-sm z-0" />
+      <div className="absolute inset-0 bg-black/40 backdrop-blur-sm z-0" />
 
       <div className="relative z-10 max-w-3xl mx-auto text-center text-white">
         {/* Badge */}
@@ -29,7 +29,7 @@ export default function BusinessCTA() {
         </h2>
 
         {/* Subtext */}
-        <p className="text-base sm:text-lg text-white/90 mb-8">
+        <p className="text-sm sm:text-base md:text-lg lg:text-xl text-white/90 mb-8">
           Join thousands of restaurants on Foodeez and connect with hungry
           customers looking for their next favorite meal.
         </p>
@@ -49,11 +49,9 @@ export default function BusinessCTA() {
           </Link>
         </div> */}
 
-<p className="text-2xl md:text-4xl lg:text-5xl font-bold text-white">
+        <p className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-4 leading-tight">
           Coming Soon
         </p>
-
-      
       </div>
     </section>
   );

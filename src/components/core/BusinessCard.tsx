@@ -55,27 +55,29 @@ const BusinessCard: React.FC<BusinessCardProps> = ({ business }) => {
   );
 
   return (
-    <div className="group relative bg-gray-100 rounded-xl border border-gray-200 shadow-sm hover:shadow-md transition-all duration-300 overflow-hidden w-full max-w-md h-[440px] flex flex-col">
+    <div className="group relative bg-background-card rounded-xl border shadow-sm hover:shadow-md transition-all duration-300 overflow-hidden w-full max-w-md h-[460px] flex flex-col">
       {/* Image */}
-      <div className="h-[155px]">
+
+      <div className="">
         <Link
           href={`/business/${slug}`}
           target="_blank"
           rel="noopener noreferrer"
-          className="block relative w-full h-[155px] bg-gray-100 overflow-hidden"
+          className="block relative w-full h-[170px] aspect-video overflow-hidden"
         >
           {IMAGE_URL ? (
             <Image
               src={IMAGE_URL}
               alt={BUSINESS_NAME}
-              fill
-              className="object-cover transition-transform duration-500 group-hover:scale-105"
+              height={1000}
+              width={1000}
+              className="object-cover transition-transform duration-500 group-hover:scale-105 aspect-video"
               sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
               priority
             />
           ) : (
-            <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-gray-100 to-gray-200">
-              <span className="text-3xl font-bold text-gray-400 uppercase">
+            <div className="w-full h-full flex items-center justify-center bg-gray-200">
+              <span className="text-3xl font-bold text-gray-600 uppercase">
                 {BUSINESS_NAME.charAt(0)}
               </span>
             </div>
@@ -112,7 +114,7 @@ const BusinessCard: React.FC<BusinessCardProps> = ({ business }) => {
 
           {/* Description */}
           {DESCRIPTION && (
-            <p className="mt-2 text-sm text-gray-600 line-clamp-2">
+            <p className="mt-2 text-sm text-text-main line-clamp-2">
               {DESCRIPTION}
             </p>
           )}
@@ -121,20 +123,20 @@ const BusinessCard: React.FC<BusinessCardProps> = ({ business }) => {
           {ADDRESS_TOWN &&
             (GOOGLE_PROFILE ? (
               <Link href={GOOGLE_PROFILE} target="_blank">
-                <p className="mt-6 flex items-center text-sm text-gray-500 hover:text-primary transition">
+                <p className="mt-6 flex items-center text-sm text-text-main  hover:text-accent transition">
                   <MapPin size={14} className="mr-1.5 text-primary" />
                   <span className="line-clamp-1">{ADDRESS_TOWN}</span>
                 </p>
               </Link>
             ) : (
-              <div className="mt-6 flex items-center text-sm text-gray-400 cursor-not-allowed">
-                <MapPin size={14} className="mr-1.5 text-gray-400" />
+              <div className="mt-6 flex items-center text-sm text-text-main cursor-not-allowed">
+                <MapPin size={14} className="mr-1.5 " />
                 <span className="line-clamp-1">{ADDRESS_TOWN}</span>
               </div>
             ))}
 
           {/* Contact Info */}
-          <div className="mt-1 space-y-1 text-sm text-gray-700">
+          <div className="mt-1 space-y-1 text-sm text-text-main">
             {PHONE_NUMBER && (
               <div className="flex items-center">
                 <Phone size={14} className="mr-2 text-primary" />
@@ -148,7 +150,7 @@ const BusinessCard: React.FC<BusinessCardProps> = ({ business }) => {
             )}
 
             {WEB_ADDRESS && (
-              <div className="flex items-center">
+              <div className="flex items-center text-text-main">
                 <Globe size={14} className="mr-2 text-primary" />
                 <a
                   href={formatUrl(WEB_ADDRESS) || "#"}
@@ -164,7 +166,7 @@ const BusinessCard: React.FC<BusinessCardProps> = ({ business }) => {
         </div>
 
         {/* Bottom Section */}
-        <div className="pt-4 border-t border-gray-100 flex items-center justify-between">
+        <div className="pt-4 flex items-center justify-between">
           {/* Socials */}
           {hasSocialLinks && (
             <div className="flex gap-1 items-center">

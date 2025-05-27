@@ -11,7 +11,7 @@ interface AnnouncementBarProps {
 
 export default function AnnouncementBar({
   message = "Coming Soon",
-  bgColor = "bg-accent-400",
+  bgColor = "bg-secondary",
   textColor = "text-white",
 }: AnnouncementBarProps) {
   const [isVisible, setIsVisible] = useState(true);

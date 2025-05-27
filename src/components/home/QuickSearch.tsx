@@ -26,18 +26,17 @@ export default function QuickSearch() {
     <section className="py-10 space-y-8">
       {/* Header */}
       <div className="text-center">
-        <h2 className="text-2xl sm:text-3xl font-bold text-primary flex items-center justify-center gap-2">
+        <h2 className="sub-heading flex items-center justify-center gap-2">
           <Sparkles className="w-6 h-6" />
           Quick Search Highlights
         </h2>
-        <p className="text-sm text-gray-500 mt-2">
-          Discover what's trending and loved by foodies across Switzerland 🇨🇭
+        <p className="sub-heading-description">
+          Discover what's trending and loved by foodies across Switzerland
         </p>
       </div>
 
       {/* Trending */}
       <motion.div
-        className="bg-white shadow rounded-2xl p-6 border border-gray-200"
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.4 }}
@@ -47,7 +46,7 @@ export default function QuickSearch() {
           {trendingItems.map((item, idx) => (
             <button
               key={idx}
-              className="bg-primary/5 text-primary text-sm font-medium px-4 py-2 rounded-md hover:bg-primary/10 transition cursor-pointer w-full text-left"
+              className="bg-secondary/20 text-primary text-sm font-medium px-4 py-2 rounded-md hover:bg-primary/10 transition cursor-pointer w-full text-left"
               onClick={() => window.open(`/discover?q=${encodeURIComponent(item)}`, '_blank')}
               type="button"
             >

@@ -3,7 +3,7 @@ import { RefreshCw } from "lucide-react";
 export default function ErrorState({ error, handleRetry }: { error: string; handleRetry: (e: React.MouseEvent<HTMLButtonElement>) => void }) {
     return (
       <div className="text-center py-10">
-        <p className="text-red-500 mb-2">{error}</p>
+        <p className="text-secondary mb-2">{error}</p>
         <button
           onClick={handleRetry}
           className="px-4 py-2 bg-primary text-white rounded-md inline-flex items-center"

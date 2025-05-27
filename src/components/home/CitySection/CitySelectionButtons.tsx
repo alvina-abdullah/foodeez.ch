@@ -2,6 +2,7 @@
 
 import { ChevronDown } from "lucide-react";
 import { cn } from "@/lib/utils/cn";
+import { AnimatePresence , motion} from "framer-motion";
 
 interface CitySelectionButtonsProps {
   mainCities: string[];
@@ -21,50 +22,70 @@ export default function CitySelectionButtons({
   onDropdownToggle,
 }: CitySelectionButtonsProps) {
   return (
-    <div className="flex flex-wrap  mb-8 border border-black rounded-lg bg-primary-100 ">
+    <div className="flex flex-wrap gap-4 relative  border border-accent mb-8 bg-secondary-light rounded-lg text-accent-dark">
       {mainCities.map((city) => (
         <button
           key={city}
           onClick={() => onCitySelect(city)}
           className={cn(
-            "px-8 py-2 text-sm md:text-base transition-colors",
+            "px-12 py-2 text-sm md:text-base transition-colors relative",
             selectedCity === city
-              ? "bg-primary text-white font-medium"
-              : "bg-primary-100 hover:bg-primary-200"
+              ? "bg-primary text-white"
+              : "bg-secondary-light hover:bg-primary-light"
           )}
         >
           {city}
         </button>
       ))}
 
-      <div className="relative">
-        <button
-          onClick={onDropdownToggle}
-          className="flex items-center gap-1 px-8 py-2  bg-primary-100 hover:bg-primary-200 text-sm md:text-base"
-        >
-          More Cities
-          <ChevronDown
-            size={16}
-            className={isDropdownOpen ? "rotate-180" : ""}
-          />
-        </button>
+<div className="relative">
+      <button
+        onClick={onDropdownToggle}
+        className={cn(
+          "flex items-center gap-1 px-4 py-2 text-sm md:text-base transition-colors relative focus:outline-none rounded-md",
+          isDropdownOpen
+            ? "bg-primary text-white"
+            : "bg-secondary-light hover:bg-primary-light"
+        )}
+      >
+        More Cities
+        <ChevronDown
+          size={16}
+          className={cn(
+            "transition-transform duration-200",
+            isDropdownOpen && "rotate-180"
+          )}
+        />
+      </button>
 
+      <AnimatePresence>
         {isDropdownOpen && (
-          <div className="absolute z-10 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5">
-            <div className="py-1">
+          <motion.div
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+            transition={{ duration: 0.2 }}
+            className="absolute top-full left-0 mt-2 w-56 max-h-96 overflow-y-auto rounded-xl shadow-lg border border-primary z-50 bg-white"
+            id="no-scrollbar"
+          >
+            <div className="p-2 space-y-1">
               {otherCities.map((city) => (
                 <button
                   key={city}
-                  onClick={() => onCitySelect(city)}
-                  className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                  onClick={() => {
+                    onCitySelect(city);
+                    onDropdownToggle(); // close dropdown after selection
+                  }}
+                  className="w-full text-left px-4 py-2 rounded-md text-sm transition-colors hover:bg-primary/10 text-text-main"
                 >
                   {city}
                 </button>
               ))}
             </div>
-          </div>
+          </motion.div>
         )}
-      </div>
+      </AnimatePresence>
+    </div>
     </div>
   );
 }

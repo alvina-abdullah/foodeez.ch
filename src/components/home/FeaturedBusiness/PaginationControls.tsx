@@ -1,5 +1,5 @@
 import { cn } from "@/lib/utils/cn";
-import { Loader2 } from "lucide-react";
+import { ChevronDown, Loader2 } from "lucide-react";
 
 export const PER_PAGE_OPTIONS: number[] = [30, 45, 60, 75, 90];
 
@@ -26,7 +26,7 @@ export default function PaginationControls({
         <button
           onClick={handleViewMoreBusiness}
           className={cn(
-            "inline-flex items-center justify-center px-6 py-3 bg-primary hover:bg-primary/90 text-white font-medium rounded-lg transition-colors shadow-sm",
+            "btn-primary",
             isPending && "pointer-events-none opacity-50"
           )}
           disabled={isPending}
@@ -49,22 +49,10 @@ export default function PaginationControls({
           onClick={() => setIsDropdownOpen(!isDropdownOpen)}
         >
           {perPage}/ page
-          <svg
-            className="ml-2 w-4 h-4 text-gray-400"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth="2"
-              d="M19 9l-7 7-7-7"
-            />
-          </svg>
+          <ChevronDown />
         </button>
         {isDropdownOpen && (
-          <div className="absolute z-10 mt-2 w-full rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5">
+          <div className="absolute z-10 mt-2 w-full rounded-md shadow-lg border-primary border bg-white ring-1 ring-black ring-opacity-5">
             <div className="py-1">
               {PER_PAGE_OPTIONS.map((option) => (
                 <button

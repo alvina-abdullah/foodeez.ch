@@ -32,7 +32,7 @@ export default function Footer() {
     <footer className="bg-primary text-white pt-16 pb-8">
       <div className="container-custom">
         {/* Top Section - Help banner */}
-        <div className="bg-primary border-2 border-white text-white rounded-xl p-8 mb-12 flex flex-col md:flex-row md:items-center justify-between">
+        <div className=" border-2 border-white text-white rounded-xl p-8 mb-12 flex flex-col md:flex-row md:items-center justify-between">
           <div>
             <h3 className="text-2xl font-bold mb-2">
               Help millions to find the right Place & Food to enjoy
@@ -101,20 +101,26 @@ export default function Footer() {
                 <Link href="#">Blogs</Link>
               </li>
               <li>
-                <Link href="#">Help us serve better</Link>
+                <Link href="#">Help us to serve better</Link>
               </li>
               <li>
-                <Link href="#">Be a Food Explorer</Link>
+                <Link href="#">Be a Foodeez Explorer</Link>
               </li>
             </ul>
           </div>
 
           {/* For Businesses */}
-          <div>
+          <div className="lg:col-span-2">
             <h3 className="text-lg font-semibold mb-5">
-              Are you on foodeez? Register.
+              Are you on foodeez? No!
             </h3>
+
             <ul className="space-y-3">
+              <li>
+                <Link href="#" className="font-medium">
+                  Register Now
+                </Link>
+              </li>
               <li>
                 <Link href="#">Contact Us</Link>
               </li>
@@ -125,11 +131,9 @@ export default function Footer() {
                 <Link href="#">Subscribe</Link>
               </li>
             </ul>
-          </div>
-
-          {/* Newsletter */}
-          <div>
-            <h3 className="text-lg font-semibold mb-5 text-text">Newsletter</h3>
+            {/* Newsletter */}
+          <div className="mt-10">
+            <h3 className="text-lg lg:text-xl font-semibold mb-5 text-text">Newsletter</h3>
             <p className="mb-4 text-text">
               Be the part of foodeez, to get the updates, blogs, new restaurants
               & foods and offers.
@@ -156,6 +160,7 @@ export default function Footer() {
                 Thanks for subscribing!
               </p>
             )}
+          </div>
           </div>
         </div>
 

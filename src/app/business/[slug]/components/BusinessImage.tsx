@@ -17,7 +17,7 @@ const BusinessImage: React.FC<BusinessImageProps> = ({
   return (
     <div
       className={clsx(
-        "relative w-full aspect-video overflow-hidden shadow-lg",
+        "relative w-full overflow-hidden shadow-lg",
         className
       )}
     >
@@ -25,9 +25,9 @@ const BusinessImage: React.FC<BusinessImageProps> = ({
         <Image
           src={imageUrl}
           alt={businessName || "Business"}
-          width={1000}
-          height={1000}
-          className="object-cover w-full h-full"
+          width={100}
+          height={100}
+          className="object-cover w-full h-[600px] aspect-video "
           sizes="(max-width: 768px) 100vw, 50vw"
           priority
         />

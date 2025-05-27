@@ -67,10 +67,10 @@ export default function ContactPage() {
         <div className="absolute inset-0 bg-[url('/grid.svg')] bg-center [mask-image:linear-gradient(180deg,white,rgba(255,255,255,0))]"></div>
         <div className="mx-auto max-w-7xl px-6 py-24 sm:py-32 lg:px-8">
           <div className="mx-auto max-w-2xl text-center">
-            <h1 className="text-4xl font-bold tracking-tight text-white sm:text-6xl">
+            <h1 className="text-4xl lg:text-6xl font-bold tracking-tight text-white sm:text-6xl">
               Get in Touch
             </h1>
-            <p className="mt-6 text-lg leading-8 text-white/90">
+            <p className="mt-6 text-xl  leading-8 text-white">
               Have questions? We're here to help. Reach out to our team and we'll get back to you as soon as possible.
             </p>
           </div>

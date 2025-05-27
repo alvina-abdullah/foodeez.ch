@@ -25,7 +25,7 @@ export default function ResultCountInfo({
   return (
     <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 py-2 border-gray-200 mb-8">
       <div className="">
-        <p className="text-lg sm:text-2xl font-bold text-gray-800">
+        <p className="text-lg sm:text-2xl text-accent-dark">
           Showing{" "}
           <span className="text-primary font-semibold">{visibleCount}</span> of{" "}
           <span className="text-primary font-semibold">{totalCount}</span>{" "}
@@ -34,7 +34,7 @@ export default function ResultCountInfo({
             <>
               {" "}
               for{" "}
-              <span className="text-accent font-semibold">
+              <span className="text-primary font-semibold">
                 "{filterLabel}"
               </span>
             </>

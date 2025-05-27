@@ -12,7 +12,7 @@ interface AnnouncementBarProps {
 
 export default function AnnouncementBar2({
   message = "Limited Time Offer: Get 15% off on your first restaurant review!",
-  bgColor = "bg-accent",
+  bgColor = "bg-primary",
   textColor = "text-white",
 }: AnnouncementBarProps) {
   const [isVisible, setIsVisible] = useState(true);

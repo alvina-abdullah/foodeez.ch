@@ -13,8 +13,8 @@ export default function ContentHeader({
 }: ContentHeaderProps) {
   return (
     <div className="mb-8 flex items-center justify-center gap-2">
-      <Building className="text-primary" size={24} />
-      <h3 className="text-xl font-semibold">
+      <Building className="text-text-light" size={24} />
+      <h3 className="text-xl md:text-2xl text-primary font-semibold">
         {selectedCity
           ? `Restaurants in ${selectedCity}`
           : searchZipCode

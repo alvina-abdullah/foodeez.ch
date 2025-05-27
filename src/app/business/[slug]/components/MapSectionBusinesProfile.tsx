@@ -53,6 +53,7 @@ export default function MapCard({ placeId }: MapCardProps) {
             zoom={center ? 15 : 1}
             onLoad={handleLoad}
           />
+         
           
         </LoadScript>
       ) : (

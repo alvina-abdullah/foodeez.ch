@@ -34,8 +34,8 @@ export default function RootLayout({
         <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
       </head>
       <body className="flex flex-col font-sans bg-background max-w-[1440px] mx-auto min-h-screen">
+        <AnnouncementBar />
         <AnnouncementBar2 />
-        {/* <AnnouncementBar /> */}
    
         <Navbar />
         {/* Content padding to avoid overlap */}

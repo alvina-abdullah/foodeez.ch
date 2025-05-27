@@ -1,15 +1,21 @@
+import { FilterX } from "lucide-react";
+
 export default function EmptyState({ clearAllFilters }: { clearAllFilters: () => void }) {
-    return (
-      <div className="text-center py-10 bg-gray-50 rounded-lg border border-gray-100">
-        <p className="text-gray-500 mb-2">
-          No restaurants found matching the selected filters
-        </p>
-        <button
-          onClick={clearAllFilters}
-          className="text-primary hover:text-primary/80 font-medium text-sm"
-        >
-          Clear Filters
-        </button>
-      </div>
-    );
-  }
+  return (
+    <div className="text-center py-12">
+      <FilterX className="mx-auto mb-4 h-10 w-10 text-accent-light" aria-hidden="true" />
+      
+      <p className="text-text-muted text-base md:text-lg font-medium mb-4">
+        No restaurants found matching your filters.
+      </p>
+
+      <button
+        onClick={clearAllFilters}
+        className="inline-flex items-center gap-2 text-sm md:text-base font-semibold text-primary border border-primary active:text-primary-dark transition-colors rounded-md px-4 py-2 "
+      >
+        <FilterX className="w-4 h-4" aria-hidden="true" />
+        Clear Filters
+      </button>
+    </div>
+  );
+}
