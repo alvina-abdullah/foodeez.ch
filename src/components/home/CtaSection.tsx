@@ -121,7 +121,7 @@ export default function CtaSection() {
               <Link
                 href="/business/register"
                 target="_blank"
-                className="bg-primary-500 hover:bg-primary-600 text-white font-semibold py-3 px-8 rounded-full transition-all duration-300"
+                className="bg-primary hover:bg-primary-600 text-white font-semibold py-3 px-8 rounded-full transition-all duration-300"
               >
                 Register Your Business
               </Link>

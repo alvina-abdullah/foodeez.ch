@@ -49,7 +49,9 @@ export default function BusinessCTA() {
           </Link>
         </div> */}
 
-        <ComingSoon color="text-white" />
+<p className="text-2xl md:text-4xl lg:text-5xl font-bold text-white">
+          Coming Soon
+        </p>
 
       
       </div>

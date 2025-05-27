@@ -30,9 +30,12 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className={`${inter.variable} ${poppins.variable} scroll-smooth `}>
+      <head>
+        <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
+      </head>
       <body className="flex flex-col font-sans bg-background max-w-[1440px] mx-auto min-h-screen">
         <AnnouncementBar2 />
-        <AnnouncementBar />
+        {/* <AnnouncementBar /> */}
    
         <Navbar />
         {/* Content padding to avoid overlap */}

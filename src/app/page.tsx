@@ -2,14 +2,14 @@
 
 import BusinessCTA from "@/components/home/BusinessCTA";
 import ShareExperience from "@/components/home/ShareExperience";
-import BenefitsSection from "@/components/home/BenefitsSection";
+// import BenefitsSection from "@/components/home/BenefitsSection";
 // import AboutSection from "@/components/home/AboutSection";
 // import TestimonialsSection from "@/components/home/TestimonialsSection";
 import CtaSection from "@/components/home/CtaSection";
 import FaqSection from "@/components/home/FaqSection";
-import HeroSection from "@/components/home/HeroSection";
+// import HeroSection from "@/components/home/HeroSection";
 import FeaturedBusiness from "@/components/home/FeaturedBusiness";
-import MapSection from "@/components/home/MapSection";
+// import MapSection from "@/components/home/MapSection";
 import QuickSearch from "@/components/home/QuickSearch";
 import CitySection from "@/components/home/CitySection/index";
 
