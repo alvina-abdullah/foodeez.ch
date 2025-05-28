@@ -1,8 +1,8 @@
 // components/action-buttons.tsx
 "use client";
 import { useState } from 'react';
-import { Button } from "@/components/ui/button";
 import { Heart, Share2, Star } from "lucide-react";
+import Button from '@/components/core/Button';
 
 interface ActionButtonsProps {
   onFavorite?: (isFavorite: boolean) => void;
@@ -41,7 +41,7 @@ export function ActionButtons({ onFavorite, onShare, onReview }: ActionButtonsPr
   return (
     <div className="grid grid-cols-1 md:flex md:items-center justify-between gap-3 mb-8 w-full">
       <Button
-        variant={isFavorite ? "default" : "outline"}
+        variant={isFavorite ? "primary" : "outline"}
         className="flex items-center justify-center gap-2 transition-all"
         onClick={handleFavorite}
       >
