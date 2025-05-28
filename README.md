@@ -96,3 +96,5 @@ This is a private project. All rights reserved.
 - [Radix UI](https://www.radix-ui.com)
 - [Framer Motion](https://www.framer.com/motion/)
 - [Prisma](https://www.prisma.io)
+
+![Foodeez Logo](public/Logo/Logo.png)
