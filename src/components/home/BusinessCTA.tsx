@@ -1,6 +1,5 @@
 // import Link from "next/link";
 // import { TrendingUp, ArrowRight } from "lucide-react";
-import ComingSoon from "../ui/comingsoon";
 
 export default function BusinessCTA() {
   return (

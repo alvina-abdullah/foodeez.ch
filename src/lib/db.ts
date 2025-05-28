@@ -3,8 +3,6 @@
 import { Prisma } from "@prisma/client";
 import { prisma } from "./prisma"
 import { BusinessDetail, BusinessResult } from "@/types/business.types";
-import { PER_PAGE_OPTIONS } from "@/components/home/FeaturedBusiness/PaginationControls";
-
 
 // Example function to test the schema
 export async function getBusinesses() {
@@ -250,9 +248,7 @@ export async function getBusinessesByTypeAndCategories(params: {
     let businesses: any[] = [];
     let totalCount = 0;
 
-    const getData = async (model: any, viewName: string) => {
-
-
+    const getData = async (model: any) => {
       const [data, count] = await Promise.all([
         model.findMany({
           where: whereClause,
@@ -269,18 +265,18 @@ export async function getBusinessesByTypeAndCategories(params: {
 
     try {
       if (normalizedType === 'halal') {
-        ({ data: businesses, count: totalCount } = await getData(prisma.business_detail_view_halal, 'business_detail_view_halal'));
+        ({ data: businesses, count: totalCount } = await getData(prisma.business_detail_view_halal));
       } else if (normalizedType === 'vegan') {
-        ({ data: businesses, count: totalCount } = await getData(prisma.business_detail_view_vegan, 'business_detail_view_vegan'));
+        ({ data: businesses, count: totalCount } = await getData(prisma.business_detail_view_vegan));
       } else if (normalizedType === 'vegetarian') {
-        ({ data: businesses, count: totalCount } = await getData(prisma.business_detail_view_vegetarian, 'business_detail_view_vegetarian'));
+        ({ data: businesses, count: totalCount } = await getData(prisma.business_detail_view_vegetarian));
       } else {
-        ({ data: businesses, count: totalCount } = await getData(prisma.business_detail_view_all, 'business_detail_view_all'));
+        ({ data: businesses, count: totalCount } = await getData(prisma.business_detail_view_all));
       }
     } catch (dbError) {
+      console.error("dbError:", dbError);
 
-
-      ({ data: businesses, count: totalCount } = await getData(prisma.business_detail_view_all, 'business_detail_view_all'));
+      ({ data: businesses, count: totalCount } = await getData(prisma.business_detail_view_all));
     }
 
     // 🔹 Step 3: Normalize and return

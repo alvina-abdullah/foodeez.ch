@@ -1,5 +1,5 @@
 import { useState, useRef } from "react";
-import { GoogleMap, LoadScript, Marker } from "@react-google-maps/api";
+import { GoogleMap, LoadScript } from "@react-google-maps/api";
 import { Card } from "@/components/ui/card"; // Adjust path as needed
 
 interface MapCardProps {

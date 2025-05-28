@@ -3,7 +3,6 @@
 import { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { Heart, Share2, Star } from "lucide-react";
-// import { toast } from "react-hot-toast";
 
 interface ActionButtonsProps {
   onFavorite?: (isFavorite: boolean) => void;
@@ -19,35 +18,24 @@ export function ActionButtons({ onFavorite, onShare, onReview }: ActionButtonsPr
     const newState = !isFavorite;
     setIsFavorite(newState);
     onFavorite?.(newState);
-    // toast.success(newState ? 'Added to favorites' : 'Removed from favorites');
   };
 
-  const handleShare = async () => {
+  const handleShare = () => {
     setIsSharing(true);
-    // try {
-    //   if (navigator.share) {
-    //     await navigator.share({
-    //       title: document.title,
-    //       url: window.location.href
-    //     });
-    //   } else {
-    //     await navigator.clipboard.writeText(window.location.href);
-    //     // toast.success('Link copied to clipboard!');
-    //   }
-    //   onShare?.();
-    // } catch (error: any) {
-    //   console.error('Sharing failed:', error);
-    //   // toast.error('Sharing failed');
-    // } finally {
+    try {
+      onShare?.();
+      console.log('Sharing location...');
+    } catch (error: any) {
+      console.error('Sharing failed:', error);
+    } finally {
       setIsSharing(false);
-    
+    }
   };
 
   const handleReview = () => {
     onReview?.();
     const reviewSection = document.getElementById('reviews-section');
     reviewSection?.scrollIntoView({ behavior: 'smooth' });
-    // toast('Share your experience with us!', { icon: '✍️' });
   };
 
   return (

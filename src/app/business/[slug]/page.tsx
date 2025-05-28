@@ -2,7 +2,7 @@
 
 import { useParams } from "next/navigation";
 import { getBusinessById } from "@/lib/db";
-import { generateSlug, parseSlug } from "@/lib/utils/genSlug";
+import { parseSlug } from "@/lib/utils/genSlug";
 import BusinessImage from "./components/BusinessImage";
 import BusinessSkeleton from "./components/BusinessSkeleton";
 import React, { useState, useEffect } from "react";
@@ -15,7 +15,7 @@ import {
 } from "./components/fetchGooglePlaceDetails";
 import { extractPlaceIdFromUrl } from "@/lib/utils/google";
 import GoogleReviews from "./components/GoogleReviews";
-import { ActionButtons } from "./components/action-buttons";
+// import { ActionButtons } from "./components/action-buttons";
 import OpeningHours from "./components/OpeningHoursSection";
 import BusinessInfoSection from "./components/BusinessInfoSection";
 

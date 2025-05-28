@@ -63,7 +63,7 @@ export default function Home() {
 
 Proper Started 5 April
 
-From 5 - 2028 April No record
+From 5 - 28 April No record
 
 28 April 3 hours
 
@@ -87,7 +87,8 @@ From 5 - 2028 April No record
 
 26 May 5.5 Hours 
 
-27 May 3 hours
+27 May 6.5 + hours
+
 
 
 

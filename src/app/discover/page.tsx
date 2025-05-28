@@ -1,14 +1,18 @@
 "use client";
 
-import { useState, useEffect, useCallback, useTransition, Suspense } from "react";
+import {
+  useState,
+  useEffect,
+  useCallback,
+  useTransition,
+  Suspense,
+} from "react";
 import {
   searchBusinesses,
   getPopularSearchTerms,
-  getFoodCategories,
   getPriceRanges,
 } from "@/services/DiscoverPageService";
 import SearchHero from "./components/SearchHero";
-
 import { useRouter, useSearchParams } from "next/navigation";
 import Filters from "./components/Filters";
 import SearchLoading from "./components/SearchLoading";
@@ -16,12 +20,6 @@ import NoResults from "./components/NoResults";
 import BusinessList from "./components/BusinessList";
 import Pagination from "./components/Pagination";
 import { DiscoverBusiness } from "@/types/discover.types";
-
-type Category = {
-  id: number;
-  name: string;
-  count: number;
-};
 
 type PriceRange = {
   id: number;
@@ -33,11 +31,9 @@ function DiscoverPage() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
-
   const [businesses, setBusinesses] = useState<DiscoverBusiness[]>([]);
   const [totalResults, setTotalResults] = useState(0);
   const [popularSearches, setPopularSearches] = useState<string[]>([]);
-  const [categories, setCategories] = useState<Category[]>([]);
   const [priceRanges, setPriceRanges] = useState<PriceRange[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -60,14 +56,13 @@ function DiscoverPage() {
   useEffect(() => {
     const loadInitialData = async () => {
       try {
-        const [terms, cats, prices] = await Promise.all([
+        const [terms, prices] = await Promise.all([
           getPopularSearchTerms(),
-          getFoodCategories(),
+
           getPriceRanges(),
         ]);
 
         setPopularSearches(terms);
-        setCategories(cats);
         setPriceRanges(prices);
       } catch (error) {
         console.error("Error loading initial data:", error);
@@ -182,7 +177,6 @@ function DiscoverPage() {
         {/* Results Info and Sorting */}
         <div className="flex flex-wrap justify-between items-center mb-6">
           <div>
-          
             <h2 className="text-2xl font-bold text-text-main">
               {isLoading ? (
                 <span className="animate-pulse">Searching...</span>

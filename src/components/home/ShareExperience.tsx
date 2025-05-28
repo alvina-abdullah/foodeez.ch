@@ -1,7 +1,5 @@
 "use client";
 
-import ComingSoon from "../ui/comingsoon";
-
 // import Link from "next/link";
 
 export default function ShareExperience() {
