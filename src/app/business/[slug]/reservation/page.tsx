@@ -13,6 +13,7 @@ import ReservationImage from "./components/ReservationImage";
 import ReservationForm from "./components/ReservationForm";
 import ReservationSummary from "./components/ReservationSummary";
 import ReservationSuccess from "./components/ReservationSuccess";
+import LoadingSkeleton from "./components/LoadingSkeleton";
 
 export interface BusinessData {
   BUSINESS_ID: number;
@@ -122,9 +123,7 @@ export default function ReservationPage() {
 
   if (loading) {
     return (
-      <div className="min-h-[400px] flex items-center justify-center">
-        <LoadingSpinner size="lg" />
-      </div>
+     <LoadingSkeleton />
     );
   }
 
@@ -142,7 +141,7 @@ export default function ReservationPage() {
           className="inline-flex items-center text-primary-600 hover:text-primary-700"
         >
           <ChevronLeft size={16} className="mr-1" />
-          Return to businesses
+          Return to business list
         </Link>
       </div>
     );
@@ -189,7 +188,7 @@ export default function ReservationPage() {
         <meta name="twitter:image" content={image} />
         <link rel="canonical" href={url} />
       </head>
-      <div className=" py-12">
+      <div className="my-10">
         <div className="">
           <div className="mb-6">
             <Link
@@ -201,15 +200,17 @@ export default function ReservationPage() {
             </Link>
           </div>
           <ReservationHero business={business} />
-          <div className="flex flex-col md:flex-row gap-8">
-            {/* Left: Image */}
-            <div className="md:w-1/2 w-full flex flex-col gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 md:gap-8">
+            {/* Left: Image - center vertically */}
+            <div className="flex items-center justify-center h-full">
               <ReservationImage business={business} />
             </div>
+
             {/* Right: Contact Info & Form */}
-            <div className="md:w-1/2 w-full flex flex flex-col">
+            <div className="flex flex-col">
               <ContactInfoCard business={business} />
-              <div className="bg-white rounded-xl shadow-lg overflow-hidden">
+
+              <div className="bg-white rounded-xl shadow-lg overflow-hidden mt-6">
                 <div className="p-6 md:p-8">
                   <ReservationForm
                     businessName={business.BUSINESS_NAME}

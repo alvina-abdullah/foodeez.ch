@@ -4,7 +4,6 @@ import { useParams } from "next/navigation";
 import { getBusinessById } from "@/lib/db";
 import { parseSlug } from "@/lib/utils/genSlug";
 import BusinessImage from "./components/BusinessImage";
-import BusinessSkeleton from "./components/BusinessSkeleton";
 import React, { useState, useEffect } from "react";
 import { Separator } from "@/components/ui/separator";
 import MapCard from "./components/MapSectionBusinesProfile";
@@ -18,6 +17,7 @@ import GoogleReviews from "./components/GoogleReviews";
 // import { ActionButtons } from "./components/action-buttons";
 import OpeningHours from "./components/OpeningHoursSection";
 import BusinessInfoSection from "./components/BusinessInfoSection";
+import BusinessProfilePageLoadingSkeleton from "./components/BusinessProfilePageLoadingSkeleton";
 
 export interface BusinessData {
   BUSINESS_ID: number;
@@ -110,7 +110,7 @@ const BusinessDetailPage = () => {
   }, [placeId]); // 👈 runs once placeId is set
 
   if (loading) {
-    return <BusinessSkeleton />;
+    return <BusinessProfilePageLoadingSkeleton />
   }
 
   if (!business) {
@@ -201,12 +201,12 @@ const BusinessDetailPage = () => {
           /> */}
 
           {/* Foodeez Reviews */}
-          <div className="relative my-6">
+          <div className="relative my-8">
             <div className="absolute inset-0 flex items-center">
               <Separator className="w-full bg-gray-300" />
             </div>
             <div className="relative flex justify-center">
-              <span className="bg-primary text-white px-8 py-2 rounded-full text-sm font-medium">
+              <span className="bg-primary text-white px-8 py-2 rounded-full text-sm md:text-base lg:text-lg font-medium">
                 {business.BUSINESS_NAME} Reviews
               </span>
             </div>
@@ -217,12 +217,12 @@ const BusinessDetailPage = () => {
             <GoogleReviews reviews={googleBusinessData?.reviews || []} />
           </div>
 
-          <div className="relative my-6">
+          <div className="relative my-8">
             <div className="absolute inset-0 flex items-center">
               <Separator className="w-full bg-gray-300" />
             </div>
             <div className="relative flex justify-center">
-              <span className="bg-primary text-white px-8 py-2 rounded-full text-sm font-medium">
+              <span className="bg-primary text-white px-8 py-2 rounded-full text-sm md:text-base lg:text-lg  font-medium">
                 Location
               </span>
             </div>

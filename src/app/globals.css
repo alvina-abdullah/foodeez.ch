@@ -96,3 +96,102 @@
 #no-scrollbar::-webkit-scrollbar {
   display: none; /* Chrome, Safari, and Opera */
 }
+
+:root {
+  --radius: 0.5rem;
+
+  /* 🌐 Backgrounds & Text */
+  --background: #FFFDFB;
+  --foreground: #1F2937;
+
+  --card: #F3F4F6;
+  --card-foreground: #1F2937;
+
+  --popover: #FFFDFB;
+  --popover-foreground: #1F2937;
+
+  /* 🔶 Primary Brand */
+  --primary: #FF4D00;
+  --primary-foreground: #FFFDFB;
+
+  /* 🟠 Secondary Accent */
+  --secondary: #F87C1D;
+  --secondary-foreground: #1F2937;
+
+  /* 🟤 Accent Rich Brown */
+  --accent: #733500;
+  --accent-foreground: #FFFDFB;
+
+  /* 🌟 Highlight */
+  --highlight: #EEA40D;
+
+  /* 🔺 Danger */
+  --destructive: #DC2626;
+  --destructive-foreground: #FFFDFB;
+
+  /* 🔘 Input/Borders/Ring */
+  --border: #E5E7EB;
+  --input: #E5E7EB;
+  --ring: #FF7A33;
+
+  /* 🎨 Charts - Just some creative matches */
+  --chart-1: #FF4D00;
+  --chart-2: #F87C1D;
+  --chart-3: #EEA40D;
+  --chart-4: #22C55E;
+  --chart-5: #DC2626;
+
+  /* 🧾 Sidebar */
+  --sidebar: #FFFDFB;
+  --sidebar-foreground: #1F2937;
+  --sidebar-primary: #FF4D00;
+  --sidebar-primary-foreground: #FFFDFB;
+  --sidebar-accent: #F87C1D;
+  --sidebar-accent-foreground: #1F2937;
+  --sidebar-border: #E5E7EB;
+  --sidebar-ring: #FF7A33;
+}
+
+.dark {
+  --background: #1F2937;
+  --foreground: #FFFDFB;
+
+  --card: #374151;
+  --card-foreground: #FFFDFB;
+
+  --popover: #374151;
+  --popover-foreground: #FFFDFB;
+
+  --primary: #FF7A33;
+  --primary-foreground: #1F2937;
+
+  --secondary: #FDA75D;
+  --secondary-foreground: #1F2937;
+
+  --accent: #9E5C2A;
+  --accent-foreground: #FFFDFB;
+
+  --highlight: #F9C449;
+
+  --destructive: #F87171;
+  --destructive-foreground: #1F2937;
+
+  --border: #4B5563;
+  --input: #4B5563;
+  --ring: #FDA75D;
+
+  --chart-1: #FF7A33;
+  --chart-2: #FDA75D;
+  --chart-3: #F9C449;
+  --chart-4: #22C55E;
+  --chart-5: #F87171;
+
+  --sidebar: #374151;
+  --sidebar-foreground: #FFFDFB;
+  --sidebar-primary: #FF7A33;
+  --sidebar-primary-foreground: #1F2937;
+  --sidebar-accent: #FDA75D;
+  --sidebar-accent-foreground: #1F2937;
+  --sidebar-border: #4B5563;
+  --sidebar-ring: #FDA75D;
+}

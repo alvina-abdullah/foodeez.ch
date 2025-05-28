@@ -13,7 +13,7 @@ const BusinessInfoSection: React.FC<{ business: BusinessDetail }> = ({
   );
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 my-10">
       {/* Description Section */}
       <div className="space-y-2">
         <h2 className="sub-heading">Description</h2>
@@ -57,7 +57,10 @@ const BusinessInfoSection: React.FC<{ business: BusinessDetail }> = ({
       </div>
 
       {/* Social & Reserve */}
-      <div className="flex items-center justify-between border-t pt-4">
+      <div className="flex items-center justify-between border-t pt-8">
+        <Link href={`/business/${genslug}/reservation`} target="_blank">
+          <button className="btn-primary">Reserve Table</button>
+        </Link>
         <SocialLinks
           facebook={business.FACEBOOK_LINK}
           instagram={business.INSTA_LINK}
@@ -66,9 +69,6 @@ const BusinessInfoSection: React.FC<{ business: BusinessDetail }> = ({
           size="xl"
           className="gap-2 [&>a]:text-primary"
         />
-        <Link href={`/business/${genslug}/reservation`} target="_blank">
-          <button className="btn-primary">Reserve Table</button>
-        </Link>
       </div>
     </div>
   );

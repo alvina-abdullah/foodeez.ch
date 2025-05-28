@@ -24,7 +24,7 @@ export default function GooglePhotoGallery({
   }
 
   return (
-    <div className="py-8">
+    <div className="py-8 ">
       <div className="flex items-center sub-heading !mb-10">
         <h2 className="flex items-center">
           Photo Gallery{" "}

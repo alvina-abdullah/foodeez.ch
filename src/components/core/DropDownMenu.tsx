@@ -88,7 +88,7 @@ export default function DropdownMenu({ label, items }: DropdownMenuProps) {
       <AnimatePresence>
         {isOpen && (
           <motion.div
-            className="absolute left-0 mt-2 w-48 shadow-lg rounded-md overflow-hidden z-50"
+            className="absolute left-0 mt-2 w-48 shadow-lg rounded-md overflow-hidden z-50 bg-background"
             initial="hidden"
             animate="visible"
             exit="exit"

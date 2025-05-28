@@ -203,13 +203,20 @@ const ReservationForm: React.FC<ReservationFormProps> = ({
             Continue
           </button>
         ) : (
+          // <button
+          //   type="submit"
+          //   disabled={isSubmitting}
+          //   className="px-6 py-2.5 bg-primary hover:bg-primary-dark text-white font-medium rounded-md shadow-sm transition-colors disabled:opacity-70"
+          // >
+          //   {isSubmitting ? 'Processing...' : 'Complete Reservation'}
+          // </button>
           <button
-            type="submit"
-            disabled={isSubmitting}
-            className="px-6 py-2.5 bg-primary hover:bg-primary-dark text-white font-medium rounded-md shadow-sm transition-colors disabled:opacity-70"
-          >
-            {isSubmitting ? 'Processing...' : 'Complete Reservation'}
-          </button>
+          type="submit"
+          disabled={isSubmitting}
+          className="px-6 py-2.5 bg-primary hover:bg-primary-dark text-white font-medium rounded-md shadow-sm transition-colors disabled:opacity-70"
+        >
+          {isSubmitting ? 'Processing...' : 'Coming Soon'}
+        </button>
         )}
       </div>
     </form>

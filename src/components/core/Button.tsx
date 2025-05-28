@@ -9,14 +9,14 @@ const buttonVariants = cva(
   {
     variants: {
       variant: {
-        primary: 'bg-primary-500 text-white hover:bg-primary-600 focus:ring-primary-500',
-        secondary: 'bg-secondary-500 text-white hover:bg-secondary-600 focus:ring-secondary-500',
-        accent: 'bg-accent-500 text-secondary-900 hover:bg-accent-600 focus:ring-accent-500',
-        outline: 'bg-transparent border-2 border-primary-500 text-primary-500 hover:bg-primary-50 focus:ring-primary-500',
-        outlineSecondary: 'bg-transparent border-2 border-secondary-500 text-secondary-500 hover:bg-secondary-50 focus:ring-secondary-500',
-        ghost: 'bg-transparent text-primary-500 hover:bg-primary-50 focus:ring-primary-500',
-        link: 'bg-transparent text-primary-500 hover:underline focus:ring-0 shadow-none hover:shadow-none p-0',
-        gradient: `bg-gradient-to-r from-primary-500 to-secondary-500 text-white hover:from-primary-600 hover:to-secondary-600 focus:ring-primary-500`,
+        primary: 'bg-primary text-white hover:bg-primary focus:ring-primary',
+        secondary: 'bg-secondary text-white hover:bg-secondary focus:ring-secondary',
+        accent: 'bg-accent text-secondary hover:bg-accent focus:ring-accent',
+        outline: 'bg-transparent border-2 border-primary text-primary hover:bg-primary focus:ring-primary',
+        outlineSecondary: 'bg-transparent border-2 border-secondary text-secondary hover:bg-secondary focus:ring-secondary',
+        ghost: 'bg-transparent text-primary hover:bg-primary focus:ring-primary',
+        link: 'bg-transparent text-primary hover:underline focus:ring-0 shadow-none hover:shadow-none p-0',
+        gradient: `bg-gradient-to-r from-primary to-secondary text-white hover:from-primary hover:to-secondary focus:ring-primary`,
       },
       size: {
         xs: 'px-2.5 py-1.5 text-xs',
