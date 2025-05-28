@@ -5,7 +5,6 @@ import Link from "next/link";
 import { useParams } from "next/navigation";
 import { ChevronLeft } from "lucide-react";
 import { extractBusinessId, parseSlug } from "@/lib/utils/genSlug";
-import LoadingSpinner from "@/components/core/LoadingSpinner";
 import { getBusinessById } from "@/lib/db";
 import ReservationHero from "./components/ReservationHero";
 import ContactInfoCard from "./components/ContactInfoCard";
