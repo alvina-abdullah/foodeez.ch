@@ -1,36 +1,98 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🍽️ Foodeez - Modern Food Exploring Platform
 
-## Getting Started
+Foodeez is a cutting-edge food exploring platform built with Next.js 14, offering a seamless experience for exploring food online. The platform features a modern UI, real-time reviews, and an intuitive user interface.
 
-First, run the development server:
+## ✨ Features
 
+- 🎨 Modern and Responsive UI
+- 🔍 Advanced Search and Filtering
+- 📱 Mobile-First Design
+- 🔐 Secure Authentication
+- 🚀 Fast and Optimized Performance
+
+## 🛠️ Tech Stack
+
+- **Framework:** Next.js 14
+- **Language:** TypeScript
+- **Styling:** Tailwind CSS
+- **UI Components:** Radix UI
+- **Animations:** Framer Motion
+- **Maps Integration:** Google Maps API
+- **Database:** Prisma
+- **Icons:** Lucide React & React Icons
+- **Date Handling:** date-fns
+- **Utilities:** lodash, clsx, tailwind-merge
+
+## 🚀 Getting Started
+
+### Prerequisites
+
+- Node.js 18.x or later
+- npm or yarn
+- Google Maps API key (for location features)
+
+### Installation
+
+1. Clone the repository:
+```bash
+git clone https://github.com/yourusername/foodeez.git
+cd foodeez
+```
+
+2. Install dependencies:
+```bash
+npm install
+# or
+yarn install
+```
+
+3. Set up environment variables:
+Create a `.env` file in the root directory and add:
+```env
+NEXT_PUBLIC_GOOGLE_MAPS_API_KEY=your_google_maps_api_key
+```
+
+4. Run the development server:
 ```bash
 npm run dev
 # or
 yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## 📁 Project Structure
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```
+src/
+├── app/          # Next.js app directory
+├── components/   # React components
+│   ├── core/     # Core components
+│   ├── home/     # Home page components
+│   ├── layout/   # Layout components
+│   └── ui/       # UI components
+├── features/     # Feature-specific code
+├── lib/          # Utility functions
+├── services/     # API services
+├── shared/       # Shared resources
+└── types/        # TypeScript types
+```
 
-## Learn More
+## 🛠️ Available Scripts
 
-To learn more about Next.js, take a look at the following resources:
+- `npm run dev` - Start development server
+- `npm run build` - Build for production
+- `npm run start` - Start production server
+- `npm run lint` - Run ESLint
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## 📝 License
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+This is a private project. All rights reserved.
 
-## Deploy on Vercel
+## 🙏 Built With
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- [Next.js](https://nextjs.org)
+- [Tailwind CSS](https://tailwindcss.com)
+- [Radix UI](https://www.radix-ui.com)
+- [Framer Motion](https://www.framer.com/motion/)
+- [Prisma](https://www.prisma.io)
