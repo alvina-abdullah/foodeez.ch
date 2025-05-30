@@ -30,7 +30,7 @@ export const Navbar = () => {
 
   return (
     <nav
-      className={`z-50 h-auto sticky top-0 transition-all duration-300 bg-background 
+      className={ `px-4 md::px-6 z-50 h-auto sticky top-0 transition-all duration-300 bg-background 
      ${isScrolled ? "" : ""}
         `}
       aria-label="Main Navigation"

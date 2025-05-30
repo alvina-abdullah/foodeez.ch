@@ -1,16 +1,17 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import { MapPin, Phone, Mail, Send } from 'lucide-react';
-import { Input } from '@/components/core/Input';
-import { Button } from '@/components/core/Button';
+import { useState } from "react";
+import { MapPin, Phone, Mail, Send } from "lucide-react";
+import { Input } from "@/components/core/Input";
+import { Button } from "@/components/core/Button";
+import Banner from "@/components/core/Banner";
 
 export default function ContactPage() {
   const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    subject: '',
-    message: '',
+    name: "",
+    email: "",
+    subject: "",
+    message: "",
   });
   const [isLoading, setIsLoading] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
@@ -23,9 +24,9 @@ export default function ContactPage() {
       // TODO: Implement form submission
       await new Promise((resolve) => setTimeout(resolve, 1000));
       setIsSuccess(true);
-      setFormData({ name: '', email: '', subject: '', message: '' });
+      setFormData({ name: "", email: "", subject: "", message: "" });
     } catch (error) {
-      console.error('Error submitting form:', error);
+      console.error("Error submitting form:", error);
     } finally {
       setIsLoading(false);
     }
@@ -44,40 +45,39 @@ export default function ContactPage() {
   const contactInfo = [
     {
       icon: <MapPin className="h-6 w-6" />,
-      title: 'Our Location',
-      description: '8154 Oberglatt, Switzerland',
+      title: "Our Location",
+      description: "8154 Oberglatt, Switzerland",
     },
     {
       icon: <Phone className="h-6 w-6" />,
-      title: 'Phone Number',
-      description: '+41 76 408 94 30',
+      title: "Phone Number",
+      description: "+41 76 408 94 30",
     },
     {
       icon: <Mail className="h-6 w-6" />,
-      title: 'Email Address',
-      description: 'info@foodeez.ch',
+      title: "Email Address",
+      description: "info@foodeez.ch",
     },
- 
   ];
 
   return (
     <div className="">
       {/* Header */}
-      <div className="relative isolate overflow-hidden bg-gradient-to-b from-primary to-primary/90">
-        <div className="absolute inset-0 bg-[url('/grid.svg')] bg-center [mask-image:linear-gradient(180deg,white,rgba(255,255,255,0))]"></div>
-        <div className="mx-auto max-w-7xl px-6 py-24 sm:py-32 lg:px-8">
-          <div className="mx-auto max-w-2xl text-center">
-            <h1 className="text-4xl lg:text-6xl font-bold tracking-tight text-white sm:text-6xl">
-              Get in Touch
-            </h1>
-            <p className="mt-6 text-xl  leading-8 text-white">
-              Have questions? We're here to help. Reach out to our team and we'll get back to you as soon as possible.
-            </p>
-          </div>
+      <Banner
+        src="/images/banner1.jpeg"
+        alt="Register Your Business on Foodeez"
+      />
+      <div className="py-20">
+        <div className="text-center mb-12">
+          <h1 className="main-heading"> Get in Touch</h1>
+          <p className="main-heading-description">
+            Have questions? We're here to help. Reach out to our team and we'll
+            get back to you as soon as possible.
+          </p>
         </div>
       </div>
 
-      <div className="mx-auto max-w-7xl px-6 py-16 sm:py-24 lg:px-8">
+      <div className="bg-gray-100 py-16 sm:py-24 lg:px-8">
         {/* Contact Info Cards */}
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 mb-16">
           {contactInfo.map((info, index) => (
@@ -91,17 +91,21 @@ export default function ContactPage() {
                 </div>
                 <div>
                   <h3 className="font-semibold text-gray-900">{info.title}</h3>
-                  <p className="mt-1 text-sm text-gray-600">{info.description}</p>
+                  <p className="mt-1 text-sm text-gray-600">
+                    {info.description}
+                  </p>
                 </div>
               </div>
             </div>
           ))}
         </div>
 
-        <div className=" max-w-5xl mx-auto">
+        <div className="  lg:px-8 border-primary bg-primary/10 border rounded-2xl p-8 shadow-lg space-y-8">
           {/* Contact Form */}
           <div className="bg-white rounded-2xl p-8 shadow-sm">
-            <h2 className="text-2xl font-bold text-gray-900">Send us a message</h2>
+            <h2 className="text-2xl font-bold text-gray-900">
+              Send us a message
+            </h2>
             <p className="mt-2 text-gray-600">
               Fill out the form below and we'll get back to you within 24 hours.
             </p>
@@ -151,8 +155,8 @@ export default function ContactPage() {
                 />
               </div>
 
-              <Button 
-                type="submit" 
+              <Button
+                type="submit"
                 isLoading={isLoading}
                 className="w-full flex items-center justify-center gap-2"
               >
@@ -169,10 +173,8 @@ export default function ContactPage() {
               )}
             </form>
           </div>
-
-          
         </div>
       </div>
     </div>
   );
-} 
+}

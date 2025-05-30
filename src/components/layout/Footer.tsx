@@ -5,6 +5,7 @@ import { useState } from "react";
 import { Send, MapPin, Phone, Mail } from "lucide-react";
 import { SocialLinks } from "../core/SocialLinks";
 import Image from "next/image";
+import { toast } from 'react-hot-toast';
 
 export default function Footer() {
   const socialLinks = {
@@ -16,17 +17,39 @@ export default function Footer() {
   };
 
   const [email, setEmail] = useState("");
-  const [subscribed, setSubscribed] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
-  const handleSubscribe = (e: React.FormEvent) => {
+  const handleSubscribe = async (e: React.FormEvent) => {
     e.preventDefault();
-    // In a real implementation, you would connect to your API to handle newsletter subscriptions
-    if (email) {
-      setSubscribed(true);
-      setEmail("");
-      setTimeout(() => setSubscribed(false), 3000);
+    setIsLoading(true);
+  
+    try {
+      const response = await fetch('/api/subscribe', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email }),
+      });
+  
+      const data = await response.json();
+  
+      if (!response.ok || data.success === false) {
+        const errorMessage = data?.message || 'Subscription failed. Please try again.';
+        toast.error(errorMessage);
+        return;
+      }
+  
+      toast.success(data.message || 'Successfully subscribed to our newsletter!');
+      setEmail('');
+    } catch (error) {
+      console.error('Subscription error:', error);
+      toast.error('Something went wrong. Please try again later.');
+    } finally {
+      setIsLoading(false);
     }
   };
+  
 
   return (
     <footer className="bg-primary text-white pt-16 pb-8">
@@ -146,20 +169,21 @@ export default function Footer() {
                 placeholder="Your email address"
                 className="w-full px-4 py-3 text-primary border border-gray-400 rounded-lg text-text focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
                 required
+                disabled={isLoading}
               />
               <button
                 type="submit"
-                className="absolute right-1 top-1 bottom-1 px-3 bg-primary text-white rounded-lg flex items-center justify-center hover:bg-primary/90 transition-colors"
+                className="absolute right-1 top-1 bottom-1 px-3 bg-primary text-white rounded-lg flex items-center justify-center hover:bg-primary/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                 aria-label="Subscribe"
+                disabled={isLoading}
               >
-                <Send size={16} />
+                {isLoading ? (
+                  <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                ) : (
+                  <Send size={16} />
+                )}
               </button>
             </form>
-            {subscribed && (
-              <p className="mt-2 text-secondary text-sm">
-                Thanks for subscribing!
-              </p>
-            )}
           </div>
           </div>
         </div>

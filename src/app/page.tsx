@@ -2,22 +2,26 @@
 
 import BusinessCTA from "@/components/home/BusinessCTA";
 import ShareExperience from "@/components/home/ShareExperience";
+import CtaSection from "@/components/home/CtaSection";
+import FaqSection from "@/components/home/FaqSection";
+import HeroSection from "@/components/home/HeroSection";
+import FeaturedBusiness from "@/components/home/FeaturedBusiness";
+import QuickSearch from "@/components/home/QuickSearch";
+import CitySection from "@/components/home/CitySection/index";
+import ScrollingBusinessBar from "@/components/home/ScrollingBusinessBar";
+// import MapSection from "@/components/home/MapSection";
 // import BenefitsSection from "@/components/home/BenefitsSection";
 // import AboutSection from "@/components/home/AboutSection";
 // import TestimonialsSection from "@/components/home/TestimonialsSection";
-import CtaSection from "@/components/home/CtaSection";
-import FaqSection from "@/components/home/FaqSection";
-// import HeroSection from "@/components/home/HeroSection";
-import FeaturedBusiness from "@/components/home/FeaturedBusiness";
-// import MapSection from "@/components/home/MapSection";
-import QuickSearch from "@/components/home/QuickSearch";
-import CitySection from "@/components/home/CitySection/index";
 
 export default function Home() {
   return (
     <div className="">
       {/* Hero Section with Search */}
-      {/* <HeroSection /> */}
+      <HeroSection />
+
+      {/* Scrolling Business Bar */}
+      <ScrollingBusinessBar />
 
       {/* Featured Business Grid */}
 
@@ -88,6 +92,8 @@ From 5 - 28 April No record
 26 May 5.5 Hours 
 
 27 May 6.5 + hours
+
+28 May 3.5 hours
 
 
 

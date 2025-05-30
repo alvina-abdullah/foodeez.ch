@@ -18,6 +18,7 @@ import GoogleReviews from "./components/GoogleReviews";
 import OpeningHours from "./components/OpeningHoursSection";
 import BusinessInfoSection from "./components/BusinessInfoSection";
 import BusinessProfilePageLoadingSkeleton from "./components/BusinessProfilePageLoadingSkeleton";
+import Banner from "@/components/core/Banner";
 
 export interface BusinessData {
   BUSINESS_ID: number;
@@ -110,7 +111,7 @@ const BusinessDetailPage = () => {
   }, [placeId]); // 👈 runs once placeId is set
 
   if (loading) {
-    return <BusinessProfilePageLoadingSkeleton />
+    return <BusinessProfilePageLoadingSkeleton />;
   }
 
   if (!business) {
@@ -130,7 +131,6 @@ const BusinessDetailPage = () => {
   const image = business.IMAGE_URL || "/default-business.jpg";
   const url = typeof window !== "undefined" ? window.location.href : "";
 
- 
   return (
     <>
       <head>
@@ -172,9 +172,9 @@ const BusinessDetailPage = () => {
             businessName={business.BUSINESS_NAME || ""}
             className="mb-6"
           />
-
+      
           {/* Info Section */}
-          <BusinessInfoSection business={business}  />
+          <BusinessInfoSection business={business} />
 
           <GooglePhotoGallery
             photos={googleBusinessData?.photos || []}
