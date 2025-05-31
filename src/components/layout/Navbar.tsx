@@ -35,24 +35,24 @@ export const Navbar = () => {
         `}
       aria-label="Main Navigation"
     >
-      <div className="flex items-center justify-between py-4">
+      <div className="flex items-center justify-between">
         {/* Logo */}
 
         <Link href="/">
           <Image
             src="/Logo/LogoFoodeezMain.svg"
             alt="Foodeez Logo"
-            height={120}
-            width={120}
-            className=""
+            height={144}
+            width={144}
+            className="md:w-36 md:h-36 p-4 md:p-0"
           />
         </Link>
 
         {/* Desktop Nav */}
         <div className="hidden lg:flex items-center space-x-5">
           {[
-            // { label: "Share your Experiance", href: "/review" }
-            { label: "Share your Experiance", href: "/coming-soon" },
+            { label: "Share your Experience", href: "/share-experience" }
+        
           ].map((link) => (
             <Link
               key={link.href}

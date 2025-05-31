@@ -1,7 +1,7 @@
 "use client";
 
 import { useParams } from "next/navigation";
-import { getBusinessById } from "@/lib/db";
+import { getBusinessById } from "@/services/db";
 import { parseSlug } from "@/lib/utils/genSlug";
 import BusinessImage from "./components/BusinessImage";
 import React, { useState, useEffect } from "react";
@@ -18,7 +18,6 @@ import GoogleReviews from "./components/GoogleReviews";
 import OpeningHours from "./components/OpeningHoursSection";
 import BusinessInfoSection from "./components/BusinessInfoSection";
 import BusinessProfilePageLoadingSkeleton from "./components/BusinessProfilePageLoadingSkeleton";
-import Banner from "@/components/core/Banner";
 
 export interface BusinessData {
   BUSINESS_ID: number;

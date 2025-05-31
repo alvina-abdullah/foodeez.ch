@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
-import { getBusinessesByLocation, getCities } from "@/lib/db";
+import { getBusinessesByLocation, getCities } from "@/services/db";
 import { BusinessDetail } from "@/types/business.types";
 import CitySelectionButtons from "./CitySelectionButtons";
 import ZipCodeSearch from "./ZipCodeSearch";
@@ -56,7 +56,7 @@ export default function CitySection() {
 
       const data = await getBusinessesByLocation({
         city: selectedCity,
-        zipCode: searchZipCode as any,
+        zipCode: searchZipCode as string,
         limit: 12,
       });
 

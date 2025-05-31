@@ -3,9 +3,9 @@ import { Inter, Poppins } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
-import AnnouncementBar from "@/components/layout/AnnouncementBar";
+import AnnouncementBar1 from "@/components/layout/AnnouncementBar1";
 import AnnouncementBar2 from "@/components/layout/AnnouncmentBar2";
-import { Toaster } from 'react-hot-toast';
+import { Toaster } from "react-hot-toast";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -20,7 +20,8 @@ const poppins = Poppins({
 
 export const metadata: Metadata = {
   title: "Foodeez - Food Discovery, Visit & Review Portal",
-  description: "Discover, visit, and review your favorite restaurants and food with Foodeez - the ultimate food discovery platform.",
+  description:
+    "Discover, visit, and review your favorite restaurants and food with Foodeez - the ultimate food discovery platform.",
   keywords: "food, restaurants, discovery, reviews, dining, cuisine",
 };
 
@@ -30,19 +31,20 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={`${inter.variable} ${poppins.variable} scroll-smooth `}>
+    <html
+      lang="en"
+      className={`${inter.variable} ${poppins.variable} scroll-smooth `}
+    >
       <head>
         <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
       </head>
       <body className="flex flex-col font-sans bg-background max-w-[1440px] mx-auto min-h-screen">
-        <AnnouncementBar />
+        <AnnouncementBar1 />
         <AnnouncementBar2 />
-   
+
         <Navbar />
         {/* Content padding to avoid overlap */}
-        <main className="">
-          {children}
-        </main>
+        <main className="">{children}</main>
         <Footer />
         <Toaster position="bottom-right" />
       </body>

@@ -16,33 +16,32 @@ const faqs: FaqItem[] = [
     answer:
       "As of now, you cannot register because <b>Foodeez is under construction.</b>",
   },
-
-  // {
-  //   question: "Is Foodeez available in my city?",
-  //   answer:
-  //     "Foodeez is rapidly expanding across multiple cities. You can check if we're available in your city by entering your location in the search bar on our homepage. If we're not yet available in your area, you can sign up to be notified when we launch there.",
-  // },
-  // {
-  //   question: "How can I leave a review for a restaurant?",
-  //   answer:
-  //     "To leave a review, visit the restaurant's profile page on Foodeez and click on the \"Write a Review\" button. You'll need to have a Foodeez account to submit a review. You can rate your experience, write detailed feedback, and upload photos of your visit.",
-  // },
-  // {
-  //   question: "Are all restaurants on Foodeez verified?",
-  //   answer:
-  //     "Yes, all restaurants listed on Foodeez go through a verification process to ensure authenticity. Our team verifies the business details, location, and other important information before activating the listing on our platform. This helps maintain quality and trustworthiness.",
-  // },
-  // {
-  //   question:
-  //     "What happens if I have an issue with a restaurant I found on Foodeez?",
-  //   answer:
-  //     "If you encounter any issues with a restaurant you found through our platform, you can report the problem through the restaurant's profile page or contact our customer support team. We take all reports seriously and work with restaurant partners to resolve any concerns.",
-  // },
-  // {
-  //   question: "Is there a cost to list my restaurant on Foodeez?",
-  //   answer:
-  //     "We offer both free and premium listing options for restaurants. The basic listing is free and includes essential features to showcase your restaurant. Premium listings offer additional benefits like priority placement in search results, featured status, and advanced analytics. You can view our pricing plans on the business registration page.",
-  // },
+  {
+    question: "What is Foodeez?",
+    answer:
+      "Foodeez is a community-driven food discovery platform that connects food lovers with local restaurants, home chefs, and food brands. Whether you're craving something new or want to share your food story, Foodeez is the place to be.",
+  },
+  {
+    question: "Who can join Foodeez?",
+    answer:
+      "Anyone with a passion for food can join! Whether you're a restaurant owner, food blogger, home chef, or just someone who loves discovering and reviewing food — Foodeez welcomes you.",
+  },
+  {
+    question: "Why should I register my business on Foodeez?",
+    answer:
+      "Listing your restaurant or food business on Foodeez increases your visibility, helps attract more local customers, and gives you tools to manage your reputation and grow your brand.",
+  },
+  {
+    question: "Do I need to be on Google or Instagram to join?",
+    answer:
+      "Not at all. While having a social media presence helps, Foodeez is a standalone platform. You can create your profile, upload photos, share your story, and connect with foodies without any external accounts.",
+  },
+  {
+    question:
+      "Can Foodeez help set up Google Maps and Instagram for my restaurant?",
+    answer:
+      "Yes! Our team plans to offer optional onboarding services in the future, including help with setting up your Google Business Profile, Instagram page, and syncing them with your Foodeez profile.",
+  },
 ];
 
 export default function FaqSection() {
@@ -108,15 +107,16 @@ export default function FaqSection() {
 
         <div className="mt-12 text-center">
           <p className="mb-3 text-text-main text-base sm:text-lg">
-            have questions?
+            Have questions?
           </p>
 
-          <button className="inline-flex text-primary font-medium text-base hover:underline hover:text-primary-700 transition-colors">
-            <Link href="/contact" className="flex items-center gap-2">
-              <span>Contact our support team</span>
-              <ArrowRight size={20} />
-            </Link>
-          </button>
+          <Link
+            href="/contact"
+            className="inline-flex items-center gap-2 text-primary font-medium text-base hover:underline hover:text-primary-700 transition-colors"
+          >
+            <span>Contact Us</span>
+            <ArrowRight size={20} />
+          </Link>
         </div>
       </div>
     </section>

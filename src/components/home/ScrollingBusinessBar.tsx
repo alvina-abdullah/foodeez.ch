@@ -31,17 +31,22 @@ const businesses: Business[] = [
   },
   {
     name: 'Taj Mahal Badan',
-    url: 'https://tuscany-restaurant.ch/',
+    url: 'https://tajmahalbaden.ch/',
     logo: '/images/BusinessLogos/tajmahal.png'
   },
   {
     name: 'Darbar Restaurant',
     url: 'https://darbar.ch/de/',
     logo: '/images/BusinessLogos/darbar.png'
+  },
+  {
+    name: 'Tuscany Italian Restaurant',
+    url: 'https://tuscany-restaurant.ch/',
+    logo: '/images/BusinessLogos/tuscany.png'
   }
 ];
 
-const ScrollingBusinessBar: React.FC<ScrollingBusinessBarProps> = ({ speed = 40 }) => {
+const ScrollingBusinessBar: React.FC<ScrollingBusinessBarProps> = ({ speed = 20 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -57,7 +62,7 @@ const ScrollingBusinessBar: React.FC<ScrollingBusinessBarProps> = ({ speed = 40 
       aria-label="Scrolling list of featured businesses"
     >
       <div className="scroll-content inline-block whitespace-nowrap animate-scroll">
-        {businesses.map((biz, index) => (
+      {[...businesses, ...businesses].map((biz, index) => (
           <a
             key={index}
             href={biz.url}
@@ -76,7 +81,7 @@ const ScrollingBusinessBar: React.FC<ScrollingBusinessBarProps> = ({ speed = 40 
                 
               />
             </div>
-            <span className="text-xs sm:text-sm text-center mt-2 text-gray-700 max-w-[120px] truncate sm:line-clamp-2">
+            <span className="text-xs sm:text-sm text-center mt-2 text-text-main max-w-[120px] truncate sm:line-clamp-2">
               {biz.name}
             </span>
           </a>
@@ -98,7 +103,7 @@ const ScrollingBusinessBar: React.FC<ScrollingBusinessBarProps> = ({ speed = 40 
             transform: translateX(0);
           }
           100% {
-            transform: translateX(-100%);
+            transform: translateX(-50%);
           }
         }
       `}</style>

@@ -3,7 +3,7 @@
 import { useState, useEffect, useCallback } from "react";
 import { BusinessDetail } from "@/types/business.types";
 import { useTransition } from "react";
-import { getBusinessesByTypeAndCategories } from "@/lib/db";
+import { getBusinessesByTypeAndCategories } from "@/services/db";
 import FoodTypeFilter from "./FoodTypeFilter";
 import CategoryFilter from "./CategoryFilter";
 import ResultCountInfo from "./ResultCountInfo";
@@ -53,23 +53,17 @@ const VISIBLE_CATEGORIES_LIMIT = 5;
 export default function FeaturedBusiness() {
   const [businesses, setBusinesses] = useState<BusinessDetail[]>([]);
   const [isCategoryDropdownOpen, setIsCategoryDropdownOpen] = useState(false);
-  const [isPaginationDropdownOpen, setIsPaginationDropdownOpen] =
-    useState(false);
-  const [selectedCategoryId, setSelectedCategoryId] = useState<
-    number | undefined
-  >(undefined);
+  const [isPaginationDropdownOpen, setIsPaginationDropdownOpen] = useState(false);
+  const [selectedCategoryId, setSelectedCategoryId] = useState<number | undefined>(undefined);
   const [initialLoading, setInitialLoading] = useState(true);
   const [currentBatch, setCurrentBatch] = useState(1);
   const [hasMore, setHasMore] = useState(true);
-
-  const [selectedFoodType, setSelectedFoodType] =
-    useState<string>(INITIAL_FOOD_TYPE);
+  const [selectedFoodType, setSelectedFoodType] =useState<string>(INITIAL_FOOD_TYPE);
   const [selectedCategory, setSelectedCategory] = useState<string>("");
   const [isPending, startTransition] = useTransition();
   const [error, setError] = useState<string | null>(null);
   const [perPage, setPerPage] = useState(PER_PAGE_OPTIONS[0]);
   const [totalCountofBusiness, setTotalCountOfBusiness] = useState(0);
-
   const visibleCategories = FOOD_CATEGORIES.slice(0, VISIBLE_CATEGORIES_LIMIT);
   const hiddenCategories = FOOD_CATEGORIES.slice(VISIBLE_CATEGORIES_LIMIT);
 
@@ -131,9 +125,8 @@ export default function FeaturedBusiness() {
 
   // Handlers
   const handleFoodTypeSelect = (type: string) => {
-    console.log(type);
-    setSelectedFoodType(type);
 
+    setSelectedFoodType(type);
     // Only reset category selection when switching to "All"
     if (type === "All") {
       setSelectedCategory("");

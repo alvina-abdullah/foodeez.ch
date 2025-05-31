@@ -1,8 +1,8 @@
 "use client";
 
-import BusinessCTA from "@/components/home/BusinessCTA";
-import ShareExperience from "@/components/home/ShareExperience";
-import CtaSection from "@/components/home/CtaSection";
+import BusinessCTA from "@/components/home/CTAs/BusinessCTA";
+import ShareExperience from "@/components/home/CTAs/ShareExperience";
+import CtaSection from "@/components/home/CTAs/CtaSection";
 import FaqSection from "@/components/home/FaqSection";
 import HeroSection from "@/components/home/HeroSection";
 import FeaturedBusiness from "@/components/home/FeaturedBusiness";
@@ -95,7 +95,10 @@ From 5 - 28 April No record
 
 28 May 3.5 hours
 
+29 May No Work
 
+30 May 3.5 hours
 
+31 May 3+ hours
 
 */

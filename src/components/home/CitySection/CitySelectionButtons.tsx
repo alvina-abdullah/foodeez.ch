@@ -65,7 +65,7 @@ export default function CitySelectionButtons({
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
             transition={{ duration: 0.2 }}
-            className="absolute top-full left-0 mt-2 w-56 max-h-96 overflow-y-auto rounded-xl shadow-lg border border-primary z-50 bg-white"
+            className="absolute top-full left-0 mt-2 w-auto md:w-56 max-h-96 overflow-y-auto rounded-xl shadow-lg border border-primary z-50 bg-white"
             id="no-scrollbar"
           >
             <div className="p-2 space-y-1">

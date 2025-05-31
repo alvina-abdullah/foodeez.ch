@@ -1,7 +1,7 @@
 'use server';
 
 import { Prisma } from "@prisma/client";
-import { prisma } from "./prisma"
+import { prisma } from "../lib/prisma"
 import { BusinessDetail, BusinessResult } from "@/types/business.types";
 
 // Example function to test the schema
@@ -60,7 +60,7 @@ interface BusinessQueryParams {
 export async function getBusinessesByLocation({
   city,
   zipCode,
-  limit = 9
+  limit = 12
 }: BusinessQueryParams): Promise<BusinessResult> {
   try {
     // Validate at least one search parameter exists
@@ -124,84 +124,6 @@ export async function getBusinessesByLocation({
   }
 }
 
-// export async function getBusinessesByType(params: {
-//   foodType: string;
-//   category?: string;
-//   limit?: number;
-// }): Promise<BusinessDetail[]> {
-//   const { foodType, category, limit = 9 } = params;
-//   const normalizedType = foodType.toLowerCase();
-
-//   try {
-//     // First fetch businesses based on food type
-//     let businesses: any[] = [];
-
-//     if (normalizedType === 'halal') {
-//       businesses = await prisma.business_detail_view_halal.findMany({
-//         take: Math.min(limit, 50),
-//         orderBy: { BUSINESS_NAME: 'asc' }
-//       });
-//     } else if (normalizedType === 'vegan') {
-//       businesses = await prisma.business_detail_view_vegan.findMany({
-//         take: Math.min(limit, 50),
-//         orderBy: { BUSINESS_NAME: 'asc' }
-//       });
-//     } else if (normalizedType === 'vegetarian') {
-//       businesses = await prisma.business_detail_view_vegetarian.findMany({
-//         take: Math.min(limit, 50),
-//         orderBy: { BUSINESS_NAME: 'asc' }
-//       });
-//     } else {
-//       // Default to 'all' businesses
-//       businesses = await prisma.business_detail_view_all.findMany({
-//         take: Math.min(limit, 50),
-//         orderBy: { BUSINESS_NAME: 'asc' }
-//       });
-//     }
-
-//     // If category is specified, filter businesses by category
-//     if (category) {
-//       // Get businesses in this category
-//       const businessCategories = await prisma.business_2_business_category_view.findMany({
-//         where: {
-//           CATEGORY_NAME: category
-//         }
-//       });
-
-//       // Extract business IDs that belong to this category
-//       const businessIdsInCategory = businessCategories
-//         .map(bc => bc.BUSINESS_ID)
-//         .filter(id => id !== null && id !== undefined);
-
-//       // Filter the businesses to only include those in the category
-//       businesses = businesses.filter(
-//         business => businessIdsInCategory.includes(business.BUSINESS_ID)
-//       );
-//     }
-
-//     // Normalize the result format
-//     return businesses.map(business => {
-//       // Determine the ranking field based on the view type
-//       const ranking = business.IFNULL_d_Ranking__0_ !== undefined
-//         ? business.IFNULL_d_Ranking__0_
-//         : (business.Ranking || 0);
-
-//       // Return a consistent object format
-//       return {
-//         ...business,
-//         Ranking: ranking
-//       };
-//     });
-//   } catch (error) {
-//     console.error(`Error fetching ${foodType} businesses:`, error);
-//     return [];
-//   }
-// }
-
-/**
- * Fetch businesses by both food type (halal, vegan, etc) and category ID
- * This function works with the businessCategory table's ID
- */
 export async function getBusinessesByTypeAndCategories(params: {
   foodType: string;
   categoryId?: number;
@@ -216,7 +138,6 @@ export async function getBusinessesByTypeAndCategories(params: {
 
     // 🔹 Step 1: Get businesses by category
     if (categoryId !== undefined) {
-
 
       const businessCategoryLinks = await prisma.businessToBusinessCategory.findMany({
         where: {
@@ -235,7 +156,7 @@ export async function getBusinessesByTypeAndCategories(params: {
 
 
       if (businessIdsInCategory.length === 0) {
-        console.log(`No businesses found for category ${categoryId}, returning empty result.`);
+        // console.log(`No businesses found for category ${categoryId}, returning empty result.`);
         return { businesses: [], totalCount: 0 };
       }
     }
@@ -252,8 +173,8 @@ export async function getBusinessesByTypeAndCategories(params: {
       const [data, count] = await Promise.all([
         model.findMany({
           where: whereClause,
-          skip,
           take: limit,
+          skip,
           orderBy: { BUSINESS_NAME: 'asc' }
         }),
         model.count({
@@ -287,8 +208,6 @@ export async function getBusinessesByTypeAndCategories(params: {
           ? business.IFNULL_d_Ranking__0_
           : (business.Ranking || 0)
     }));
-
-
 
     return {
       businesses: normalizedBusinesses,
