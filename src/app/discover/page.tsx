@@ -19,7 +19,7 @@ import SearchLoading from "./components/SearchLoading";
 import NoResults from "./components/NoResults";
 import BusinessList from "./components/BusinessList";
 import Pagination from "./components/Pagination";
-import { DiscoverBusiness } from "@/types/discover.types";
+import { BusinessDetail } from "@/types/business.types";
 
 type PriceRange = {
   id: number;
@@ -31,7 +31,7 @@ function DiscoverPage() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
-  const [businesses, setBusinesses] = useState<DiscoverBusiness[]>([]);
+  const [businesses, setBusinesses] = useState<BusinessDetail[]>([]);
   const [totalResults, setTotalResults] = useState(0);
   const [popularSearches, setPopularSearches] = useState<string[]>([]);
   const [priceRanges, setPriceRanges] = useState<PriceRange[]>([]);
@@ -87,7 +87,7 @@ function DiscoverPage() {
         sortBy: currentSort,
       });
 
-      setBusinesses(results.businesses as DiscoverBusiness[]);
+      setBusinesses(results.businesses as BusinessDetail[]);
       setTotalResults(results.total);
     } catch (error) {
       console.error("Error fetching businesses:", error);
@@ -173,7 +173,7 @@ function DiscoverPage() {
         isLoading={isPending}
       />
 
-      <div className="container max-w-7xl mx-auto px-4 py-8">
+      <div className="py-8">
         {/* Results Info and Sorting */}
         <div className="flex flex-wrap justify-between items-center mb-6">
           <div>

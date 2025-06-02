@@ -4,7 +4,6 @@ import { Prisma } from "@prisma/client";
 import { prisma } from "../lib/prisma"
 import { BusinessDetail, BusinessResult } from "@/types/business.types";
 
-// Example function to test the schema
 export async function getBusinesses() {
   try {
     const businesses = await prisma.business_detail_view_all.findMany({
@@ -32,7 +31,6 @@ export async function getBusinessById(id: number) {
   }
 }
 
-// Function to get distinct cities from the database
 export async function getCities() {
   try {
     const cities = await prisma.business_detail_view_all.findMany({
@@ -111,7 +109,7 @@ export async function getBusinessesByLocation({
         GOOGLE_RATING: true,
         APPROVED: true,
         STATUS: true,
-        Ranking: true,
+        RANKING: true,
       }
     });
   } catch (error) {
@@ -139,18 +137,18 @@ export async function getBusinessesByTypeAndCategories(params: {
     // 🔹 Step 1: Get businesses by category
     if (categoryId !== undefined) {
 
-      const businessCategoryLinks = await prisma.businessToBusinessCategory.findMany({
+      const businessCategoryLinks = await prisma.business_2_business_category_view.findMany({
         where: {
-          businessCategoryId: categoryId,
-          status: 1
+          BUSINESS_CATEGORY_ID: categoryId,
+          STATUS: 1
         },
         select: {
-          businessId: true
+          BUSINESS_ID: true
         }
       });
 
       businessIdsInCategory = businessCategoryLinks
-        .map(link => link.businessId)
+        .map(link => link.BUSINESS_ID)
         .filter((id): id is number => id !== null && id !== undefined);
 
 
@@ -166,7 +164,7 @@ export async function getBusinessesByTypeAndCategories(params: {
       ? { BUSINESS_ID: { in: businessIdsInCategory } }
       : {};
 
-    let businesses: any[] = [];
+    let businesses: BusinessDetail[] = [];
     let totalCount = 0;
 
     const getData = async (model: any) => {
@@ -200,17 +198,8 @@ export async function getBusinessesByTypeAndCategories(params: {
       ({ data: businesses, count: totalCount } = await getData(prisma.business_detail_view_all));
     }
 
-    // 🔹 Step 3: Normalize and return
-    const normalizedBusinesses = businesses.map(business => ({
-      ...business,
-      Ranking:
-        business.IFNULL_d_Ranking__0_ !== undefined
-          ? business.IFNULL_d_Ranking__0_
-          : (business.Ranking || 0)
-    }));
-
     return {
-      businesses: normalizedBusinesses,
+      businesses: businesses,
       totalCount
     };
   } catch (error) {
@@ -219,5 +208,15 @@ export async function getBusinessesByTypeAndCategories(params: {
       businesses: [],
       totalCount: 0
     };
+  }
+}
+
+export async function getAdsLinkData() {
+  try {
+    const adsLinkData = await prisma.adlink_view.findMany();
+    return adsLinkData;
+  } catch (error) {
+    console.error('Error fetching ads link data:', error);
+    return [];
   }
 }

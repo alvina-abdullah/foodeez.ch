@@ -3,12 +3,12 @@
 import { useEffect, useRef } from "react";
 
 const phrases = [
-  "Switzerland’s #1 Food Discovery Platform --",
-  "Powered by Tech. Driven by Taste --",
-  "Where Prestige Meets Visibility --",
-  "Crafted for Culinary Excellence & Designed for Global Discovery --",
-  "Fine Dining or Hidden Gem — We Make You Visible --",
-  "More Than a Listing, A Digital Stage for Your Brand --",
+  "Switzerland’s #1 Food Discovery Platform",
+  "Powered by Tech. Driven by Taste",
+  "Where Prestige Meets Visibility",
+  "Crafted for Culinary Excellence & Designed for Global Discovery",
+  "Fine Dining or Hidden Gem — We Make You Visible",
+  "More Than a Listing, A Digital Stage for Your Brand",
   "Designed for Chefs Who Want to Be Remembered",
 ];
 
@@ -21,7 +21,7 @@ interface AnnouncementBarProps {
 export default function AnnouncementBar1({
   bgColor = "bg-secondary",
   textColor = "text-white",
-  speed = 40,
+  speed = 80,
 }: AnnouncementBarProps) {
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -39,8 +39,8 @@ export default function AnnouncementBar1({
     >
       <div className="scroll-text whitespace-nowrap animate-scroll">
         {[...phrases, ...phrases].map((text, i) => (
-          <span key={i} className="mx-6 inline-block">
-            {text}
+          <span key={i} className=" inline-block">
+            {text} &nbsp;&nbsp;&nbsp;*&nbsp;&nbsp;&nbsp;
           </span>
         ))}
       </div>

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
-import { getBusinessesByLocation, getCities } from "@/services/db";
+import { getBusinessesByLocation, getCities } from "@/services/HomePageService";
 import { BusinessDetail } from "@/types/business.types";
 import CitySelectionButtons from "./CitySelectionButtons";
 import ZipCodeSearch from "./ZipCodeSearch";
@@ -89,7 +89,7 @@ export default function CitySection() {
           GOOGLE_RATING: business.GOOGLE_RATING || undefined,
           APPROVED: business.APPROVED || undefined,
           STATUS: business.STATUS || undefined,
-          Ranking: business.Ranking || undefined,
+          Ranking: business.RANKING || undefined,
         })) as BusinessDetail[]
       );
 

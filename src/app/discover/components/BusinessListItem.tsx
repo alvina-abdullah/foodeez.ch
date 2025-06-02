@@ -4,15 +4,15 @@ import Image from "next/image";
 import { MapPin, Star, Calendar, Phone } from "lucide-react";
 import { generateSlug } from "@/lib/utils/genSlug";
 import { SocialLinks } from "@/components/core/SocialLinks";
-import { DiscoverBusiness } from "@/types/discover.types";
+import { BusinessDetail } from "@/types/business.types";
 
 interface Props {
-  business: DiscoverBusiness;
+  business: BusinessDetail;
 }
 
 export default function BusinessListItem({ business }: Props) {
   const {
-    Business_ID,
+    BUSINESS_ID,
     BUSINESS_NAME,
     IMAGE_URL,
     ADDRESS_TOWN,
@@ -25,7 +25,7 @@ export default function BusinessListItem({ business }: Props) {
     INSTA_LINK,
   } = business || {};
 
-  const slug = generateSlug(BUSINESS_NAME || "business", Business_ID);
+  const slug = generateSlug(BUSINESS_NAME || "business", BUSINESS_ID);
   const rating = GOOGLE_RATING ? parseFloat(GOOGLE_RATING) : null;
 
   const formatUrl = (url: string | undefined) => {

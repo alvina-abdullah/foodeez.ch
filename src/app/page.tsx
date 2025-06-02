@@ -24,7 +24,6 @@ export default function Home() {
       <ScrollingBusinessBar />
 
       {/* Featured Business Grid */}
-
       <FeaturedBusiness />
 
       {/* Business CTA */}
@@ -101,4 +100,7 @@ From 5 - 28 April No record
 
 31 May 3+ hours
 
+1 June 1.5 + hour
+
+2 june
 */

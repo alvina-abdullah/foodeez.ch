@@ -1,8 +1,8 @@
+import { BusinessDetail } from '@/types/business.types';
 import React from 'react';
-import type { BusinessData } from '../page';
 
 interface ReservationSummaryProps {
-  business: BusinessData;
+  business: BusinessDetail;
   date: string;
   time: string;
   guests: string;

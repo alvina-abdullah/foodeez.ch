@@ -13,8 +13,8 @@ export async function POST(request: Request) {
     }
 
     // Check if the email already exists
-    const existingSubscription = await prisma.foodeezSubscription.findFirst({
-      where: { emailAddress: email },
+    const existingSubscription = await prisma.foodeez_subscription.findFirst({
+      where: { EMAIL_ADDRESS: email },
     });
 
     if (existingSubscription) {
@@ -29,11 +29,11 @@ export async function POST(request: Request) {
     }
 
     // Create new subscription
-    await prisma.foodeezSubscription.create({
+    await prisma.foodeez_subscription.create({
       data: {
-        id: BigInt(Date.now()),
-        emailAddress: email,
-        createdAt: new Date(),
+        FOODEEZ_SUBSCRIPTION_ID : BigInt(Date.now()),
+        EMAIL_ADDRESS: email,
+        CREATION_DATETIME: new Date(),
       },
     });
 

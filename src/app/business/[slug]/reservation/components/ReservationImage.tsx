@@ -1,9 +1,9 @@
 import React from "react";
-import type { BusinessData } from "../page";
 import Image from "next/image";
+import { BusinessDetail } from "@/types/business.types";
 
 interface ReservationImageProps {
-  business: BusinessData;
+  business: BusinessDetail;
 }
 
 const ReservationImage: React.FC<ReservationImageProps> = ({ business }) => {

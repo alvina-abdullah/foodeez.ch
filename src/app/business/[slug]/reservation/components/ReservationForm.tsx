@@ -26,7 +26,7 @@ const ReservationForm: React.FC<ReservationFormProps> = ({
     setFormData((prev: any) => ({ ...prev, [name]: value }));
   };
 
-  const nextStep = () => setCurrentStep((prev) => prev + 1);
+  // const nextStep = () => setCurrentStep((prev) => prev + 1);
   const prevStep = () => setCurrentStep((prev) => Math.max(1, prev - 1));
 
   return (
@@ -195,28 +195,28 @@ const ReservationForm: React.FC<ReservationFormProps> = ({
           </button>
         )}
         {currentStep < 2 ? (
-          <button
-            type="button"
-            onClick={nextStep}
-            className="px-6 py-2.5 bg-primary hover:bg-primary-dark text-white font-medium rounded-md shadow-sm transition-colors"
+          // <button
+          //   type="button"
+          //   onClick={nextStep}
+          //   className="px-6 py-2.5 bg-primary hover:bg-primary-dark text-white font-medium rounded-md shadow-sm transition-colors"
+          // >
+          //   Continue
+          // </button>
+            <button
+            type="submit"
+            disabled={isSubmitting}
+            className="px-6 py-2.5 bg-primary hover:bg-primary-dark text-white font-medium rounded-md shadow-sm transition-colors disabled:opacity-70"
           >
-            Continue
+            {isSubmitting ? 'Processing...' : 'Coming Soon'}
           </button>
         ) : (
-          // <button
-          //   type="submit"
-          //   disabled={isSubmitting}
-          //   className="px-6 py-2.5 bg-primary hover:bg-primary-dark text-white font-medium rounded-md shadow-sm transition-colors disabled:opacity-70"
-          // >
-          //   {isSubmitting ? 'Processing...' : 'Complete Reservation'}
-          // </button>
           <button
-          type="submit"
-          disabled={isSubmitting}
-          className="px-6 py-2.5 bg-primary hover:bg-primary-dark text-white font-medium rounded-md shadow-sm transition-colors disabled:opacity-70"
-        >
-          {isSubmitting ? 'Processing...' : 'Coming Soon'}
-        </button>
+            type="submit"
+            disabled={isSubmitting}
+            className="px-6 py-2.5 bg-primary hover:bg-primary-dark text-white font-medium rounded-md shadow-sm transition-colors disabled:opacity-70"
+          >
+            {isSubmitting ? 'Processing...' : 'Complete Reservation'}
+          </button>
         )}
       </div>
     </form>

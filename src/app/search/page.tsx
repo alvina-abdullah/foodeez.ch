@@ -1,41 +1,39 @@
-'use client';
+"use client";
 
-import { useEffect, useState } from 'react';
-// import { useRouter, useSearchParams } from 'next/navigation';
-import BusinessCard from '@/components/core/BusinessCard';
-import { BusinessDetail } from '@/types/business.types';
-import Link from 'next/link';
-import { Search } from 'lucide-react';
-import { searchBusinesses } from '@/services/searchPageService';
+import Link from "next/link";
+import { useEffect, useState } from "react";
+import { Search } from "lucide-react";
+import { searchBusinesses } from "@/services/searchPageService";
+import { BusinessDetail } from "@/types/business.types";
+import BusinessCard from "@/components/core/BusinessCard";
 
 export default function SearchPage() {
-  // const router = useRouter();
-  // const searchParams = useSearchParams();
   const [isLoading, setIsLoading] = useState(false);
   const [businesses, setBusinesses] = useState<BusinessDetail[]>([]);
   const [searchPerformed, setSearchPerformed] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [searchQuery, setSearchQuery] = useState({
-    name: '',
-    zipCode: ''
-  });
+  const [searchQuery, setSearchQuery] = useState({ name: "", zipCode: "" });
 
   useEffect(() => {
     const fetchBusinesses = async () => {
       if (!searchQuery.name && !searchQuery.zipCode) return;
-      
+
       setIsLoading(true);
       setError(null);
-      
+
       try {
-        const result = await searchBusinesses(searchQuery);
-        setBusinesses(result);
-        if (result.length === 0) {
-          setError('No businesses found matching your search');
+        const result = await searchBusinesses({
+          name: searchQuery.name,
+          zipCode: searchQuery.zipCode,
+        });
+        console.log(result);
+        setBusinesses(result.businesses);
+        if (result.businesses.length === 0) {
+          setError("No businesses found matching your search");
         }
       } catch (err) {
-        console.error('Search error:', err);
-        setError('An error occurred while searching for businesses');
+        console.error("Search error:", err);
+        setError("An error occurred while searching for businesses");
         setBusinesses([]);
       } finally {
         setIsLoading(false);
@@ -50,20 +48,23 @@ export default function SearchPage() {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
     setSearchQuery({
-      name: formData.get('name') as string,
-      zipCode: formData.get('zipCode') as string
+      name: formData.get("name") as string,
+      zipCode: formData.get("zipCode") as string,
     });
   };
 
   return (
-    <div className="py-8">
+    <div className="py-8 min-h-screen">
       {/* Search Form */}
       <div className="mb-12">
-        <h1 className="main-heading text-center">Find Your Favorite Business</h1>
-        <form onSubmit={handleSearch} className="space-y-4">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <h1 className="main-heading text-center">Find Your Business</h1>
+        <form onSubmit={handleSearch} className="mt-10 space-y-4 flex">
+          <div className="">
             <div>
-              <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">
+              <label
+                htmlFor="name"
+                className="block text-sm font-medium text-gray-700 mb-1"
+              >
                 Business Name
               </label>
               <input
@@ -75,7 +76,10 @@ export default function SearchPage() {
               />
             </div>
             <div>
-              <label htmlFor="zipCode" className="block text-sm font-medium text-gray-700 mb-1">
+              <label
+                htmlFor="zipCode"
+                className="block text-sm font-medium text-gray-700 mb-1"
+              >
                 ZIP Code
               </label>
               <input
@@ -105,11 +109,7 @@ export default function SearchPage() {
       </div>
 
       {/* Error Message */}
-      {error && (
-        <div className="text-center py-4 text-red-600">
-          {error}
-        </div>
-      )}
+      {error && <div className="text-center py-4 text-red-600">{error}</div>}
 
       {/* Results */}
       {searchPerformed && (
@@ -131,7 +131,8 @@ export default function SearchPage() {
                 We couldn't find any business matching your search.
               </h2>
               <p className="text-gray-600 mb-6">
-                Try adjusting your search terms or explore our featured businesses.
+                Try adjusting your search terms or explore our featured
+                businesses.
               </p>
               <Link
                 href="/business/register"

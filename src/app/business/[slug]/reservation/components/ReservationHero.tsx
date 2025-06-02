@@ -1,21 +1,19 @@
-import React from 'react';
-import type { BusinessData } from '../page';
+import { BusinessDetail } from "@/types/business.types";
+import React from "react";
 
 interface ReservationHeroProps {
-  business: BusinessData;
+  business: BusinessDetail
 }
 
 const ReservationHero: React.FC<ReservationHeroProps> = ({ business }) => {
   return (
-    <section className="w-full bg-primary text-white py-20 shadow-md md:mb-8 text-center">
-      <h1 className="sub-heading !text-white">Reserve a Table</h1>
-      <p className="sub-heading-description !text-white">
-        Complete the form below to reserve a table{business.BUSINESS_NAME && (
-          <span> at <span className="font-semibold">{business.BUSINESS_NAME}</span></span>
-        )}.
+    <div className="text-center my-12">
+      <h1 className="main-heading">Reserve Table</h1>
+      <p className="main-heading-description">
+        Reserve your table at {business.BUSINESS_NAME}
       </p>
-    </section>
+    </div>
   );
 };
 
-export default ReservationHero; 
+export default ReservationHero;

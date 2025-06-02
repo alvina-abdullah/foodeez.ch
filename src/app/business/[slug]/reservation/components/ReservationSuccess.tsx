@@ -1,9 +1,9 @@
 import React from 'react';
 import { BadgeCheck, Utensils, Calendar, Clock, Users } from 'lucide-react';
-import type { BusinessData } from '../page';
+import { BusinessDetail } from '@/types/business.types';
 
 interface ReservationSuccessProps {
-  business: BusinessData;
+  business: BusinessDetail;
   email?: string;
   date: string;
   time: string;

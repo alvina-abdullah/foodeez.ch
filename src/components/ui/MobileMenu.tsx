@@ -14,7 +14,7 @@ export default function MobileMenu({ isMenuOpen }: MobileMenuProps) {
 
     const dropdownItems = [
         { label: 'Register Your Business', href: '/businesses/register' },
-        { label: 'Pricing Plans', href: '/pricing' },
+        { label: 'Pricing Plans', href: '/coming-soon' },
         { label: 'Contact Sales', href: '/contact' },
     ];
 
@@ -50,13 +50,13 @@ export default function MobileMenu({ isMenuOpen }: MobileMenuProps) {
 
                         <div className="border-t border-gray-100 my-2 pt-4 pb-2 flex flex-col space-y-2">
                             <Link
-                                href="/signin"
+                                href="/coming-soon"
                                 className="block px-3 py-2.5 text-center text-base font-medium text-primary border border-primary rounded-full hover:bg-primary transition-all"
                             >
                                 Sign in
                             </Link>
                             <Link
-                                href="/signup"
+                                href="/coming-soon"
                                 className="block px-3 py-2.5 text-center text-base font-medium bg-primary text-white rounded-full hover:bg-primary transition-all"
                             >
                                 Sign Up

@@ -1,59 +1,35 @@
-'use client';
+"use client";
 
-import Image from 'next/image';
-import { useEffect, useRef } from 'react';
-
-interface Business {
-  name: string;
-  url: string;
-  logo: string;
-}
+import { getAdsLinkData } from "@/services/HomePageService";
+import { adsLinkData } from "@/types/addlink.types";
+import Image from "next/image";
+import { useEffect, useRef, useState } from "react";
 
 interface ScrollingBusinessBarProps {
   speed?: number;
 }
 
-const businesses: Business[] = [
-  {
-    name: 'Salpers - Online Grocery Shop',
-    url: 'https://salpers.ch/',
-    logo: '/images/BusinessLogos/salpers.png'
-  },
-  {
-    name: 'New Spice Village - Dübendorf',
-    url: 'https://newspicevillage.ch/',
-    logo: '/images/BusinessLogos/spicevillage.png'
-  },
-  {
-    name: 'Sahar Restaurant',
-    url: 'https://sahar.ch/',
-    logo: '/images/BusinessLogos/sahar.png'
-  },
-  {
-    name: 'Taj Mahal Badan',
-    url: 'https://tajmahalbaden.ch/',
-    logo: '/images/BusinessLogos/tajmahal.png'
-  },
-  {
-    name: 'Darbar Restaurant',
-    url: 'https://darbar.ch/de/',
-    logo: '/images/BusinessLogos/darbar.png'
-  },
-  {
-    name: 'Tuscany Italian Restaurant',
-    url: 'https://tuscany-restaurant.ch/',
-    logo: '/images/BusinessLogos/tuscany.png'
-  }
-];
-
-const ScrollingBusinessBar: React.FC<ScrollingBusinessBarProps> = ({ speed = 20 }) => {
+const ScrollingBusinessBar: React.FC<ScrollingBusinessBarProps> = ({
+  speed = 20,
+}) => {
   const containerRef = useRef<HTMLDivElement>(null);
+
+  const [adsLinkData, setAdsLinkData] = useState<adsLinkData[]>([]);
 
   useEffect(() => {
     if (containerRef.current) {
-      containerRef.current.style.setProperty('--speed', `${speed}s`);
+      containerRef.current.style.setProperty("--speed", `${speed}s`);
     }
   }, [speed]);
+
+  useEffect(() => {
+    const fetchAdsLinkData = async () => {
+      const adsLinkData = await getAdsLinkData();
+      console.log(adsLinkData);
+      setAdsLinkData(adsLinkData);
+    };
+    fetchAdsLinkData();
+  }, []);
 
   return (
     <div
@@ -62,27 +38,26 @@ const ScrollingBusinessBar: React.FC<ScrollingBusinessBarProps> = ({ speed = 20 
       aria-label="Scrolling list of featured businesses"
     >
       <div className="scroll-content inline-block whitespace-nowrap animate-scroll">
-      {[...businesses, ...businesses].map((biz, index) => (
+        {[...adsLinkData, ...adsLinkData].map((biz, index) => (
           <a
             key={index}
-            href={biz.url}
+            href={biz.WEB_ADDRESS || "#"}
             target="_blank"
             rel="noopener noreferrer"
-            title={biz.name}
+            title={biz.BUSINESS_NAME || ""}
             className="inline-flex flex-col items-center justify-start mx-6 sm:mx-8 hover:scale-105 transition-transform duration-300 min-w-[120px]"
           >
             <div className="relative w-[clamp(60px,10vw,100px)] h-[clamp(60px,10vw,100px)] bg-white rounded-lg p-2 shadow-md hover:shadow-lg transition-shadow">
               <Image
-                src={biz.logo}
-                alt={biz.name}
+                src={biz.LOGO_FILE || "/placeholder.png"}
+                alt={biz.BUSINESS_NAME || ""}
                 fill
                 className="object-contain"
                 sizes="(max-width: 768px) 70px, 100px object-contain p-1"
-                
               />
             </div>
             <span className="text-xs sm:text-sm text-center mt-2 text-text-main max-w-[120px] truncate sm:line-clamp-2">
-              {biz.name}
+              {biz.BUSINESS_NAME}
             </span>
           </a>
         ))}

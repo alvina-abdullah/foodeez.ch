@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useParams } from "next/navigation";
 import { ChevronLeft } from "lucide-react";
 import { extractBusinessId, parseSlug } from "@/lib/utils/genSlug";
-import { getBusinessById } from "@/services/db";
+import { getBusinessById } from "@/services/HomePageService";
 import ReservationHero from "./components/ReservationHero";
 import ContactInfoCard from "./components/ContactInfoCard";
 import ReservationImage from "./components/ReservationImage";
@@ -13,33 +13,7 @@ import ReservationForm from "./components/ReservationForm";
 import ReservationSummary from "./components/ReservationSummary";
 import ReservationSuccess from "./components/ReservationSuccess";
 import LoadingSkeleton from "./components/LoadingSkeleton";
-
-export interface BusinessData {
-  BUSINESS_ID: number;
-  BUSINESS_NAME?: string;
-  SHORT_NAME?: string;
-  DESCRIPTION?: string;
-  ADDRESS_STREET?: string;
-  ADDRESS_ZIP?: bigint;
-  ADDRESS_TOWN?: string;
-  ADDRESS_CITY_ID?: number;
-  CITY_CODE?: string;
-  CITY_NAME?: string;
-  ADDRESS_COUNTRY?: string;
-  PHONE_NUMBER?: string;
-  WHATSAPP_NUMBER?: string;
-  WEB_ADDRESS?: string;
-  LOGO?: string;
-  FACEBOOK_LINK?: string;
-  INSTA_LINK?: string;
-  TIKTOK_LINK?: string;
-  GOOGLE_PROFILE?: string;
-  IMAGE_URL?: string;
-  GOOGLE_RATING?: string;
-  APPROVED?: number;
-  STATUS?: number;
-  Ranking?: bigint;
-}
+import Banner from "@/components/core/Banner";
 
 export default function ReservationPage() {
   const params = useParams();
@@ -121,9 +95,7 @@ export default function ReservationPage() {
   // };
 
   if (loading) {
-    return (
-     <LoadingSkeleton />
-    );
+    return <LoadingSkeleton />;
   }
 
   if (!business) {
@@ -187,21 +159,22 @@ export default function ReservationPage() {
         <meta name="twitter:image" content={image} />
         <link rel="canonical" href={url} />
       </head>
-      <div className="my-10">
+      <div className="">
+        <Banner src="/images/banners/banner1.jpeg" alt={`Banner`} />
         <div className="">
-          <div className="mb-6">
-            <Link
-              href={`/business/${slug}`}
-              className="inline-flex items-center text-primary hover:text-primary-dark"
-            >
-              <ChevronLeft size={16} className="mr-1" />
-              Back to {business.BUSINESS_NAME}
-            </Link>
-          </div>
           <ReservationHero business={business} />
-          <div className="grid grid-cols-1 md:grid-cols-2 md:gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 md:gap-8 mb-10">
             {/* Left: Image - center vertically */}
-            <div className="flex items-center justify-center h-full">
+            <div className="flex flex-col justify-center h-full">
+              <div className="mb-2">
+                <Link
+                  href={`/business/${slug}`}
+                  className="inline-flex items-center text-primary hover:text-primary-dark"
+                >
+                  <ChevronLeft size={16} className="mr-1" />
+                  Back to {business.BUSINESS_NAME}
+                </Link>
+              </div>
               <ReservationImage business={business} />
             </div>
 
@@ -209,7 +182,7 @@ export default function ReservationPage() {
             <div className="flex flex-col">
               <ContactInfoCard business={business} />
 
-              <div className="bg-white rounded-xl shadow-lg overflow-hidden mt-6">
+              <div className="bg-primary/10 rounded-xl shadow-lg overflow-hidden mt-6">
                 <div className="p-6 md:p-8">
                   <ReservationForm
                     businessName={business.BUSINESS_NAME}

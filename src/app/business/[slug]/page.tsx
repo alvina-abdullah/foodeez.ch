@@ -1,7 +1,7 @@
 "use client";
 
 import { useParams } from "next/navigation";
-import { getBusinessById } from "@/services/db";
+import { getBusinessById } from "@/services/HomePageService";
 import { parseSlug } from "@/lib/utils/genSlug";
 import BusinessImage from "./components/BusinessImage";
 import React, { useState, useEffect } from "react";
@@ -18,36 +18,10 @@ import GoogleReviews from "./components/GoogleReviews";
 import OpeningHours from "./components/OpeningHoursSection";
 import BusinessInfoSection from "./components/BusinessInfoSection";
 import BusinessProfilePageLoadingSkeleton from "./components/BusinessProfilePageLoadingSkeleton";
-
-export interface BusinessData {
-  BUSINESS_ID: number;
-  BUSINESS_NAME?: string;
-  SHORT_NAME?: string;
-  DESCRIPTION?: string;
-  ADDRESS_STREET?: string;
-  ADDRESS_ZIP?: bigint;
-  ADDRESS_TOWN?: string;
-  ADDRESS_CITY_ID?: number;
-  CITY_CODE?: string;
-  CITY_NAME?: string;
-  ADDRESS_COUNTRY?: string;
-  PHONE_NUMBER?: string;
-  WHATSAPP_NUMBER?: string;
-  WEB_ADDRESS?: string;
-  LOGO?: string;
-  FACEBOOK_LINK?: string;
-  INSTA_LINK?: string;
-  TIKTOK_LINK?: string;
-  GOOGLE_PROFILE?: string;
-  IMAGE_URL?: string;
-  GOOGLE_RATING?: string;
-  APPROVED?: number;
-  STATUS?: number;
-  Ranking?: bigint;
-}
+import { BusinessDetail } from "@/types/business.types";
 
 const BusinessDetailPage = () => {
-  const [business, setBusiness] = useState<BusinessData | null>(null);
+  const [business, setBusiness] = useState<BusinessDetail | null>(null);
   const [placeId, setPlaceId] = useState<string>("");
   const [loading, setLoading] = useState(true);
   const [googleBusinessData, setGoogleBusinessData] =
@@ -72,7 +46,7 @@ const BusinessDetailPage = () => {
         : null;
 
       if (mapped && mapped.BUSINESS_ID) {
-        setBusiness(mapped as unknown as BusinessData);
+        setBusiness(mapped as unknown as BusinessDetail);
 
         // ✅ Extract place ID from Google profile
         const placeId = extractPlaceIdFromUrl(
@@ -171,7 +145,7 @@ const BusinessDetailPage = () => {
             businessName={business.BUSINESS_NAME || ""}
             className="mb-6"
           />
-      
+
           {/* Info Section */}
           <BusinessInfoSection business={business} />
 

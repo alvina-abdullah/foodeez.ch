@@ -4,11 +4,11 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { Grid, List } from "lucide-react";
 import BusinessListItem from "./BusinessListItem";
-import { DiscoverBusiness } from "@/types/discover.types";
-import BusinessCard from "./BusinessCard";
+import { BusinessDetail } from "@/types/business.types";
+import BusinessCard from "@/components/core/BusinessCard";
 
 interface BusinessListProps {
-    businesses: DiscoverBusiness[];
+    businesses: BusinessDetail[];
 }
 
 export default function BusinessList({ businesses }: BusinessListProps) {
@@ -76,7 +76,7 @@ export default function BusinessList({ businesses }: BusinessListProps) {
             >
                 {businesses.map((business) => (
                     <motion.div
-                        key={business.Business_ID}
+                        key={business.BUSINESS_ID}
                         variants={itemVariants}
                         className={viewMode === "list" ? "w-full" : ""}
                     >

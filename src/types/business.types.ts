@@ -26,17 +26,14 @@ export interface BusinessDetail {
   GOOGLE_RATING?: string;
   APPROVED?: number;
   STATUS?: number;
-  Ranking?: bigint;
-  // Add compatibility with different view structures
-  IFNULL_d_Ranking__0_?: bigint;
-  Category_name?: string;
+  RANKING?: bigint;
 }
 
 export type BusinessCategory = {
   id?: number;
-  CNT?: bigint;
-  Business_category_id: number;
-  Category_name: string;
+  CNT?: number;
+  BUSINESS_CATEGORY_ID: number;
+  CATEGORY_NAME: string;
 };
 
 export type BusinessResult = Prisma.business_detail_view_allGetPayload<{
@@ -64,6 +61,6 @@ export type BusinessResult = Prisma.business_detail_view_allGetPayload<{
     GOOGLE_RATING: true;
     APPROVED: true;
     STATUS: true;
-    Ranking: true;
+    RANKING: true;
   }
 }>[];

@@ -3,7 +3,7 @@
 import { useState, useEffect, useCallback } from "react";
 import { BusinessDetail } from "@/types/business.types";
 import { useTransition } from "react";
-import { getBusinessesByTypeAndCategories } from "@/services/db";
+import { getBusinessesByTypeAndCategories } from "@/services/HomePageService";
 import FoodTypeFilter from "./FoodTypeFilter";
 import CategoryFilter from "./CategoryFilter";
 import ResultCountInfo from "./ResultCountInfo";
