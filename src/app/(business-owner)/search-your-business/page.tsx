@@ -7,41 +7,33 @@ import {
   useTransition,
   Suspense,
 } from "react";
-import {
-  searchBusinesses,
-  getPopularSearchTerms,
-  getPriceRanges,
-} from "@/services/DiscoverPageService";
-import SearchHero from "./components/SearchHero";
+import { searchBusinesses } from "@/services/DiscoverPageService";
 import { useRouter, useSearchParams } from "next/navigation";
-import Filters from "./components/Filters";
 import SearchLoading from "./components/SearchLoading";
 import NoResults from "./components/NoResults";
 import BusinessList from "./components/BusinessList";
 import Pagination from "./components/Pagination";
 import { BusinessDetail } from "@/types/business.types";
+// import Filters from "./components/Filters";
+// import { Filter } from "lucide-react";
+import { motion } from "framer-motion";
+import SearchBar from "./components/SearchBar";
 
-type PriceRange = {
-  id: number;
-  name: string;
-  symbol: string;
-};
 
-function DiscoverPage() {
+function SearchYourBusiness() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
   const [businesses, setBusinesses] = useState<BusinessDetail[]>([]);
   const [totalResults, setTotalResults] = useState(0);
-  const [popularSearches, setPopularSearches] = useState<string[]>([]);
-  const [priceRanges, setPriceRanges] = useState<PriceRange[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  // const [showFilters, setShowFilters] = useState(false);
 
   // Get search params
   const currentQuery = searchParams.get("q") || "";
+  const currentLocation = searchParams.get("location") || "";
   const currentCategory = searchParams.get("category") || "All";
   const currentFoodType = searchParams.get("foodType") || "All";
-  const currentPriceRange = searchParams.get("price") || "All";
   const currentRating = searchParams.get("rating")
     ? Number(searchParams.get("rating"))
     : 0;
@@ -52,26 +44,6 @@ function DiscoverPage() {
     (searchParams.get("sort") as "rating" | "popularity" | "newest") ||
     "popularity";
 
-  // Load initial data
-  useEffect(() => {
-    const loadInitialData = async () => {
-      try {
-        const [terms, prices] = await Promise.all([
-          getPopularSearchTerms(),
-
-          getPriceRanges(),
-        ]);
-
-        setPopularSearches(terms);
-        setPriceRanges(prices);
-      } catch (error) {
-        console.error("Error loading initial data:", error);
-      }
-    };
-
-    loadInitialData();
-  }, []);
-
   // Handle search
   const fetchBusinesses = useCallback(async () => {
     setIsLoading(true);
@@ -81,10 +53,11 @@ function DiscoverPage() {
         searchTerm: currentQuery,
         category: currentCategory,
         foodType: currentFoodType,
-        priceRange: currentPriceRange,
         rating: currentRating,
         page: currentPage,
         sortBy: currentSort,
+        name: currentQuery,
+        zipCode: currentLocation,
       });
 
       setBusinesses(results.businesses as BusinessDetail[]);
@@ -96,9 +69,9 @@ function DiscoverPage() {
     }
   }, [
     currentQuery,
+    currentLocation,
     currentCategory,
     currentFoodType,
-    currentPriceRange,
     currentRating,
     currentPage,
     currentSort,
@@ -124,13 +97,17 @@ function DiscoverPage() {
     });
 
     startTransition(() => {
-      router.push(`/discover?${newParams.toString()}`);
+      router.push(`/search-your-business?${newParams.toString()}`);
     });
   };
 
   // Handle search query change
-  const handleSearch = (query: string) => {
-    updateSearchParams({ q: query || null, page: 1 });
+  const handleSearch = (query: string, location: string) => {
+    updateSearchParams({ 
+      q: query || null, 
+      location: location || null,
+      page: 1 
+    });
   };
 
   // Handle filter changes
@@ -143,9 +120,6 @@ function DiscoverPage() {
         break;
       case "foodType":
         params.foodType = value === "All" ? null : value;
-        break;
-      case "price":
-        params.price = value === "All" ? null : value;
         break;
       case "rating":
         params.rating = value === "0" ? null : value;
@@ -164,12 +138,21 @@ function DiscoverPage() {
   };
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background relative py-16">
+
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+        className="text-center mb-8"
+      >
+        <h1 className="main-heading">Find Your Restaurant</h1>
+      </motion.div>
+
       {/* Hero with Search */}
-      <SearchHero
+      <SearchBar
         query={currentQuery}
         onSearch={handleSearch}
-        popularSearches={popularSearches}
         isLoading={isPending}
       />
 
@@ -179,7 +162,7 @@ function DiscoverPage() {
           <div>
             <h2 className="text-2xl font-bold text-text-main">
               {isLoading ? (
-                <span className="animate-pulse">Searching...</span>
+                <span className="animate-pulse">Loading...</span>
               ) : (
                 <>
                   {totalResults > 0 ? (
@@ -203,7 +186,7 @@ function DiscoverPage() {
           </div>
 
           {/* Sort Dropdown */}
-          {/* <div className="mt-4 md:mt-0">
+          <div className="mt-4 md:mt-0">
             <select
               value={currentSort}
               onChange={(e) => handleFilterChange("sort", e.target.value)}
@@ -214,20 +197,42 @@ function DiscoverPage() {
               <option value="rating">Highest Rated</option>
               <option value="newest">Newest</option>
             </select>
-          </div> */}
+          </div>
         </div>
 
         <div className="flex flex-col lg:flex-row gap-6">
-          {/* Filters Sidebar */}
-          <div className="w-full lg:w-64 flex-shrink-0">
-            <Filters
-              priceRanges={priceRanges}
-              selectedPriceRange={currentPriceRange}
-              selectedRating={currentRating}
-              onChange={handleFilterChange}
-              isLoading={isPending}
+          {/* <button
+            onClick={() => setShowFilters(!showFilters)}
+            className="lg:hidden flex items-center justify-center gap-2 px-4 py-2 bg-primary text-white rounded-lg mb-4"
+          >
+            <Filter />
+            {showFilters ? "Hide Filters" : "Show Filters"}
+          </button> 
+
+          
+          <div
+            className={`fixed lg:static inset-0 z-50 lg:z-auto transform transition-transform duration-300 ease-in-out ${
+              showFilters
+                ? "translate-x-0"
+                : "-translate-x-full lg:translate-x-0"
+            } lg:w-64 flex-shrink-0  lg:bg-transparent`}
+          >
+           
+            <div
+              className="fixed inset-0 bg-black bg-opacity-50 lg:hidden"
+              onClick={() => setShowFilters(false)}
+              style={{ display: showFilters ? "block" : "none" }}
             />
-          </div>
+
+        
+            <div className="relative h-full lg:h-auto w-64 p-4 lg:p-0">
+              <Filters
+                selectedRating={currentRating}
+                onChange={handleFilterChange}
+                isLoading={isPending}
+              />
+            </div>
+          </div>  */}
 
           {/* Results */}
           <div className="flex-1">
@@ -258,10 +263,10 @@ function DiscoverPage() {
 }
 
 // Wrap the component with Suspense
-export default function DiscoverPageWithSuspense() {
+export default function SearchYourBusinessPageWithSuspance() {
   return (
-    <Suspense fallback={<div>Loading...</div>}>
-      <DiscoverPage />
+    <Suspense fallback={<SearchLoading />}>
+      <SearchYourBusiness />
     </Suspense>
   );
 }

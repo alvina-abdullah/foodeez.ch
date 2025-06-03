@@ -1,7 +1,7 @@
 'use server';
 
-import { prisma } from "@/lib/prisma";
 import { BusinessDetail } from "@/types/business.types";
+import { prisma } from "../lib/prisma"
 
 type FilterOptions = {
   searchTerm?: string;
@@ -14,23 +14,21 @@ type FilterOptions = {
   sortBy?: 'rating' | 'popularity' | 'newest';
 };
 
-/**
- * Searches businesses based on various filters
- */
 export async function searchBusinesses({
   searchTerm = '',
   category = 'All',
   foodType = 'All',
-  priceRange = 'All', 
+  priceRange = 'All',
   rating = 0,
   page = 1,
   limit = 12,
   sortBy = 'popularity',
-}: FilterOptions): Promise<{ businesses: BusinessDetail[]; total: number }> {
+  name = '',
+  zipCode = '',
+}: FilterOptions & { name?: string; zipCode?: string }): Promise<{ businesses: BusinessDetail[]; total: number }> {
   try {
     const offset = (page - 1) * limit;
 
-    // Base query
     let query = `
       SELECT * FROM business_detail_view_all 
       WHERE 1=1
@@ -41,7 +39,21 @@ export async function searchBusinesses({
       WHERE 1=1
     `;
 
-    // Search term filter
+    // Name filter
+    if (name) {
+      const nameCondition = ` AND BUSINESS_NAME LIKE '%${name}%' `;
+      query += nameCondition;
+      countQuery += nameCondition;
+    }
+
+    // Zip Code filter
+    if (zipCode) {
+      const zipCondition = ` AND ADDRESS_ZIP = '${zipCode}' `;
+      query += zipCondition;
+      countQuery += zipCondition;
+    }
+
+    // Search term filter (existing logic)
     if (searchTerm) {
       const searchCondition = `
         AND (
@@ -55,6 +67,7 @@ export async function searchBusinesses({
       countQuery += searchCondition;
     }
 
+    
     // Category filter
     if (category && category !== 'All') {
       // Map category names to their corresponding business_category_id values
@@ -134,6 +147,7 @@ export async function searchBusinesses({
       countQuery += ratingCondition;
     }
 
+
     // Sorting
     switch (sortBy) {
       case 'rating':
@@ -174,25 +188,6 @@ export async function searchBusinesses({
   }
 }
 
-/**
- * Get popular search terms
- */
-export async function getPopularSearchTerms(): Promise<string[]> {
-  // This would typically be backed by a real database table tracking searches
-  // For now, returning static popular search terms
-  return [
-    "Pizza",
-    "Indian",
-    "Chinese",
-    "Fast Food",
-    "Halal",
-    "Vegan",
-    "Burger",
-    "Italian",
-    "Healthy",
-    "Breakfast"
-  ];
-}
 
 /**
  * Get food categories for filters
@@ -250,16 +245,4 @@ export async function getDietaryPreferences(): Promise<{ id: number; name: strin
     console.error("Error fetching dietary preferences:", error);
     return [];
   }
-}
-
-/**
- * Get price ranges
- */
-export async function getPriceRanges(): Promise<{ id: number; name: string; symbol: string }[]> {
-  return [
-    { id: 1, name: "Budget", symbol: "£" },
-    { id: 2, name: "Mid-Range", symbol: "££" },
-    { id: 3, name: "Premium", symbol: "£££" },
-    { id: 4, name: "Luxury", symbol: "££££" }
-  ];
 }

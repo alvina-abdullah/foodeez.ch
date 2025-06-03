@@ -4,7 +4,7 @@ const subscription = () => {
   return (
     <div className="flex items-center justify-center min-h-screen">
       <h1 className="text-2xl md:text-4xl lg:text-6xl font-extrabold text-primary">
-        Coming Soon...
+        Subscription Coming Soon...
       </h1>
     </div>
   );

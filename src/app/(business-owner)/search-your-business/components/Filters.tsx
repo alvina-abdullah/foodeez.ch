@@ -5,16 +5,12 @@ import { motion } from "framer-motion";
 import { Filter, ChevronDown, ChevronUp, Star, X } from "lucide-react";
 
 interface FiltersProps {
-  priceRanges: { id: number; name: string; symbol: string }[];
-  selectedPriceRange: string;
   selectedRating: number;
   onChange: (filterType: string, value: string) => void;
   isLoading: boolean;
 }
 
 export default function Filters({
-  priceRanges,
-  selectedPriceRange,
   selectedRating,
   onChange,
   isLoading,
@@ -24,7 +20,7 @@ export default function Filters({
     rating: true,
   });
 
-  const hasActiveFilters = selectedPriceRange !== "All" || selectedRating > 0;
+  const hasActiveFilters =  selectedRating > 0;
 
   const toggleSection = (section: keyof typeof expandedSections) => {
     setExpandedSections({
@@ -131,36 +127,6 @@ export default function Filters({
             >
               <RatingStars rating={rating} />
               <span className="ml-2">{rating === 5 ? "only" : "& up"}</span>
-            </div>
-          ))}
-        </div>
-      </FilterSection>
-
-      {/* Price Range */}
-      <FilterSection title="Price Range" section="price">
-        <div className="space-y-2">
-          <div
-            className={`py-1 px-2 rounded cursor-pointer hover:bg-gray-100 ${
-              selectedPriceRange === "All"
-                ? "bg-primary/10 text-primary font-medium"
-                : ""
-            }`}
-            onClick={() => onChange("price", "All")}
-          >
-            Any Price
-          </div>
-          {priceRanges.map((price) => (
-            <div
-              key={price.id}
-              className={`py-1 px-2 rounded cursor-pointer hover:bg-gray-100 flex justify-between items-center ${
-                selectedPriceRange === price.name
-                  ? "bg-primary/10 text-primary font-medium"
-                  : ""
-              }`}
-              onClick={() => onChange("price", price.name)}
-            >
-              <span>{price.name}</span>
-              <span className="text-xs font-medium">{price.symbol}</span>
             </div>
           ))}
         </div>
