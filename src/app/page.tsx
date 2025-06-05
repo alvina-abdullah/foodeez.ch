@@ -102,5 +102,11 @@ From 5 - 28 April No record
 
 1 June 1.5 + hour
 
-2 june 2+  Hours
+2 june 4 +  Hours
+
+3 june 2.5 + hours
+
+4 june 1.5 hours
+
+5 june 2 hours
 */

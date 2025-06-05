@@ -242,14 +242,16 @@ model owner_2_business {
 }
 
 model visitors_account {
-  VISITORS_ACCOUNT_ID BigInt    @id
+  VISITORS_ACCOUNT_ID BigInt    @id @default(autoincrement())
   CREATION_DATETIME   DateTime? @db.DateTime(0)
-  EMAIL_ADDRESS       String?   @db.VarChar(255)
-  PASSWORD            String?   @db.VarChar(45)
+  EMAIL_ADDRESS       String?   @unique @db.VarChar(255)
+  PASSWORD            String?   @db.VarChar(255)
   FIRST_NAME          String?   @db.VarChar(45)
   LAST_NAME           String?   @db.VarChar(45)
   LANGUAGE            String?   @db.VarChar(45)
   PIC                 String?   @db.VarChar(255)
+  RESET_TOKEN         String?   @db.VarChar(255)
+  RESET_TOKEN_EXPIRY  DateTime? @db.DateTime(0)
 }
 
 view adlink_view {

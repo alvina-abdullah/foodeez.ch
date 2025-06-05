@@ -1,11 +1,12 @@
 import type { Metadata } from "next";
 import { Inter, Poppins } from "next/font/google";
 import "./globals.css";
-import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import AnnouncementBar1 from "@/components/layout/AnnouncementBar1";
 import AnnouncementBar2 from "@/components/layout/AnnouncmentBar2";
 import { Toaster } from "react-hot-toast";
+import { AuthProvider } from "@/components/providers/AuthProvider";
+import Navbar from "@/components/layout/Navbar";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -39,14 +40,15 @@ export default function RootLayout({
         <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
       </head>
       <body className="flex flex-col font-sans bg-background max-w-[1440px] mx-auto min-h-screen">
-        <AnnouncementBar1 />
-        <AnnouncementBar2 />
-
-        <Navbar />
-        {/* Content padding to avoid overlap */}
-        <main className="">{children}</main>
-        <Footer />
-        <Toaster position="bottom-right" />
+        <AuthProvider>
+          <AnnouncementBar1 />
+          <AnnouncementBar2 />
+          <Navbar />
+          {/* Content padding to avoid overlap */}
+          <main className="">{children}</main>
+          <Footer />
+          <Toaster position="bottom-right" />
+        </AuthProvider>
       </body>
     </html>
   );

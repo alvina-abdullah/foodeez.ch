@@ -50,13 +50,13 @@ export default function MobileMenu({ isMenuOpen }: MobileMenuProps) {
 
                         <div className="border-t border-gray-100 my-2 pt-4 pb-2 flex flex-col space-y-2">
                             <Link
-                                href="/coming-soon"
+                                href="/signin"
                                 className="block px-3 py-2.5 text-center text-base font-medium text-primary border border-primary rounded-full hover:bg-primary transition-all"
                             >
                                 Sign in
                             </Link>
                             <Link
-                                href="/coming-soon"
+                                href="/signup"
                                 className="block px-3 py-2.5 text-center text-base font-medium bg-primary text-white rounded-full hover:bg-primary transition-all"
                             >
                                 Sign Up

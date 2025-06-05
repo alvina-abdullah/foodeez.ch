@@ -104,7 +104,7 @@ export default function DropdownMenu({ label, items }: DropdownMenuProps) {
               >
                 <Link
                   href={item.href}
-                  className="block px-4 py-2 text-sm text-secondary hover:bg-primary/10 hover:text-primary-dark transition-colors"
+                  className="block px-4 py-2 text-sm  hover:bg-primary/10 hover:text-primary-dark transition-colors"
                 >
                   {item.label}
                 </Link>
