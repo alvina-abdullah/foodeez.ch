@@ -3,7 +3,7 @@
 import { useState, useRef } from 'react';
 import { Dialog, Transition } from '@headlessui/react';
 import { Fragment } from 'react';
-import { Camera, X, Loader2 } from 'lucide-react';
+import { Camera, Loader2 } from 'lucide-react';
 import Image from 'next/image';
 import { toast } from 'react-hot-toast';
 

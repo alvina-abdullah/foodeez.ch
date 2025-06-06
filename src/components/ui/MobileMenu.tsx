@@ -13,7 +13,6 @@ interface MobileMenuProps {
 }
 
 export default function MobileMenu({
-    isMenuOpen,
     isAuthenticated,
     userName,
     onSignOut,
@@ -62,12 +61,6 @@ export default function MobileMenu({
                         </div>
                         <div className="mt-3 space-y-1">
                             <Link
-                                href="/dashboard"
-                                className="block px-3 py-2 rounded-md text-base font-medium text-gray-600 hover:bg-gray-50 hover:text-primary"
-                            >
-                                Dashboard
-                            </Link>
-                            <Link
                                 href="/dashboard/profile"
                                 className="block px-3 py-2 rounded-md text-base font-medium text-gray-600 hover:bg-gray-50 hover:text-primary"
                             >
@@ -75,7 +68,7 @@ export default function MobileMenu({
                             </Link>
                             <button
                                 onClick={onSignOut}
-                                className="block w-full text-left px-3 py-2 rounded-md text-base font-medium text-red-600 hover:bg-red-50"
+                                className="block w-full px-3 py-2 rounded-md text-base font-medium bg-primary text-center text-white hover:bg-red-50"
                             >
                                 Sign Out
                             </button>

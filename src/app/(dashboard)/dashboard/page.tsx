@@ -4,9 +4,6 @@ import { useSession } from "next-auth/react";
 import { motion } from "framer-motion";
 import {
   Settings,
-  Bell,
-  Heart,
-  TrendingUp,
   CircleUser,
 } from "lucide-react";
 import Link from "next/link";
@@ -21,24 +18,6 @@ export default function DashboardPage() {
       description: "Keep your information current",
       icon: Settings,
       href: "/dashboard/profile",
-    },
-    {
-      title: "Notifications",
-      description: "Manage your alerts",
-      icon: Bell,
-      href: "/dashboard/notifications",
-    },
-    {
-      title: "Favorites",
-      description: "View your saved items",
-      icon: Heart,
-      href: "/dashboard/favorites",
-    },
-    {
-      title: "Analytics",
-      description: "Track your activity",
-      icon: TrendingUp,
-      href: "/dashboard/analytics",
     },
   ];
 
