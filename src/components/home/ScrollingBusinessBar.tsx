@@ -25,7 +25,6 @@ const ScrollingBusinessBar: React.FC<ScrollingBusinessBarProps> = ({
   useEffect(() => {
     const fetchAdsLinkData = async () => {
       const adsLinkData = await getAdsLinkData();
-      console.log(adsLinkData);
       setAdsLinkData(adsLinkData);
     };
     fetchAdsLinkData();

@@ -3,12 +3,12 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Menu, X, User } from "lucide-react";
+import { Menu, X, User  } from "lucide-react";
 import { AnimatePresence } from "framer-motion";
 import DropdownMenu from "../core/DropDownMenu";
 import MobileMenu from "../ui/MobileMenu";
 import Image from "next/image";
-import { useSession } from "next-auth/react";
+import { useSession, signOut } from "next-auth/react";
 import ProfileDropdown from "./ProfileDropdown";
 
 export const Navbar = () => {
@@ -16,6 +16,9 @@ export const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const { data: session, status } = useSession();
   const pathname = usePathname();
+
+  console.log("Session Data:", session);
+  console.log("Auth Status:", status);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -30,6 +33,17 @@ export const Navbar = () => {
     setIsMenuOpen(false);
   }, [pathname]);
 
+  // Loading skeleton for auth section
+  const AuthSkeleton = () => (
+    <div className="flex items-center space-x-4">
+      <div className="w-8 h-8 rounded-full bg-gray-200 animate-pulse" />
+      <div className="w-24 h-4 bg-gray-200 rounded animate-pulse" />
+    </div>
+  );
+
+  const handleSignOut = async () => {
+    await signOut({ callbackUrl: "/" });
+  };
 
   return (
     <nav
@@ -77,40 +91,55 @@ export const Navbar = () => {
             )
           )}
 
-          {status === "authenticated" ? (
-            <>
-              {status === "authenticated" && (
-                <ProfileDropdown session={session} />
-              )}
-            </>
-          ) : (
-            <div className="flex items-center gap-3">
-              <Link
-                href="/signin"
-                className="text-sm font-medium text-primary hover:text-primary-dark transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded-md px-2 py-1"
-              >
-                Sign In
-              </Link>
-              <Link
-                href="/signup"
-                className="text-sm font-medium bg-primary text-white px-4 py-2 rounded-full shadow-sm hover:bg-primary-dark transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-dark"
-              >
-                Sign Up
-              </Link>
-            </div>
-          )}
+          {/* Auth Section with Loading State */}
+          <div className="ml-4">
+            {status === "loading" ? (
+              <AuthSkeleton />
+            ) : status === "authenticated" ? (
+              <ProfileDropdown session={session} />
+            ) : (
+              <div className="flex items-center gap-3">
+                <Link
+                  href="/auth/signin"
+                  className="text-sm font-medium text-primary hover:text-primary-dark transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded-md px-2 py-1"
+                >
+                  Sign In
+                </Link>
+                <Link
+                  href="/auth/signup"
+                  className="text-sm font-medium bg-primary text-white px-4 py-2 rounded-full shadow-sm hover:bg-primary-dark transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-dark"
+                >
+                  Sign Up
+                </Link>
+              </div>
+            )}
+          </div>
         </div>
 
         {/* Mobile Icons */}
         <div className="lg:hidden flex items-center space-x-2">
-          {status === "authenticated" && (
+          {status === "loading" ? (
+            <div className="h-6 w-6 rounded-full bg-gray-200 animate-pulse" />
+          ) : status === "authenticated" ? (
             <Link
               href="/dashboard"
               className="p-2 text-text-muted hover:text-primary transition"
             >
-              <User className="w-6 h-6" />
+              {
+                session?.user?.image ? (
+                  <Image
+                    src={session.user.image}
+                    alt="User Avatar"
+                    width={32}
+                    height={32}
+                    className="rounded-full"
+                  />
+                ) : (
+                  <User className="w-6 h-6" />
+                )
+              }
             </Link>
-          )}
+          ) : null}
           <button
             type="button"
             onClick={() => setIsMenuOpen(!isMenuOpen)}
@@ -131,9 +160,9 @@ export const Navbar = () => {
         {isMenuOpen && (
           <MobileMenu
             isMenuOpen={isMenuOpen}
-            // isAuthenticated={status === 'authenticated'}
-            // userName={session?.user?.name}
-            // onSignOut={() => signOut({ callbackUrl: "/" })}
+            isAuthenticated={status === "authenticated"}
+            userName={session?.user?.name}
+            onSignOut={handleSignOut}
           />
         )}
       </AnimatePresence>

@@ -53,6 +53,7 @@ export default function ForgotPassword() {
               width={120}
               height={120}
               className="mx-auto"
+              priority
             />
           </Link>
           <h2 className="text-3xl font-bold tracking-tight text-gray-900">
@@ -75,7 +76,7 @@ export default function ForgotPassword() {
               Check your email for a link to reset your password. If it doesn't appear within a few minutes, check your spam folder.
             </div>
             <Link
-              href="/signin"
+              href="/auth/signin"
               className="inline-block text-sm font-medium text-primary hover:text-primary-dark transition-colors"
             >
               Return to sign in
@@ -109,7 +110,7 @@ export default function ForgotPassword() {
 
             <div className="text-center">
               <Link
-                href="/signin"
+                href="/auth/signin"
                 className="text-sm font-medium text-primary hover:text-primary-dark transition-colors"
               >
                 Back to sign in

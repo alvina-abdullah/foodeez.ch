@@ -59,7 +59,7 @@ export default function ResetPassword() {
 
       setSuccess(true);
       setTimeout(() => {
-        router.push('/signin');
+        router.push('/auth/signin');
       }, 3000);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'An error occurred');
@@ -91,7 +91,7 @@ export default function ResetPassword() {
             </p>
             <div className="mt-6">
               <Link
-                href="/forgot-password"
+                href="/auth/forgot-password"
                 className="text-sm font-medium text-primary hover:text-primary-dark transition-colors"
               >
                 Request new reset link

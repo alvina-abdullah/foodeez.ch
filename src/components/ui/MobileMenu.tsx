@@ -1,15 +1,23 @@
 'use client';
 
+import { motion } from 'framer-motion';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { motion, AnimatePresence } from 'framer-motion';
-import AccordionMenu from '../core/AccordinMenu';
+
 
 interface MobileMenuProps {
     isMenuOpen: boolean;
+    isAuthenticated?: boolean;
+    userName?: string | null;
+    onSignOut?: () => void;
 }
 
-export default function MobileMenu({ isMenuOpen }: MobileMenuProps) {
+export default function MobileMenu({
+    isMenuOpen,
+    isAuthenticated,
+    userName,
+    onSignOut,
+}: MobileMenuProps) {
     const pathname = usePathname();
 
     const dropdownItems = [
@@ -19,52 +27,77 @@ export default function MobileMenu({ isMenuOpen }: MobileMenuProps) {
     ];
 
     return (
-        <AnimatePresence>
-            {isMenuOpen && (
-                <motion.div
-                    initial={{ y: '-100%', opacity: 1 }}
-                    animate={{ y: 0, opacity: 1 }}
-                    exit={{ y: '-100%', opacity: 1 }}
-                    transition={{ duration: 0.5, ease: 'easeOut' }}
-                    className="lg:hidden bg-white shadow-lg z-50"
-                >
-                    <div className="px-2 pt-2 pb-4 space-y-1">
-                        {[
-                            { label: 'Share Your Experience', href: '/reviews' },
-                        ].map((link) => (
-                            <Link
-                                key={link.href}
-                                href={link.href}
-                                className={`block px-3 py-2.5 text-base font-medium rounded-md ${pathname === link.href
-                                    ? 'text-primary bg-primary font-semibold'
-                                    : ' hover:text-primary hover:bg-primary'
-                                    }`}
-                            >
-                                {link.label}
-                            </Link>
-                        ))}
+        <motion.div
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: 'auto' }}
+            exit={{ opacity: 0, height: 0 }}
+            transition={{ duration: 0.2 }}
+            className="lg:hidden bg-white border-t"
+        >
+            <div className="px-4 py-3 space-y-1">
+                {/* Main Navigation */}
+                {dropdownItems.map((item) => (
+                    <Link
+                        key={item.href}
+                        href={item.href}
+                        className={`block px-3 py-2 rounded-md text-base font-medium ${
+                            pathname === item.href
+                                ? 'bg-primary/10 text-primary'
+                                : 'text-gray-600 hover:bg-gray-50 hover:text-primary'
+                        }`}
+                    >
+                        {item.label}
+                    </Link>
+                ))}
 
-                        <div className="border-t border-gray-100 my-2 py-2">
-                            <AccordionMenu label="Be Foodeez Partner" items={dropdownItems} />
+        
+
+                {/* Auth Section */}
+                {isAuthenticated ? (
+                    <div className="pt-4 pb-3 border-t">
+                        <div className="px-3">
+                            <p className="text-base font-medium text-gray-800">
+                                {userName || 'User'}
+                            </p>
                         </div>
-
-                        <div className="border-t border-gray-100 my-2 pt-4 pb-2 flex flex-col space-y-2">
+                        <div className="mt-3 space-y-1">
                             <Link
-                                href="/signin"
-                                className="block px-3 py-2.5 text-center text-base font-medium text-primary border border-primary rounded-full hover:bg-primary transition-all"
+                                href="/dashboard"
+                                className="block px-3 py-2 rounded-md text-base font-medium text-gray-600 hover:bg-gray-50 hover:text-primary"
                             >
-                                Sign in
+                                Dashboard
                             </Link>
                             <Link
-                                href="/signup"
-                                className="block px-3 py-2.5 text-center text-base font-medium bg-primary text-white rounded-full hover:bg-primary transition-all"
+                                href="/dashboard/profile"
+                                className="block px-3 py-2 rounded-md text-base font-medium text-gray-600 hover:bg-gray-50 hover:text-primary"
                             >
-                                Sign Up
+                                Update Profile
                             </Link>
+                            <button
+                                onClick={onSignOut}
+                                className="block w-full text-left px-3 py-2 rounded-md text-base font-medium text-red-600 hover:bg-red-50"
+                            >
+                                Sign Out
+                            </button>
                         </div>
                     </div>
-                </motion.div>
-            )}
-        </AnimatePresence>
+                ) : (
+                    <div className="pt-4 pb-3 border-t space-y-2">
+                        <Link
+                            href="/auth/signin"
+                            className="block w-full text-center px-3 py-2 rounded-md text-base font-medium text-gray-600 hover:bg-gray-50 hover:text-primary"
+                        >
+                            Sign In
+                        </Link>
+                        <Link
+                            href="/auth/signup"
+                            className="block w-full text-center px-3 py-2 rounded-md text-base font-medium bg-primary text-white hover:bg-primary/90"
+                        >
+                            Sign Up
+                        </Link>
+                    </div>
+                )}
+            </div>
+        </motion.div>
     );
 }

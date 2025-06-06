@@ -1,32 +1,25 @@
 "use client";
 
-import { useState, useEffect } from "react";
 import Link from "next/link";
+import Image from "next/image";
+import { useState } from "react";
 import { signIn } from "next-auth/react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { Input } from "@/components/core/Input";
 import { Button } from "@/components/core/Button";
 import { FcGoogle } from "react-icons/fc";
-import Image from "next/image";
 
-export default function SignIn() {
+export default function SignUp() {
   const router = useRouter();
-  const searchParams = useSearchParams();
-  const callbackUrl = searchParams.get('callbackUrl') || '/dashboard';
-  const error = searchParams.get('error');
-
   const [formData, setFormData] = useState({
+    firstName: "",
+    lastName: "",
     email: "",
     password: "",
+    confirmPassword: "",
   });
   const [isLoading, setIsLoading] = useState(false);
-  const [errorMessage, setErrorMessage] = useState("");
-
-  useEffect(() => {
-    if (error) {
-      setErrorMessage("Invalid email or password. Please try again.");
-    }
-  }, [error]);
+  const [error, setError] = useState("");
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -39,30 +32,52 @@ export default function SignIn() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
-    setErrorMessage("");
+    setError("");
+
+    if (formData.password !== formData.confirmPassword) {
+      setError("Passwords do not match");
+      setIsLoading(false);
+      return;
+    }
 
     try {
+      const response = await fetch("/api/auth/register", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          firstName: formData.firstName,
+          lastName: formData.lastName,
+          email: formData.email,
+          password: formData.password,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.message || "Something went wrong");
+      }
+
+      // Sign in the user after successful registration
       const result = await signIn("credentials", {
         email: formData.email,
         password: formData.password,
         redirect: false,
-        callbackUrl,
       });
 
+
       if (result?.error) {
-        setErrorMessage("Invalid email or password");
+        setError("Failed to sign in after registration");
         return;
       }
 
-      if (result?.url) {
-        router.push(result.url);
-      } else {
-        router.push(callbackUrl);
-      }
+      router.push("/");
       router.refresh();
     } catch (err) {
-      setErrorMessage("An error occurred. Please try again.");
-      console.error("Sign in error:", err);
+      setError(err instanceof Error ? err.message : "An error occurred");
+      console.error("Sign up error:", err);
     } finally {
       setIsLoading(false);
     }
@@ -70,9 +85,9 @@ export default function SignIn() {
 
   const handleGoogleSignIn = async () => {
     try {
-      await signIn("google", { callbackUrl });
+      await signIn("google", { callbackUrl: "/" });
     } catch (err) {
-      setErrorMessage("Failed to sign in with Google");
+      setError("Failed to sign in with Google");
       console.error("Google sign in error:", err);
     }
   };
@@ -88,30 +103,62 @@ export default function SignIn() {
               width={120}
               height={120}
               className="mx-auto"
+              priority
             />
           </Link>
           <h2 className="text-3xl font-bold tracking-tight text-gray-900">
-            Welcome back
+            Create your account
           </h2>
           <p className="mt-2 text-sm text-gray-600">
-            Don't have an account?{" "}
+            Already have an account?{" "}
             <Link
-              href="/signup"
+              href="/signin"
               className="font-medium text-primary hover:text-primary-dark transition-colors"
             >
-              create a new account
+              Sign in
             </Link>
           </p>
         </div>
 
-        {errorMessage && (
+        {error && (
           <div className="bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded-lg text-sm">
-            {errorMessage}
+            {error}
           </div>
         )}
 
         <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
           <div className="space-y-4">
+            <div>
+              <label htmlFor="firstName" className="block text-sm font-medium text-gray-700">
+                First name
+              </label>
+              <Input
+                id="firstName"
+                type="text"
+                name="firstName"
+                value={formData.firstName}
+                onChange={handleInputChange}
+                placeholder="Micheal"
+                required
+                className="mt-1"
+              />
+            </div>
+            <div>
+              <label htmlFor="lastName" className="block text-sm font-medium text-gray-700">
+                Last name
+              </label>
+              <Input
+                id="lastName"
+                type="text"
+                name="lastName"
+                value={formData.lastName}
+                onChange={handleInputChange}
+                placeholder="Jordon"
+                required
+                className="mt-1"
+              />
+            </div>
+
             <div>
               <label htmlFor="email" className="block text-sm font-medium text-gray-700">
                 Email address
@@ -143,15 +190,22 @@ export default function SignIn() {
                 className="mt-1"
               />
             </div>
-          </div>
 
-          <div className="flex items-center justify-end">
-            <Link
-              href="/forgot-password"
-              className="text-sm font-medium text-primary hover:text-primary-dark transition-colors"
-            >
-              Forgot your password?
-            </Link>
+            <div>
+              <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700">
+                Confirm password
+              </label>
+              <Input
+                id="confirmPassword"
+                type="password"
+                name="confirmPassword"
+                value={formData.confirmPassword}
+                onChange={handleInputChange}
+                placeholder="••••••••"
+                required
+                className="mt-1"
+              />
+            </div>
           </div>
 
           <Button
@@ -160,7 +214,7 @@ export default function SignIn() {
             isLoading={isLoading}
             className="py-2.5"
           >
-            Sign in
+            Create account
           </Button>
 
           <div className="relative">
@@ -180,7 +234,7 @@ export default function SignIn() {
             className="flex items-center justify-center gap-2 py-2.5"
           >
             <FcGoogle className="w-5 h-5" />
-            Sign in with Google
+            Sign up with Google
           </Button>
         </form>
       </div>

@@ -1,25 +1,32 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { signIn } from "next-auth/react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { Input } from "@/components/core/Input";
 import { Button } from "@/components/core/Button";
 import { FcGoogle } from "react-icons/fc";
 import Image from "next/image";
 
-export default function SignUp() {
+export default function SignIn() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const callbackUrl = searchParams.get('callbackUrl') || '/';
+  const error = searchParams.get('error');
+
   const [formData, setFormData] = useState({
-    firstName: "",
-    lastName: "",
     email: "",
     password: "",
-    confirmPassword: "",
   });
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
+
+  useEffect(() => {
+    if (error) {
+      setErrorMessage("Invalid email or password. Please try again.");
+    }
+  }, [error]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -32,51 +39,30 @@ export default function SignUp() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
-    setError("");
-
-    if (formData.password !== formData.confirmPassword) {
-      setError("Passwords do not match");
-      setIsLoading(false);
-      return;
-    }
+    setErrorMessage("");
 
     try {
-      const response = await fetch("/api/auth/register", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          firstName: formData.firstName,
-          lastName: formData.lastName,
-          email: formData.email,
-          password: formData.password,
-        }),
-      });
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.message || "Something went wrong");
-      }
-
-      // Sign in the user after successful registration
       const result = await signIn("credentials", {
         email: formData.email,
         password: formData.password,
         redirect: false,
+        callbackUrl,
       });
 
       if (result?.error) {
-        setError("Failed to sign in after registration");
+        setErrorMessage("Invalid email or password");
         return;
       }
 
-      router.push("/");
+      if (result?.url) {
+        router.push(result.url);
+      } else {
+        router.push(callbackUrl);
+      }
       router.refresh();
     } catch (err) {
-      setError(err instanceof Error ? err.message : "An error occurred");
-      console.error("Sign up error:", err);
+      setErrorMessage("An error occurred. Please try again.");
+      console.error("Sign in error:", err);
     } finally {
       setIsLoading(false);
     }
@@ -84,9 +70,9 @@ export default function SignUp() {
 
   const handleGoogleSignIn = async () => {
     try {
-      await signIn("google", { callbackUrl: "/dashboard" });
+      await signIn("google", { callbackUrl });
     } catch (err) {
-      setError("Failed to sign in with Google");
+      setErrorMessage("Failed to sign in with Google");
       console.error("Google sign in error:", err);
     }
   };
@@ -105,58 +91,27 @@ export default function SignUp() {
             />
           </Link>
           <h2 className="text-3xl font-bold tracking-tight text-gray-900">
-            Create your account
+            Welcome back
           </h2>
           <p className="mt-2 text-sm text-gray-600">
-            Already have an account?{" "}
+            Don't have an account?{" "}
             <Link
-              href="/signin"
+              href="/auth/signup"
               className="font-medium text-primary hover:text-primary-dark transition-colors"
             >
-              Sign in
+              create a new account
             </Link>
           </p>
         </div>
 
-        {error && (
+        {errorMessage && (
           <div className="bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded-lg text-sm">
-            {error}
+            {errorMessage}
           </div>
         )}
 
         <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
           <div className="space-y-4">
-            <div>
-              <label htmlFor="firstName" className="block text-sm font-medium text-gray-700">
-                First name
-              </label>
-              <Input
-                id="firstName"
-                type="text"
-                name="firstName"
-                value={formData.firstName}
-                onChange={handleInputChange}
-                placeholder="Micheal"
-                required
-                className="mt-1"
-              />
-            </div>
-            <div>
-              <label htmlFor="lastName" className="block text-sm font-medium text-gray-700">
-                Last name
-              </label>
-              <Input
-                id="lastName"
-                type="text"
-                name="lastName"
-                value={formData.lastName}
-                onChange={handleInputChange}
-                placeholder="Jordon"
-                required
-                className="mt-1"
-              />
-            </div>
-
             <div>
               <label htmlFor="email" className="block text-sm font-medium text-gray-700">
                 Email address
@@ -188,22 +143,15 @@ export default function SignUp() {
                 className="mt-1"
               />
             </div>
+          </div>
 
-            <div>
-              <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700">
-                Confirm password
-              </label>
-              <Input
-                id="confirmPassword"
-                type="password"
-                name="confirmPassword"
-                value={formData.confirmPassword}
-                onChange={handleInputChange}
-                placeholder="••••••••"
-                required
-                className="mt-1"
-              />
-            </div>
+          <div className="flex items-center justify-end">
+            <Link
+              href="/auth/forgot-password"
+              className="text-sm font-medium text-primary hover:text-primary-dark transition-colors"
+            >
+              Forgot your password?
+            </Link>
           </div>
 
           <Button
@@ -212,7 +160,7 @@ export default function SignUp() {
             isLoading={isLoading}
             className="py-2.5"
           >
-            Create account
+            Sign in
           </Button>
 
           <div className="relative">
@@ -232,7 +180,7 @@ export default function SignUp() {
             className="flex items-center justify-center gap-2 py-2.5"
           >
             <FcGoogle className="w-5 h-5" />
-            Sign up with Google
+            Sign in with Google
           </Button>
         </form>
       </div>

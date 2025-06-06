@@ -47,6 +47,7 @@ export default function AuthErrorPage() {
               width={120}
               height={120}
               className="mx-auto"
+              priority
             />
           </Link>
           <h2 className="text-3xl font-bold tracking-tight text-gray-900">
@@ -59,7 +60,7 @@ export default function AuthErrorPage() {
 
         <div className="mt-8 space-y-4">
           <Link
-            href={`/signin${callbackUrl ? `?callbackUrl=${callbackUrl}` : ''}`}
+            href={`/auth/signin${callbackUrl ? `?callbackUrl=${callbackUrl}` : ''}`}
             className="w-full inline-flex items-center justify-center px-4 py-2.5 border border-transparent text-sm font-medium rounded-lg text-white bg-primary hover:bg-primary-dark focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary transition-colors"
           >
             Try Again
