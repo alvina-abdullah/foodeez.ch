@@ -49,7 +49,7 @@ export async function getCities() {
   }
 }
 
-interface BusinessQueryParams {
+interface GetBusinessesParams {
   city?: string;
   zipCode?: string;
   limit?: number;
@@ -59,31 +59,34 @@ export async function getBusinessesByLocation({
   city,
   zipCode,
   limit = 12
-}: BusinessQueryParams): Promise<BusinessResult> {
+}: GetBusinessesParams): Promise<BusinessResult> {
   try {
-    // Validate at least one search parameter exists
-    if (!city && !zipCode) return [];
+    const trimmedCity = city?.trim();
+    const trimmedZip = zipCode?.trim();
 
-    // Build where clause conditions
-    const conditions: Prisma.business_detail_view_allWhereInput[] = [];
+    let whereClause: Prisma.business_detail_view_allWhereInput | undefined;
 
-    if (city?.trim()) {
-      conditions.push({ CITY_NAME: { equals: city.trim() } });
-    }
-
-    if (zipCode?.trim()) {
-      const numericZip = parseInt(zipCode.trim(), 10);
+    if (trimmedZip) {
+      // Prioritize zip code if provided
+      const numericZip = Number(trimmedZip);
       if (!isNaN(numericZip)) {
-        conditions.push({ ADDRESS_ZIP: { equals: numericZip } });
+        whereClause = { ADDRESS_ZIP: { equals: numericZip } };
       }
+    } else if (trimmedCity) {
+      // Fallback to city if no zip code is provided
+      whereClause = { CITY_NAME: { equals: trimmedCity } };
     }
 
-    // If no valid conditions after validation, return empty
-    if (conditions.length === 0) return [];
+    if (!whereClause) {
+      console.log("No valid search criteria provided.");
+      return []; // No valid search criteria
+    }
 
-    return await prisma.business_detail_view_all.findMany({
-      where: { OR: conditions },
-      take: Math.min(limit ?? 9, 50), // Prevent excessive limits
+    console.log("Executing Prisma query with whereClause:", JSON.stringify(whereClause));
+
+    const result = await prisma.business_detail_view_all.findMany({
+      where: whereClause, // Use the determined where clause
+      take: Math.min(limit, 50), // enforce upper bound
       orderBy: { BUSINESS_NAME: 'asc' },
       select: {
         BUSINESS_ID: true,
@@ -112,11 +115,13 @@ export async function getBusinessesByLocation({
         RANKING: true,
       }
     });
+
+    return result;
   } catch (error) {
     if (error instanceof Prisma.PrismaClientKnownRequestError) {
-      console.error('Database error:', error.code, error.message);
-    } else if (error instanceof Error) {
-      console.error('Unexpected error fetching businesses:', error.message);
+      console.error('[Prisma Error]', error.code, error.message);
+    } else {
+      console.error('[Unexpected Error]', (error as Error).message);
     }
     return [];
   }

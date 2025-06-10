@@ -109,4 +109,12 @@ From 5 - 28 April No record
 4 june 1.5 hours
 
 5 june 2 hours
+
+6 june 1 hour 
+
+7 , 8 ,9 Eid ul adha 
+
+10 june 2 hours 40 mins
+
+
 */

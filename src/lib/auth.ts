@@ -136,9 +136,9 @@ export const authOptions: NextAuthOptions = {
     }
   },
   events: {
-    async signOut({ token }) {
+    async signOut() {
       // Clean up any session-related data if needed
-      console.log('User signed out:', token.email);
+      // console.log('User signed out:', token.email);
     }
   },
   secret: process.env.NEXTAUTH_SECRET,

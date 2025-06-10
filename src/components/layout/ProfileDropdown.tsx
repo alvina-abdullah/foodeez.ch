@@ -85,7 +85,7 @@ export default function ProfileDropdown({ session }: ProfileDropdownProps) {
   };
 
   const items = [
-    { label: "Dashboard", href: "/dashboard" },
+    { label: "User Dashboard", href: "/dashboard" },
     { label: "Update Profile", href: "/dashboard/profile" },
     {
       label: "Sign Out",

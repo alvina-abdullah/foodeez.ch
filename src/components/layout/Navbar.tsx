@@ -17,9 +17,6 @@ export const Navbar = () => {
   const { data: session, status } = useSession();
   const pathname = usePathname();
 
-  console.log("Session Data:", session);
-  console.log("Auth Status:", status);
-
   useEffect(() => {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 10);
