@@ -13,6 +13,7 @@ export interface BusinessDetail {
   ADDRESS_CITY_ID?: number;
   CITY_CODE?: string;
   CITY_NAME?: string;
+  EMAIL_ADDRESS?: string;
   ADDRESS_COUNTRY?: string;
   PHONE_NUMBER?: string;
   WHATSAPP_NUMBER?: string;
@@ -27,6 +28,9 @@ export interface BusinessDetail {
   APPROVED?: number;
   STATUS?: number;
   RANKING?: bigint;
+  VEGAN: number;
+  VEGETARIAN: number;
+  HALAL: number;
 }
 
 export type BusinessCategory = {
@@ -48,6 +52,7 @@ export type BusinessResult = Prisma.business_detail_view_allGetPayload<{
     ADDRESS_CITY_ID: true;
     CITY_CODE: true;
     CITY_NAME: true;
+    EMAIL_ADDRESS: true;
     ADDRESS_COUNTRY: true;
     PHONE_NUMBER: true;
     WHATSAPP_NUMBER: true;
@@ -62,5 +67,8 @@ export type BusinessResult = Prisma.business_detail_view_allGetPayload<{
     APPROVED: true;
     STATUS: true;
     RANKING: true;
+    VEGAN: true;
+    VEGETARIAN: true;
+    HALAL: true;
   }
 }>[];

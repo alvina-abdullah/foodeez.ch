@@ -58,9 +58,19 @@ const BusinessInfoSection: React.FC<{ business: BusinessDetail }> = ({
 
       {/* Social & Reserve */}
       <div className="flex items-center justify-between border-t pt-8">
-        <Link href={`/business/${genslug}/reservation`} target="_blank">
-          <button className="btn-primary">Reserve Table</button>
-        </Link>
+        {business.EMAIL_ADDRESS ? (
+          <Link href={`/business/${genslug}/reservation`} target="_blank">
+            <button className="btn-primary">Reserve Table</button>
+          </Link>
+        ) : (
+          <button
+            className="btn-primary opacity-50 cursor-not-allowed"
+            disabled
+          >
+            Reserve Table
+          </button>
+        )}
+
         <SocialLinks
           facebook={business.FACEBOOK_LINK}
           instagram={business.INSTA_LINK}

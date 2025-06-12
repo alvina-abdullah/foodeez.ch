@@ -9,6 +9,7 @@ SELECT
   `a`.`ADDRESS_CITY_ID` AS `ADDRESS_CITY_ID`,
   `c`.`CITY_CODE` AS `CITY_CODE`,
   `c`.`CITY_NAME` AS `CITY_NAME`,
+  `a`.`EMAIL_ADDRESS` AS `EMAIL_ADDRESS`,
   `a`.`ADDRESS_COUNTRY` AS `ADDRESS_COUNTRY`,
   `a`.`PHONE_NUMBER` AS `PHONE_NUMBER`,
   `a`.`WHATSAPP_NUMBER` AS `WHATSAPP_NUMBER`,
@@ -22,12 +23,54 @@ SELECT
   `a`.`GOOGLE_RATING` AS `GOOGLE_RATING`,
   `a`.`APPROVED` AS `APPROVED`,
   `a`.`STATUS` AS `STATUS`,
-  IFNULL(`d`.`RANKING`, 0) AS `RANKING`
+  IFNULL(`d`.`RANKING`, 0) AS `RANKING`,
+(
+    CASE
+      WHEN (`vegan`.`FOOD_TYPE_ID` IS NULL) THEN 0
+      ELSE 1
+    END
+  ) AS `VEGAN`,
+(
+    CASE
+      WHEN (`veg`.`FOOD_TYPE_ID` IS NULL) THEN 0
+      ELSE 1
+    END
+  ) AS `VEGETARIAN`,
+(
+    CASE
+      WHEN (`halal`.`FOOD_TYPE_ID` IS NULL) THEN 0
+      ELSE 1
+    END
+  ) AS `HALAL`
 FROM
   (
     (
-      `foodeez`.`business` `a`
-      LEFT JOIN `foodeez`.`city` `c` ON((`a`.`ADDRESS_CITY_ID` = `c`.`CITY_ID`))
+      (
+        (
+          (
+            `foodeez`.`business` `a`
+            LEFT JOIN `foodeez`.`city` `c` ON((`a`.`ADDRESS_CITY_ID` = `c`.`CITY_ID`))
+          )
+          LEFT JOIN `foodeez`.`foodeez_ranking` `d` ON((`a`.`BUSINESS_ID` = `d`.`BUSINESS_ID`))
+        )
+        LEFT JOIN `foodeez`.`business_2_food_type` `vegan` ON(
+          (
+            (`a`.`BUSINESS_ID` = `vegan`.`BUSINESS_ID`)
+            AND (`vegan`.`FOOD_TYPE_ID` = 1)
+          )
+        )
+      )
+      LEFT JOIN `foodeez`.`business_2_food_type` `veg` ON(
+        (
+          (`a`.`BUSINESS_ID` = `veg`.`BUSINESS_ID`)
+          AND (`veg`.`FOOD_TYPE_ID` = 2)
+        )
+      )
     )
-    LEFT JOIN `foodeez`.`foodeez_ranking` `d` ON((`a`.`BUSINESS_ID` = `d`.`BUSINESS_ID`))
+    LEFT JOIN `foodeez`.`business_2_food_type` `halal` ON(
+      (
+        (`a`.`BUSINESS_ID` = `halal`.`BUSINESS_ID`)
+        AND (`halal`.`FOOD_TYPE_ID` = 3)
+      )
+    )
   )

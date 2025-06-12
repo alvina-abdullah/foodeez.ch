@@ -5,7 +5,6 @@ import { getBusinessById } from "@/services/HomePageService";
 import { parseSlug } from "@/lib/utils/genSlug";
 import BusinessImage from "./components/BusinessImage";
 import React, { useState, useEffect } from "react";
-import { Separator } from "@/components/ui/separator";
 import MapCard from "./components/MapSectionBusinesProfile";
 import GooglePhotoGallery from "./components/PhotoGallary";
 import {
@@ -19,6 +18,8 @@ import OpeningHours from "./components/OpeningHoursSection";
 import BusinessInfoSection from "./components/BusinessInfoSection";
 import BusinessProfilePageLoadingSkeleton from "./components/BusinessProfilePageLoadingSkeleton";
 import { BusinessDetail } from "@/types/business.types";
+import ResturantProfilePageHeader from "./components/ResturantProfilePageHeader";
+import ResturantProfilePageSeperator from "./components/ResturantProfilePageSeperator";
 
 const BusinessDetailPage = () => {
   const [business, setBusiness] = useState<BusinessDetail | null>(null);
@@ -122,24 +123,17 @@ const BusinessDetailPage = () => {
       </head>
 
       <div className="py-4">
-        {/* Header with Restaurant Name and City */}
-
-        <div className="">
-          <h1 className="sub-heading">
-            {business.BUSINESS_NAME}
-            {business.CITY_NAME && (
-              <>
-                {" "}
-                • <span className="text-secondary">{business.CITY_NAME}</span>
-              </>
-            )}
-          </h1>
-        </div>
+        <ResturantProfilePageHeader
+          BUSINESS_NAME={business.BUSINESS_NAME || ""}
+          CITY_NAME={business.CITY_NAME || ""}
+          HALAL={business.HALAL}
+          VEGAN={business.VEGAN}
+          VEGETARIAN={business.VEGETARIAN}
+        />
 
         {/* Main Content */}
         <div className="">
           {/* Restaurant Profile Picture */}
-
           <BusinessImage
             imageUrl={business.IMAGE_URL || ""}
             businessName={business.BUSINESS_NAME || ""}
@@ -173,33 +167,16 @@ const BusinessDetailPage = () => {
             }}
           /> */}
 
-          {/* Foodeez Reviews */}
-          <div className="relative my-8">
-            <div className="absolute inset-0 flex items-center">
-              <Separator className="w-full bg-gray-300" />
-            </div>
-            <div className="relative flex justify-center">
-              <span className="bg-primary text-white px-8 py-2 rounded-full text-sm md:text-base lg:text-lg font-medium">
-                {business.BUSINESS_NAME} Reviews
-              </span>
-            </div>
-          </div>
+          <ResturantProfilePageSeperator
+            text={`${business.BUSINESS_NAME} Reviews`}
+          />
 
           {/* Reviews */}
           <div className="">
             <GoogleReviews reviews={googleBusinessData?.reviews || []} />
           </div>
 
-          <div className="relative my-8">
-            <div className="absolute inset-0 flex items-center">
-              <Separator className="w-full bg-gray-300" />
-            </div>
-            <div className="relative flex justify-center">
-              <span className="bg-primary text-white px-8 py-2 rounded-full text-sm md:text-base lg:text-lg  font-medium">
-                Location
-              </span>
-            </div>
-          </div>
+          <ResturantProfilePageSeperator text={`Location`} />
 
           {/* Google Map */}
           <MapCard placeId={placeId} />

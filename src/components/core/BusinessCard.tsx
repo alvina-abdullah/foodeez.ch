@@ -3,11 +3,20 @@
 import React from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { MapPin, Calendar, Globe, Phone } from "lucide-react";
+import {
+  MapPin,
+  Calendar,
+  Globe,
+  Phone,
+  Sprout,
+  Leaf,
+  CheckCircle2,
+} from "lucide-react";
 import { generateSlug } from "@/lib/utils/genSlug";
 import { BusinessDetail } from "@/types/business.types";
 import { SocialLinks } from "@/components/core/SocialLinks";
 import StarIcon from "../ui/StarIcon";
+import { cn } from "@/lib/utils";
 
 export interface BusinessCardProps {
   business: BusinessDetail;
@@ -27,6 +36,10 @@ const BusinessCard: React.FC<BusinessCardProps> = ({ business }) => {
     FACEBOOK_LINK,
     GOOGLE_PROFILE,
     INSTA_LINK,
+    EMAIL_ADDRESS,
+    HALAL,
+    VEGAN,
+    VEGETARIAN,
   } = business || {};
 
   if (!BUSINESS_ID) return null;
@@ -56,8 +69,8 @@ const BusinessCard: React.FC<BusinessCardProps> = ({ business }) => {
 
   return (
     <div className="group relative bg-background-card rounded-xl border shadow-sm hover:shadow-md transition-all duration-300 overflow-hidden w-full max-w-md h-[460px] flex flex-col">
-      {/* Image */}
 
+      {/* Image */}
       <div className="">
         <Link
           href={`/business/${slug}`}
@@ -87,19 +100,42 @@ const BusinessCard: React.FC<BusinessCardProps> = ({ business }) => {
 
       {/* Content */}
       <div className="flex-1 flex flex-col justify-between p-4">
-        {rating !== null && (
-          <div className="flex items-center gap-2 self-end">
-            <div className="flex items-center gap-0.5">
-              {[...Array(5)].map((_, i) => {
-                const starValue = Math.min(1, Math.max(0, rating - i));
-                return <StarIcon key={i} fillLevel={starValue} size={16} />;
-              })}
-            </div>
-            <span className="text-sm font-medium text-accent">
-              {rating.toFixed(1)}
-            </span>
+        <div className="flex items-center justify-between gap-2">
+
+          <div className="flex items-center gap-2">
+            {HALAL == 1 && (
+              <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800 border border-green-200">
+                <CheckCircle2 size={12} className="mr-1" />
+                Halal 
+              </span>
+            )}
+            {VEGAN == 1 && (
+              <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-emerald-100 text-emerald-800 border border-emerald-200">
+                <Leaf size={12} className="mr-1" />
+                Vegan
+              </span>
+            )}
+            {VEGETARIAN == 1 && (
+              <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-teal-100 text-teal-800 border border-teal-200">
+                <Sprout size={12} className="mr-1" />
+                Vegetarian
+              </span>
+            )}
           </div>
-        )}
+          {rating !== null && (
+            <div className="flex items-center gap-1.5">
+              <div className="flex items-center gap-0.5">
+                {[...Array(5)].map((_, i) => {
+                  const starValue = Math.min(1, Math.max(0, rating - i));
+                  return <StarIcon key={i} fillLevel={starValue} size={16} />;
+                })}
+              </div>
+              <span className="text-sm font-medium text-accent">
+                {rating.toFixed(1)}
+              </span>
+            </div>
+          )}
+        </div>
         <div className="mt-2">
           {/* Title */}
           <Link
@@ -178,13 +214,16 @@ const BusinessCard: React.FC<BusinessCardProps> = ({ business }) => {
               />
             </div>
           )}
-
-          {/* Reserve Link */}
           <Link
-            href={`/business/${slug}/reservation`}
+            href={EMAIL_ADDRESS ? `/business/${slug}/reservation` : "#"}
             target="_blank"
             rel="noopener noreferrer"
-            className="text-sm text-primary font-medium flex items-center gap-1 hover:underline"
+            className={cn(
+              "text-sm font-medium flex items-center gap-1",
+              EMAIL_ADDRESS
+                ? "text-primary hover:underline"
+                : "text-text-muted cursor-not-allowed pointer-events-none"
+            )}
           >
             <Calendar size={14} />
             Reserve Table

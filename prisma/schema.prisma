@@ -23,86 +23,69 @@ model adlinks {
 }
 
 model business {
-  BUSINESS_ID                  Int                            @id @default(autoincrement())
-  CREATION_DATETIME            DateTime                       @db.DateTime(0)
-  BUSINESS_NAME                String?                        @db.VarChar(255)
-  SHORT_NAME                   String?                        @db.VarChar(20)
-  DESCRIPTION                  String?                        @db.VarChar(1000)
-  ADDRESS_STREET               String?                        @db.VarChar(100)
-  ADDRESS_ZIP                  BigInt?
-  ADDRESS_CITY_ID              Int?
-  ADDRESS_TOWN                 String?                        @db.VarChar(100)
-  ADDRESS_COUNTRY              String?                        @db.VarChar(100)
-  PHONE_NUMBER                 String?                        @db.VarChar(45)
-  PHONE_NUMBER_SHORT           String?                        @db.VarChar(45)
-  WHATSAPP_NUMBER              String?                        @db.VarChar(45)
-  WEB_ADDRESS                  String?                        @db.VarChar(1000)
-  LOGO                         String?                        @db.VarChar(255)
-  FACEBOOK_LINK                String?                        @db.VarChar(1000)
-  INSTA_LINK                   String?                        @db.VarChar(1000)
-  TIKTOK_LINK                  String?                        @db.VarChar(1000)
-  GOOGLE_PROFILE               String?                        @db.VarChar(1000)
-  IMAGE_URL                    String?                        @db.VarChar(1000)
-  GOOGLE_RATING                String?                        @db.VarChar(10)
-  WHATSAPP_LINK                String?                        @db.VarChar(255)
-  APPROVED                     Int?                           @default(0) @db.TinyInt
-  STATUS                       Int?                           @default(0) @db.TinyInt
-  business_2_business_category business_2_business_category[]
-  business_2_food_type         business_2_food_type[]
-  food_menu                    food_menu[]
-  foodeez_ranking              foodeez_ranking[]
-  menu_category                menu_category[]
-  owner_2_business             owner_2_business[]
+  BUSINESS_ID        Int      @id @default(autoincrement())
+  CREATION_DATETIME  DateTime @db.DateTime(0)
+  BUSINESS_NAME      String?  @db.VarChar(255)
+  SHORT_NAME         String?  @db.VarChar(20)
+  DESCRIPTION        String?  @db.VarChar(1000)
+  ADDRESS_STREET     String?  @db.VarChar(100)
+  ADDRESS_ZIP        BigInt?
+  ADDRESS_CITY_ID    Int?
+  ADDRESS_TOWN       String?  @db.VarChar(100)
+  ADDRESS_COUNTRY    String?  @db.VarChar(100)
+  PHONE_NUMBER       String?  @db.VarChar(45)
+  PHONE_NUMBER_SHORT String?  @db.VarChar(45)
+  EMAIL_ADDRESS      String?  @db.VarChar(255)
+  WHATSAPP_NUMBER    String?  @db.VarChar(45)
+  WEB_ADDRESS        String?  @db.VarChar(1000)
+  LOGO               String?  @db.VarChar(255)
+  FACEBOOK_LINK      String?  @db.VarChar(1000)
+  INSTA_LINK         String?  @db.VarChar(1000)
+  TIKTOK_LINK        String?  @db.VarChar(1000)
+  GOOGLE_PROFILE     String?  @db.VarChar(1000)
+  IMAGE_URL          String?  @db.VarChar(1000)
+  GOOGLE_RATING      String?  @db.VarChar(10)
+  WHATSAPP_LINK      String?  @db.VarChar(255)
+  APPROVED           Int?     @default(0) @db.TinyInt
+  STATUS             Int?     @default(0) @db.TinyInt
 }
 
 model business_2_business_category {
-  BUSINESS_BUSINESS_CATEGORY_ID Int                @id @default(autoincrement())
-  CREATION_DATETIME             DateTime?          @db.DateTime(0)
-  BUSINESS_ID                   Int?
-  BUSINESS_CATEGORY_ID          Int?
-  STATUS                        Int?               @db.TinyInt
+  BUSINESS_BUSINESS_CATEGORY_ID Int       @id @default(autoincrement())
+  CREATION_DATETIME             DateTime? @db.DateTime(0)
+  BUSINESS_ID                   BigInt?
+  BUSINESS_CATEGORY_ID          BigInt?
+  STATUS                        Int?      @db.TinyInt
   DISPLAY_SEQ                   Int?
-  business_category             business_category? @relation(fields: [BUSINESS_CATEGORY_ID], references: [BUSINESS_CATEGORY_ID])
-  business                      business?          @relation(fields: [BUSINESS_ID], references: [BUSINESS_ID])
-
-  @@index([BUSINESS_CATEGORY_ID])
-  @@index([BUSINESS_ID])
 }
 
 model business_2_food_type {
-  BUSINESS_FOOD_TYPE_ID Int        @id @default(autoincrement())
-  CREATION_DATETIME     DateTime?  @db.DateTime(0)
-  BUSINESS_ID           Int?
+  BUSINESS_FOOD_TYPE_ID Int       @id @default(autoincrement())
+  CREATION_DATETIME     DateTime? @db.DateTime(0)
+  BUSINESS_ID           BigInt?
   FOOD_TYPE_ID          BigInt?
-  business              business?  @relation(fields: [BUSINESS_ID], references: [BUSINESS_ID])
-  food_type             food_type? @relation(fields: [FOOD_TYPE_ID], references: [FOOD_TYPE_ID])
-
-  @@index([BUSINESS_ID])
-  @@index([FOOD_TYPE_ID])
 }
 
 model business_category {
-  BUSINESS_CATEGORY_ID         Int                            @id @default(autoincrement())
-  CREATION_DATETIME            DateTime?                      @db.DateTime(0)
-  CATEGORY_NAME                String?                        @db.VarChar(100)
-  business_2_business_category business_2_business_category[]
+  BUSINESS_CATEGORY_ID Int       @id @default(autoincrement())
+  CREATION_DATETIME    DateTime? @db.DateTime(0)
+  CATEGORY_NAME        String?   @db.VarChar(100)
 }
 
 model business_owner {
-  BUSINESS_OWNER_ID Int                @id @unique(map: "CUSTOMER_ID_UNIQUE") @default(autoincrement())
-  CREATION_DATETIME DateTime           @db.DateTime(0)
-  EMAIL_ADDRESS     String             @unique(map: "EMAIL_ADDRESS_UNIQUE") @db.VarChar(255)
-  PASSWORD          String             @db.VarChar(45)
-  FIRST_NAME        String?            @db.VarChar(100)
-  LAST_NAME         String?            @db.VarChar(100)
-  MOBILE_PHONE      String?            @db.VarChar(45)
-  ADDRESS_STREET    String?            @db.VarChar(100)
+  BUSINESS_OWNER_ID Int      @id @unique(map: "CUSTOMER_ID_UNIQUE") @default(autoincrement())
+  CREATION_DATETIME DateTime @db.DateTime(0)
+  EMAIL_ADDRESS     String   @unique(map: "EMAIL_ADDRESS_UNIQUE") @db.VarChar(255)
+  PASSWORD          String   @db.VarChar(45)
+  FIRST_NAME        String?  @db.VarChar(100)
+  LAST_NAME         String?  @db.VarChar(100)
+  MOBILE_PHONE      String?  @db.VarChar(45)
+  ADDRESS_STREET    String?  @db.VarChar(100)
   ADDRESS_NO        Int?
   ADDRESS_ZIP       BigInt?
-  ADDRESS_TOWN      String?            @db.VarChar(100)
-  ADDRESS_COUNTRY   String?            @db.VarChar(100)
-  PIC               String?            @db.VarChar(255)
-  owner_2_business  owner_2_business[]
+  ADDRESS_TOWN      String?  @db.VarChar(100)
+  ADDRESS_COUNTRY   String?  @db.VarChar(100)
+  PIC               String?  @db.VarChar(255)
 }
 
 model business_rating {
@@ -124,11 +107,10 @@ model business_reviews {
 }
 
 model city {
-  CITY_ID           BigInt      @id @default(autoincrement())
-  CREATION_DATETIME DateTime?   @db.DateTime(0)
-  CITY_CODE         String?     @db.VarChar(2)
-  CITY_NAME         String?     @db.VarChar(100)
-  city_town         city_town[]
+  CITY_ID           BigInt    @id @default(autoincrement())
+  CREATION_DATETIME DateTime? @db.DateTime(0)
+  CITY_CODE         String?   @db.VarChar(2)
+  CITY_NAME         String?   @db.VarChar(100)
 }
 
 model city_town {
@@ -141,61 +123,45 @@ model city_town {
   E                 Float?
   H                 Float?
   LANGUAGE          String?   @db.Text
-  city              city?     @relation(fields: [CITY_ID], references: [CITY_ID])
-
-  @@index([CITY_ID])
 }
 
 model food_category {
-  FOOD_CATEGORY_ID  BigInt      @id @default(autoincrement())
-  CREATION_DATETIME DateTime?   @db.DateTime(0)
-  TITLE             String?     @db.VarChar(45)
-  DESCRIPTION       String?     @db.VarChar(255)
-  food_menu         food_menu[]
+  FOOD_CATEGORY_ID  BigInt    @id @default(autoincrement())
+  CREATION_DATETIME DateTime? @db.DateTime(0)
+  TITLE             String?   @db.VarChar(45)
+  DESCRIPTION       String?   @db.VarChar(255)
 }
 
 model food_menu {
-  FOOD_MENU_ID      Int               @id @default(autoincrement())
-  CREATION_DATETIME DateTime?         @db.DateTime(0)
-  BUSINESS_ID       Int?
+  FOOD_MENU_ID      Int       @id @default(autoincrement())
+  CREATION_DATETIME DateTime? @db.DateTime(0)
+  BUSINESS_ID       BigInt?
   FOOD_CATEGORY_ID  BigInt?
-  TITLE             String?           @db.VarChar(255)
-  STATUS            Int?              @db.TinyInt
-  business          business?         @relation(fields: [BUSINESS_ID], references: [BUSINESS_ID])
-  food_category     food_category?    @relation(fields: [FOOD_CATEGORY_ID], references: [FOOD_CATEGORY_ID])
-  food_menu_items   food_menu_items[]
-
-  @@index([BUSINESS_ID])
-  @@index([FOOD_CATEGORY_ID])
+  TITLE             String?   @db.VarChar(255)
+  STATUS            Int?      @db.TinyInt
 }
 
 model food_menu_items {
-  FOOD_MENU_ITEMS_ID BigInt         @id
-  CREATION_DATETIME  DateTime?      @db.DateTime(0)
-  FOOD_MENU_ID       Int?
-  MENU_CATEGORY_ID   Int?
-  TITLE              String?        @db.VarChar(100)
-  DESCRIPTION        String?        @db.VarChar(255)
-  PRICE              Float?         @db.Float
-  CURRENCY           String?        @db.VarChar(45)
-  PIC_1              String?        @db.VarChar(255)
-  PIC_2              String?        @db.VarChar(255)
-  PIC_3              String?        @db.VarChar(255)
-  APPROVED           Int?           @db.TinyInt
-  DISPLAY            Int?           @db.TinyInt
-  food_menu          food_menu?     @relation(fields: [FOOD_MENU_ID], references: [FOOD_MENU_ID])
-  menu_category      menu_category? @relation(fields: [MENU_CATEGORY_ID], references: [MENU_CATEGORY_ID])
-
-  @@index([FOOD_MENU_ID])
-  @@index([MENU_CATEGORY_ID])
+  FOOD_MENU_ITEMS_ID BigInt    @id
+  CREATION_DATETIME  DateTime? @db.DateTime(0)
+  FOOD_MENU_ID       BigInt?
+  MENU_CATEGORY_ID   BigInt?
+  TITLE              String?   @db.VarChar(100)
+  DESCRIPTION        String?   @db.VarChar(255)
+  PRICE              Float?    @db.Float
+  CURRENCY           String?   @db.VarChar(45)
+  PIC_1              String?   @db.VarChar(255)
+  PIC_2              String?   @db.VarChar(255)
+  PIC_3              String?   @db.VarChar(255)
+  APPROVED           Int?      @db.TinyInt
+  DISPLAY            Int?      @db.TinyInt
 }
 
 model food_type {
-  FOOD_TYPE_ID         BigInt                 @id @default(autoincrement())
-  CREATION_DATETIME    DateTime?              @db.DateTime(0)
-  TITLE                String?                @db.VarChar(45)
-  DESCRIPTION          String?                @db.VarChar(255)
-  business_2_food_type business_2_food_type[]
+  FOOD_TYPE_ID      BigInt    @id @default(autoincrement())
+  CREATION_DATETIME DateTime? @db.DateTime(0)
+  TITLE             String?   @db.VarChar(45)
+  DESCRIPTION       String?   @db.VarChar(255)
 }
 
 model foodeez_ranking {
@@ -204,9 +170,6 @@ model foodeez_ranking {
   CREATION_DATETIME  DateTime? @db.DateTime(0)
   BUSINESS_ID        Int?
   RANKING            Int?      @default(1)
-  business           business? @relation(fields: [BUSINESS_ID], references: [BUSINESS_ID])
-
-  @@index([BUSINESS_ID])
 }
 
 model foodeez_subscription {
@@ -216,29 +179,20 @@ model foodeez_subscription {
 }
 
 model menu_category {
-  MENU_CATEGORY_ID  Int               @id @default(autoincrement())
-  CREATION_DATETIME DateTime?         @db.DateTime(0)
+  MENU_CATEGORY_ID  Int       @id @default(autoincrement())
+  CREATION_DATETIME DateTime? @db.DateTime(0)
   BUSINESS_ID       Int?
-  TITLE             String?           @db.VarChar(255)
-  SHOW              Int?              @default(1) @db.TinyInt
+  TITLE             String?   @db.VarChar(255)
+  SHOW              Int?      @default(1) @db.TinyInt
   DISPLAY_SEQ       Int?
-  food_menu_items   food_menu_items[]
-  business          business?         @relation(fields: [BUSINESS_ID], references: [BUSINESS_ID])
-
-  @@index([BUSINESS_ID])
 }
 
 model owner_2_business {
-  CUSTOMER_BUSINESS_ID Int             @id @default(autoincrement())
-  CREATION_DATETIME    DateTime?       @db.DateTime(0)
-  BUSINESS_OWNER_ID    Int?
-  BUSINESS_ID          Int?
-  STATUS               Int?            @db.TinyInt
-  business             business?       @relation(fields: [BUSINESS_ID], references: [BUSINESS_ID])
-  business_owner       business_owner? @relation(fields: [BUSINESS_OWNER_ID], references: [BUSINESS_OWNER_ID])
-
-  @@index([BUSINESS_ID])
-  @@index([BUSINESS_OWNER_ID])
+  CUSTOMER_BUSINESS_ID Int       @id @default(autoincrement())
+  CREATION_DATETIME    DateTime? @db.DateTime(0)
+  BUSINESS_OWNER_ID    BigInt?
+  BUSINESS_ID          BigInt?
+  STATUS               Int?      @db.TinyInt
 }
 
 model visitors_account {
@@ -254,6 +208,15 @@ model visitors_account {
   RESET_TOKEN_EXPIRY  DateTime? @db.DateTime(0)
 }
 
+model business_2_business_category2 {
+  BUSINESS_BUSINESS_CATEGORY_ID Int       @id @default(0)
+  CREATION_DATETIME             DateTime? @db.DateTime(0)
+  BUSINESS_ID                   BigInt?
+  BUSINESS_CATEGORY_ID          BigInt?
+  STATUS                        Int?      @db.TinyInt
+  DISPLAY_SEQ                   Int?
+}
+
 view adlink_view {
   ADLINK_ID     Int     @id @default(0)
   BUSINESS_NAME String? @db.VarChar(255)
@@ -264,7 +227,7 @@ view adlink_view {
 view business_2_business_category_view {
   BUSINESS_CATEGORY_ID Int     @id @default(0)
   CATEGORY_NAME        String? @db.VarChar(100)
-  BUSINESS_ID          Int?
+  BUSINESS_ID          BigInt?
   STATUS               Int?    @db.TinyInt
   DISPLAY_SEQ          Int?
 }
@@ -286,6 +249,7 @@ view business_detail_view_all {
   ADDRESS_CITY_ID Int?
   CITY_CODE       String? @db.VarChar(2)
   CITY_NAME       String? @db.VarChar(100)
+  EMAIL_ADDRESS   String? @db.VarChar(255)
   ADDRESS_COUNTRY String? @db.VarChar(100)
   PHONE_NUMBER    String? @db.VarChar(45)
   WHATSAPP_NUMBER String? @db.VarChar(45)
@@ -300,6 +264,9 @@ view business_detail_view_all {
   APPROVED        Int?    @default(0) @db.TinyInt
   STATUS          Int?    @default(0) @db.TinyInt
   RANKING         BigInt  @default(0)
+  VEGAN           Int     @default(0)
+  VEGETARIAN      Int     @default(0)
+  HALAL           Int     @default(0)
 }
 
 view business_detail_view_halal {
@@ -313,6 +280,7 @@ view business_detail_view_halal {
   ADDRESS_CITY_ID Int?
   CITY_CODE       String? @db.VarChar(2)
   CITY_NAME       String? @db.VarChar(100)
+  EMAIL_ADDRESS   String? @db.VarChar(255)
   ADDRESS_COUNTRY String? @db.VarChar(100)
   PHONE_NUMBER    String? @db.VarChar(45)
   WHATSAPP_NUMBER String? @db.VarChar(45)
@@ -327,6 +295,9 @@ view business_detail_view_halal {
   APPROVED        Int?    @default(0) @db.TinyInt
   STATUS          Int?    @default(0) @db.TinyInt
   RANKING         BigInt  @default(0)
+  VEGAN           Int     @default(0)
+  VEGETARIAN      Int     @default(0)
+  HALAL           Int     @default(0)
 }
 
 view business_detail_view_vegan {
@@ -340,6 +311,7 @@ view business_detail_view_vegan {
   ADDRESS_CITY_ID Int?
   CITY_CODE       String? @db.VarChar(2)
   CITY_NAME       String? @db.VarChar(100)
+  EMAIL_ADDRESS   String? @db.VarChar(255)
   ADDRESS_COUNTRY String? @db.VarChar(100)
   PHONE_NUMBER    String? @db.VarChar(45)
   WHATSAPP_NUMBER String? @db.VarChar(45)
@@ -354,6 +326,9 @@ view business_detail_view_vegan {
   APPROVED        Int?    @default(0) @db.TinyInt
   STATUS          Int?    @default(0) @db.TinyInt
   RANKING         BigInt  @default(0)
+  VEGAN           Int     @default(0)
+  VEGETARIAN      Int     @default(0)
+  HALAL           Int     @default(0)
 }
 
 view business_detail_view_vegetarian {
@@ -367,6 +342,7 @@ view business_detail_view_vegetarian {
   ADDRESS_CITY_ID Int?
   CITY_CODE       String? @db.VarChar(2)
   CITY_NAME       String? @db.VarChar(100)
+  EMAIL_ADDRESS   String? @db.VarChar(255)
   ADDRESS_COUNTRY String? @db.VarChar(100)
   PHONE_NUMBER    String? @db.VarChar(45)
   WHATSAPP_NUMBER String? @db.VarChar(45)
@@ -381,4 +357,7 @@ view business_detail_view_vegetarian {
   APPROVED        Int?    @default(0) @db.TinyInt
   STATUS          Int?    @default(0) @db.TinyInt
   RANKING         BigInt  @default(0)
+  VEGAN           Int     @default(0)
+  VEGETARIAN      Int     @default(0)
+  HALAL           Int     @default(0)
 }

@@ -114,7 +114,6 @@ export default function CitySection() {
   const otherCities = cities
     .filter((c) => c.CITY_NAME && !MAIN_CITIES.includes(c.CITY_NAME))
     .map((c) => c.CITY_NAME!)
-    .slice(0, 10);
 
   const isLoading = loading.cities || loading.businesses;
   const showSkeleton = isLoading && !error;

@@ -82,8 +82,6 @@ export async function getBusinessesByLocation({
       return []; // No valid search criteria
     }
 
-    console.log("Executing Prisma query with whereClause:", JSON.stringify(whereClause));
-
     const result = await prisma.business_detail_view_all.findMany({
       where: whereClause, // Use the determined where clause
       take: Math.min(limit, 50), // enforce upper bound
@@ -99,6 +97,7 @@ export async function getBusinessesByLocation({
         ADDRESS_CITY_ID: true,
         CITY_CODE: true,
         CITY_NAME: true,
+        EMAIL_ADDRESS: true,
         ADDRESS_COUNTRY: true,
         PHONE_NUMBER: true,
         WHATSAPP_NUMBER: true,
@@ -113,6 +112,9 @@ export async function getBusinessesByLocation({
         APPROVED: true,
         STATUS: true,
         RANKING: true,
+        VEGAN: true,
+        VEGETARIAN: true,
+        HALAL: true
       }
     });
 
@@ -153,8 +155,8 @@ export async function getBusinessesByTypeAndCategories(params: {
       });
 
       businessIdsInCategory = businessCategoryLinks
-        .map(link => link.BUSINESS_ID)
-        .filter((id): id is number => id !== null && id !== undefined);
+        .map(link => Number(link.BUSINESS_ID))
+        .filter((id): id is number => !isNaN(id) && id !== null && id !== undefined);
 
 
 

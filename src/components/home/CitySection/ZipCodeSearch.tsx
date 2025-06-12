@@ -12,6 +12,22 @@ interface ZipCodeSearchProps {
   onSearchSubmit: (zip: string) => void;
 }
 
+// Add type declaration for Google Maps
+declare global {
+  interface Window {
+    google?: {
+      maps: {
+        places: {
+          Autocomplete: new (
+            input: HTMLInputElement,
+            options?: google.maps.places.AutocompleteOptions
+          ) => google.maps.places.Autocomplete;
+        };
+      };
+    };
+  }
+}
+
 export default function ZipCodeSearch({
   zipCode,
   setZipCode,
@@ -19,36 +35,58 @@ export default function ZipCodeSearch({
   onSearchSubmit,
 }: ZipCodeSearchProps) {
   const [isFocused, setIsFocused] = useState(false);
+  const [isGoogleMapsLoaded, setIsGoogleMapsLoaded] = useState(false);
   const autocompleteRef = useRef<google.maps.places.Autocomplete | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
+  // Check for Google Maps API loading
+  useEffect(() => {
+    if (window.google?.maps?.places) {
+      setIsGoogleMapsLoaded(true);
+      return;
+    }
+
+    const checkInterval = setInterval(() => {
+      if (window.google?.maps?.places) {
+        setIsGoogleMapsLoaded(true);
+        clearInterval(checkInterval);
+      }
+    }, 100);
+
+    return () => clearInterval(checkInterval);
+  }, []);
+
   // Initialize Google Places Autocomplete
   useEffect(() => {
-    if (typeof window !== "undefined" && inputRef.current) {
+    if (!isGoogleMapsLoaded || !inputRef.current) return;
+
+    try {
       autocompleteRef.current = new google.maps.places.Autocomplete(inputRef.current, {
         types: ["(regions)"],
         componentRestrictions: { country: "ch" },
         fields: ["address_components", "formatted_address"],
       });
-  
+
       autocompleteRef.current.addListener("place_changed", () => {
         const place = autocompleteRef.current?.getPlace();
-  
+
         if (place?.address_components) {
           const postalCodeComponent = place.address_components.find(
             (component) => component.types.includes("postal_code")
           );
-  
+
           if (postalCodeComponent) {
-            const zipOnly = postalCodeComponent.long_name.trim(); // just "8050"
+            const zipOnly = postalCodeComponent.long_name.trim();
             setZipCode(zipOnly);
             setSearchZipCode(zipOnly);
             onSearchSubmit(zipOnly);
           }
         }
       });
+    } catch (error) {
+      console.error("Error initializing Google Places Autocomplete:", error);
     }
-  }, [setZipCode, setSearchZipCode, onSearchSubmit]);
+  }, [isGoogleMapsLoaded, setZipCode, setSearchZipCode, onSearchSubmit]);
   
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -79,7 +117,7 @@ export default function ZipCodeSearch({
     <>
       <Script
         src={`https://maps.googleapis.com/maps/api/js?key=${process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}&libraries=places`}
-        strategy="afterInteractive"
+        strategy="lazyOnload"
       />
       
       <div className="max-w-md mx-auto mb-10">
