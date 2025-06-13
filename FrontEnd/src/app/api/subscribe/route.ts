@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
+import { sendEmail } from '@/services/EmailService';
 
 export async function POST(request: Request) {
   try {
@@ -31,11 +32,14 @@ export async function POST(request: Request) {
     // Create new subscription
     await prisma.foodeez_subscription.create({
       data: {
-        FOODEEZ_SUBSCRIPTION_ID : BigInt(Date.now()),
+        FOODEEZ_SUBSCRIPTION_ID: BigInt(Date.now()),
         EMAIL_ADDRESS: email,
         CREATION_DATETIME: new Date(),
       },
     });
+
+    // Send welcome email
+    await sendEmail(email, 'newsletter', { email });
 
     return NextResponse.json(
       {

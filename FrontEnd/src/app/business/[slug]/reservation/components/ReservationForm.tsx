@@ -26,7 +26,7 @@ const ReservationForm: React.FC<ReservationFormProps> = ({
     setFormData((prev: any) => ({ ...prev, [name]: value }));
   };
 
-  // const nextStep = () => setCurrentStep((prev) => prev + 1);
+  const nextStep = () => setCurrentStep((prev) => prev + 1);
   const prevStep = () => setCurrentStep((prev) => Math.max(1, prev - 1));
 
   return (
@@ -123,6 +123,15 @@ const ReservationForm: React.FC<ReservationFormProps> = ({
               <option value="Special Occasion">Special Occasion</option>
             </select>
           </div>
+          <div className="flex justify-end pt-4">
+            <button
+              type="button"
+              onClick={nextStep}
+              className="px-6 py-2.5 bg-primary hover:bg-primary-dark text-white font-medium rounded-md shadow-sm transition-colors"
+            >
+              Continue
+            </button>
+          </div>
         </div>
       )}
       {/* Step 2: Contact Information */}
@@ -140,6 +149,7 @@ const ReservationForm: React.FC<ReservationFormProps> = ({
                 name="name"
                 required
                 value={formData.name}
+
                 onChange={handleChange}
                 className="block w-full px-3 py-2.5 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-primary focus:border-primary transition"
                 placeholder="Your name"
@@ -182,43 +192,24 @@ const ReservationForm: React.FC<ReservationFormProps> = ({
             />
           </div>
           {children}
+          <div className="flex justify-end pt-4">
+            <button
+              type="button"
+              onClick={prevStep}
+              className="px-4 py-2 border border-gray-300 rounded-md text-text-main hover:bg-background-muted transition-colors mr-2"
+            >
+              Back
+            </button>
+            <button
+              type="submit"
+              disabled={isSubmitting}
+              className="px-6 py-2.5 bg-primary hover:bg-primary-dark text-white font-medium rounded-md shadow-sm transition-colors disabled:opacity-70"
+            >
+              {isSubmitting ? 'Processing...' : 'Complete Reservation'}
+            </button>
+          </div>
         </div>
       )}
-      <div className="flex justify-end pt-4">
-        {currentStep > 1 && (
-          <button
-            type="button"
-            onClick={prevStep}
-            className="px-4 py-2 border border-gray-300 rounded-md text-text-main hover:bg-background-muted transition-colors mr-2"
-          >
-            Back
-          </button>
-        )}
-        {currentStep < 2 ? (
-          // <button
-          //   type="button"
-          //   onClick={nextStep}
-          //   className="px-6 py-2.5 bg-primary hover:bg-primary-dark text-white font-medium rounded-md shadow-sm transition-colors"
-          // >
-          //   Continue
-          // </button>
-            <button
-            type="submit"
-            disabled={isSubmitting}
-            className="px-6 py-2.5 bg-primary hover:bg-primary-dark text-white font-medium rounded-md shadow-sm transition-colors disabled:opacity-70"
-          >
-            {isSubmitting ? 'Processing...' : 'Coming Soon'}
-          </button>
-        ) : (
-          <button
-            type="submit"
-            disabled={isSubmitting}
-            className="px-6 py-2.5 bg-primary hover:bg-primary-dark text-white font-medium rounded-md shadow-sm transition-colors disabled:opacity-70"
-          >
-            {isSubmitting ? 'Processing...' : 'Complete Reservation'}
-          </button>
-        )}
-      </div>
     </form>
   );
 };

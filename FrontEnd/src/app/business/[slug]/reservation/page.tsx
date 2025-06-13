@@ -58,22 +58,27 @@ export default function ReservationPage() {
     }
   }, [businessId, slug, parsedId.id]);
 
-  // const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
-  //   const { name, value } = e.target;
-  //   setFormData(prev => ({
-  //     ...prev,
-  //     [name]: value
-  //   }));
-  // };
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
 
-    // In a real app, this would send data to an API
     try {
-      // Simulate API call to book reservation
-      await new Promise((resolve) => setTimeout(resolve, 1500));
+      const response = await fetch('/api/reservation', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          ...formData,
+          businessName: business.BUSINESS_NAME,
+          businessEmail: business.EMAIL_ADDRESS,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to submit reservation');
+      }
+
       setIsSuccess(true);
     } catch (error) {
       console.error("Error submitting reservation:", error);
@@ -81,18 +86,6 @@ export default function ReservationPage() {
       setIsSubmitting(false);
     }
   };
-
-  // const nextStep = () => {
-  //   setCurrentStep(prev => prev + 1);
-  //   // Scroll to top on step change
-  //   window.scrollTo(0, 0);
-  // };
-
-  // const prevStep = () => {
-  //   setCurrentStep(prev => Math.max(1, prev - 1));
-  //   // Scroll to top on step change
-  //   window.scrollTo(0, 0);
-  // };
 
   if (loading) {
     return <LoadingSkeleton />;
@@ -192,6 +185,7 @@ export default function ReservationPage() {
                     setCurrentStep={setCurrentStep}
                     isSubmitting={isSubmitting}
                     handleSubmit={handleSubmit}
+          
                   >
                     {currentStep === 2 && (
                       <ReservationSummary
