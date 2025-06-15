@@ -120,4 +120,6 @@ From 5 - 28 April No record
 
 12 june 3 hours 50 mins
 
+13 june 2 hours 30 mins
+
 */

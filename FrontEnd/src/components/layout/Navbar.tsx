@@ -8,7 +8,7 @@ import { AnimatePresence } from "framer-motion";
 import DropdownMenu from "../core/DropDownMenu";
 import MobileMenu from "../ui/MobileMenu";
 import Image from "next/image";
-import { useSession, signOut } from "next-auth/react";
+import { useSession, signOut } from "../../../node_modules/next-auth/react";
 import ProfileDropdown from "./ProfileDropdown";
 
 export const Navbar = () => {

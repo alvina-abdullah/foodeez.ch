@@ -60,22 +60,22 @@ export async function POST(request: Request) {
       }
     );
 
-    // // Send notification email to admin
-    // await sendEmail(
-    //     process.env.ADMIN_EMAIL || "admin@foodeez.ch",
-    //     'reservation',
-    //     {
-    //       name,
-    //       email,
-    //       phone,
-    //       date,
-    //       time,
-    //       guests,
-    //       occasion,
-    //       specialRequests,
-    //       businessName
-    //     }
-    // )
+    // Send notification email to admin
+    await sendEmail(
+        process.env.ADMIN_EMAIL || "admin@foodeez.ch",
+        'reservation',
+        {
+          name,
+          email,
+          phone,
+          date,
+          time,
+          guests,
+          occasion,
+          specialRequests,
+          businessName
+        }
+    )
 
     return NextResponse.json(
       { message: 'Reservation request submitted successfully' },

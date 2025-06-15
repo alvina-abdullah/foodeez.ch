@@ -4,7 +4,7 @@ import { useState, useRef } from "react";
 import { CircleUser } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
-import { signOut } from "next-auth/react";
+import { signOut } from "../../../node_modules/next-auth/react";
 import { Session } from "next-auth";
 import Image from "next/image";
 import ImageUploadModal from "../ui/ImageUploadModal";
