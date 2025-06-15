@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useSession } from "../../../../../node_modules/next-auth/react";
+import { useSession } from "next-auth/react";
 import { motion } from "framer-motion";
 import { Input } from "@/components/core/Input";
 import { Button } from "@/components/core/Button";
