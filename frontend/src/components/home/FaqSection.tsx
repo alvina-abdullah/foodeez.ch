@@ -12,35 +12,28 @@ interface FaqItem {
 
 const faqs: FaqItem[] = [
   {
-    question: "How do I register my restaurant on Foodeez?",
-    answer:
-      "As of now, you cannot register because <b>Foodeez is under construction.</b>",
-  },
-  {
     question: "What is Foodeez?",
-    answer:
-      "Foodeez is a community-driven food discovery platform that connects food lovers with local restaurants, home chefs, and food brands. Whether you're craving something new or want to share your food story, Foodeez is the place to be.",
+    answer: "",
   },
   {
     question: "Who can join Foodeez?",
-    answer:
-      "Anyone with a passion for food can join! Whether you're a restaurant owner, food blogger, home chef, or just someone who loves discovering and reviewing food — Foodeez welcomes you.",
+    answer: "",
   },
   {
     question: "Why should I register my business on Foodeez?",
-    answer:
-      "Listing your restaurant or food business on Foodeez increases your visibility, helps attract more local customers, and gives you tools to manage your reputation and grow your brand.",
+    answer: "",
   },
   {
     question: "Do I need to be on Google or Instagram to join?",
-    answer:
-      "Not at all. While having a social media presence helps, Foodeez is a standalone platform. You can create your profile, upload photos, share your story, and connect with foodies without any external accounts.",
+    answer: "",
   },
   {
-    question:
-      "Can Foodeez help set up Google Maps and Instagram for my restaurant?",
-    answer:
-      "Yes! Our team plans to offer optional onboarding services in the future, including help with setting up your Google Business Profile, Instagram page, and syncing them with your Foodeez profile.",
+    question: "Can Foodeez help set up Google Maps and Instagram for my restaurant?",
+    answer: "",
+  },
+  {
+    question: "How will Foodeez help bring more customers?",
+    answer: "",
   },
 ];
 
@@ -72,16 +65,16 @@ export default function FaqSection() {
                 onClick={() => toggleFaq(index)}
                 className="w-full flex items-center justify-between p-4 text-left font-medium focus:outline-none"
               >
-                <span className="text-primary">{faq.question}</span>
+                <span className="text-primary text-lg">{faq.question}</span>
                 <span
                   className={`transition-transform ${
                     openIndex === index ? "rotate-180" : ""
                   }`}
                 >
                   {openIndex === index ? (
-                    <Minus size={18} className="text-primary" />
+                    <Minus size={20} className="text-primary" />
                   ) : (
-                    <Plus size={18} className="text-primary-dark" />
+                    <Plus size={20} className="text-primary" />
                   )}
                 </span>
               </button>
@@ -107,7 +100,7 @@ export default function FaqSection() {
 
         <div className="mt-12 text-center">
           <p className="mb-3 text-text-main text-base sm:text-lg">
-            Have questions?
+            Have more questions?
           </p>
 
           <Link
