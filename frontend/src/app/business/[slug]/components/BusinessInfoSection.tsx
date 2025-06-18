@@ -3,6 +3,7 @@ import { MapPin, Phone, Globe } from "lucide-react";
 import { BusinessDetail } from "@/types/business.types";
 import { generateSlug } from "@/lib/utils/genSlug";
 import Link from "next/link";
+import Image from "next/image";
 
 const BusinessInfoSection: React.FC<{ business: BusinessDetail }> = ({
   business,
@@ -15,12 +16,49 @@ const BusinessInfoSection: React.FC<{ business: BusinessDetail }> = ({
   return (
     <div className="space-y-6 my-10">
       {/* Description Section */}
-      <div className="space-y-2">
+      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
         <h2 className="sub-heading">Description</h2>
-        <p className="sub-heading-description !text-start !max-w-none !text-text-main">
-          {business.DESCRIPTION}
-        </p>
+
+        <div className='flex items-center gap-2 mt-2 md:mt-0'>
+         {business.HALAL == 1 && (
+              <span className="inline-flex items-center gap-2 px-2 py-1 rounded-full text-xs md:text-lg  font-medium bg-green-100 text-green-800 border border-green-200">
+                <Image
+                src='/images/foodtypes/halal.png'
+                alt='halal'
+                width={30}
+                height={30}
+                />
+                Halal 
+              </span>
+            )}
+            {business.VEGAN == 1 && (
+              <span className="inline-flex items-center gap-2 px-2 py-1 rounded-full text-xs md:text-lg font-medium bg-emerald-100 text-emerald-800 border border-emerald-200">
+                 <Image
+                src='/images/foodtypes/vegan.png'
+                alt='vegan'
+                width={30}
+                height={30}
+                />
+                Vegan
+              </span>
+            )}
+            {business.VEGETARIAN == 1 && (
+              <span className="inline-flex items-center gap-2 px-2 py-1 rounded-full text-xs md:text-lg font-medium bg-teal-100 text-teal-800 border border-teal-200">
+                <Image
+                src='/images/foodtypes/vegetarian.png'
+                alt='halal'
+                width={30}
+                height={30}
+                />
+                Vegetarian
+              </span>
+            )}
+         </div>
       </div>
+
+      <p className="sub-heading-description mt-3 text-start text-text-main max-w-none">
+        {business.DESCRIPTION}
+      </p>
 
       {/* Address & Contact */}
       <div className="space-y-4">

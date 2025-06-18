@@ -12,7 +12,7 @@ export default function RegisterBusinessPage() {
   return (
     <div className="">
       <Banner
-        src="/images/banner1.jpeg"
+        src="/images/banners/CTAs/registerCTA.png"
         alt="Register Your Business on Foodeez"
       />
       <div className="py-20">

@@ -21,7 +21,11 @@ export default function CategoryFilter({
   isPending: boolean;
 }) {
   return (
-    <div className="border border-accent mb-8 bg-secondary-light rounded-lg text-accent-dark">
+    <div className="
+    
+    hidden 
+    
+    border border-accent mb-8 bg-secondary-light rounded-lg text-accent-dark">
       <div className="flex flex-wrap gap-4 relative ">
         {visibleCategories.map((category) => {
           const isSelected = selectedCategory === category;
