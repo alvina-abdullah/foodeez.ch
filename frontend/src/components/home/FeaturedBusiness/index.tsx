@@ -3,7 +3,10 @@
 import { useState, useEffect, useCallback } from "react";
 import { BusinessDetail } from "@/types/business.types";
 import { useTransition } from "react";
-import { getBusinessesByTypeAndCategories } from "@/services/HomePageService";
+import {
+  getBusinessByFoodtypeCategoryLocation,
+  getCities,
+} from "@/services/HomePageService";
 import FoodTypeFilter from "./FoodTypeFilter";
 import CategoryFilter from "./CategoryFilter";
 import ResultCountInfo from "./ResultCountInfo";
@@ -12,6 +15,8 @@ import ErrorState from "./ErrorState";
 import EmptyState from "./EmptyState";
 import BusinessGrid from "./BusinessGrid";
 import PaginationControls, { PER_PAGE_OPTIONS } from "./PaginationControls";
+import CitySelectionButtons from "../CitySection/CitySelectionButtons";
+import ZipCodeSearch from "../CitySection/ZipCodeSearch";
 
 const FOOD_TYPES = ["All", "Halal", "Vegetarian", "Vegan"] as const;
 const FOOD_CATEGORIES = [
@@ -50,15 +55,29 @@ const FOOD_CATEGORIES = [
 const INITIAL_FOOD_TYPE = "All";
 const VISIBLE_CATEGORIES_LIMIT = 5;
 
+const MAIN_CITIES = [
+  "Zurich",
+  "Geneva",
+  "Luzern",
+  "Bern",
+  "Interlaken",
+  "Zermatt",
+  "St. Moritz",
+];
+
 export default function FeaturedBusiness() {
   const [businesses, setBusinesses] = useState<BusinessDetail[]>([]);
   const [isCategoryDropdownOpen, setIsCategoryDropdownOpen] = useState(false);
-  const [isPaginationDropdownOpen, setIsPaginationDropdownOpen] = useState(false);
-  const [selectedCategoryId, setSelectedCategoryId] = useState<number | undefined>(undefined);
+  const [isPaginationDropdownOpen, setIsPaginationDropdownOpen] =
+    useState(false);
+  const [selectedCategoryId, setSelectedCategoryId] = useState<
+    number | undefined
+  >(undefined);
   const [initialLoading, setInitialLoading] = useState(true);
   const [currentBatch, setCurrentBatch] = useState(1);
   const [hasMore, setHasMore] = useState(true);
-  const [selectedFoodType, setSelectedFoodType] =useState<string>(INITIAL_FOOD_TYPE);
+  const [selectedFoodType, setSelectedFoodType] =
+    useState<string>(INITIAL_FOOD_TYPE);
   const [selectedCategory, setSelectedCategory] = useState<string>("");
   const [isPending, startTransition] = useTransition();
   const [error, setError] = useState<string | null>(null);
@@ -66,6 +85,26 @@ export default function FeaturedBusiness() {
   const [totalCountofBusiness, setTotalCountOfBusiness] = useState(0);
   const visibleCategories = FOOD_CATEGORIES.slice(0, VISIBLE_CATEGORIES_LIMIT);
   const hiddenCategories = FOOD_CATEGORIES.slice(VISIBLE_CATEGORIES_LIMIT);
+  const [cities, setCities] = useState<{ CITY_NAME: string }[]>([]);
+  const [selectedCity, setSelectedCity] = useState<string>("");
+  const [zipCode, setZipCode] = useState<string>("");
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [searchZipCode, setSearchZipCode] = useState("");
+
+  // Handler for city selection
+  const handleCitySelect = (city: string) => {
+    setSelectedCity(city);
+    setZipCode("");
+  };
+
+  // Handler for zip code search submit
+  const handleZipCodeSearchSubmit = (zip: string) => {
+    setZipCode(zip);
+    setSelectedCity("");
+    setSearchZipCode(zip);
+    // Optionally trigger fetchBusinesses here if you want instant search
+    // fetchBusinesses(1, perPage);
+  };
 
   // Update selected category ID when category changes
   useEffect(() => {
@@ -81,6 +120,22 @@ export default function FeaturedBusiness() {
     }
   }, [selectedCategory]);
 
+  // Fetch city list on mount
+  useEffect(() => {
+    getCities().then((cities) => {
+      setCities(
+        cities
+          .filter(
+            (c: { CITY_NAME: string | null }) =>
+              typeof c.CITY_NAME === "string" && c.CITY_NAME
+          )
+          .map((c: { CITY_NAME: string | null }) => ({
+            CITY_NAME: c.CITY_NAME as string,
+          }))
+      );
+    });
+  }, []);
+
   // Fetch businesses based on filters and perPage
   const fetchBusinesses = useCallback(
     async (batch: number = 1, perPageOverride?: number) => {
@@ -88,9 +143,11 @@ export default function FeaturedBusiness() {
         setError(null);
         startTransition(async () => {
           const limit = (perPageOverride ?? perPage) * batch;
-          const response = await getBusinessesByTypeAndCategories({
+          const response = await getBusinessByFoodtypeCategoryLocation({
             foodType: selectedFoodType,
             categoryId: selectedCategoryId,
+            city: searchZipCode? undefined : selectedCity, // city only if zipCode is empty
+            zipCode: searchZipCode || undefined,
             limit,
           });
 
@@ -114,18 +171,30 @@ export default function FeaturedBusiness() {
         setInitialLoading(false);
       }
     },
-    [selectedFoodType, selectedCategoryId, perPage, startTransition]
+    [
+      selectedFoodType,
+      selectedCategoryId,
+      selectedCity,
+      searchZipCode,
+      perPage,
+      startTransition,
+    ]
   );
 
   // Handle filter changes
   useEffect(() => {
     setCurrentBatch(1); // Reset batch when filters change
     fetchBusinesses(1, perPage);
-  }, [selectedFoodType, selectedCategoryId, perPage, fetchBusinesses]);
+  }, [
+    selectedFoodType,
+    selectedCategoryId,
+    selectedCity,
+    perPage,
+    fetchBusinesses,
+  ]);
 
   // Handlers
   const handleFoodTypeSelect = (type: string) => {
-
     setSelectedFoodType(type);
     // Only reset category selection when switching to "All"
     if (type === "All") {
@@ -141,7 +210,10 @@ export default function FeaturedBusiness() {
   const clearAllFilters = () => {
     setSelectedFoodType(INITIAL_FOOD_TYPE);
     setSelectedCategory("");
-    setPerPage(PER_PAGE_OPTIONS[0])
+    setSelectedCity("");
+    setZipCode("");
+    setSearchZipCode("");
+    setPerPage(PER_PAGE_OPTIONS[0]);
   };
 
   const handleViewMoreBusiness = (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -163,6 +235,10 @@ export default function FeaturedBusiness() {
     fetchBusinesses(1, value);
   };
 
+  const otherCities = cities
+    .filter((c) => c.CITY_NAME && !MAIN_CITIES.includes(c.CITY_NAME))
+    .map((c) => c.CITY_NAME!);
+
   // Derived state
   const showSkeleton = isPending || initialLoading;
   const showEmptyState =
@@ -172,11 +248,10 @@ export default function FeaturedBusiness() {
   return (
     <section className="py-12">
       <div className="text-center mb-10">
-        <h2 className="main-heading">
-          Foodeez's Top Selection
-        </h2>
+        <h2 className="main-heading">Foodeez's Top Selection</h2>
         <p className="main-heading-description">
-          Discover restaurants by dietary preferences and food categories
+          Discover restaurants by dietary preferences and food categories and
+          Location
         </p>
       </div>
 
@@ -195,6 +270,22 @@ export default function FeaturedBusiness() {
         isDropdownOpen={isCategoryDropdownOpen}
         setIsDropdownOpen={setIsCategoryDropdownOpen}
         isPending={isPending}
+      />
+
+      <CitySelectionButtons
+        mainCities={MAIN_CITIES}
+        selectedCity={selectedCity}
+        onCitySelect={handleCitySelect}
+        otherCities={otherCities}
+        isDropdownOpen={isDropdownOpen}
+        onDropdownToggle={() => setIsDropdownOpen(!isDropdownOpen)}
+      />
+
+      <ZipCodeSearch
+        zipCode={zipCode}
+        setZipCode={setZipCode}
+        setSearchZipCode={setSearchZipCode}
+        onSearchSubmit={handleZipCodeSearchSubmit}
       />
 
       <ResultCountInfo

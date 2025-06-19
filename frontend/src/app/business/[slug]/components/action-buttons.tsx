@@ -24,7 +24,6 @@ export function ActionButtons({ onFavorite, onShare, onReview }: ActionButtonsPr
     setIsSharing(true);
     try {
       onShare?.();
-      console.log('Sharing location...');
     } catch (error: any) {
       console.error('Sharing failed:', error);
     } finally {

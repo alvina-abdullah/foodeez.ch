@@ -8,15 +8,13 @@ import {
   Calendar,
   Globe,
   Phone,
-  Sprout,
-  Leaf,
-  CheckCircle2,
 } from "lucide-react";
 import { generateSlug } from "@/lib/utils/genSlug";
 import { BusinessDetail } from "@/types/business.types";
 import { SocialLinks } from "@/components/core/SocialLinks";
 import StarIcon from "../ui/StarIcon";
 import { cn } from "@/lib/utils";
+import FoodTypeBadges from "./FoodTypeBadges";
 
 export interface BusinessCardProps {
   business: BusinessDetail;
@@ -68,29 +66,28 @@ const BusinessCard: React.FC<BusinessCardProps> = ({ business }) => {
   );
 
   return (
-    <div className="group relative bg-background-card rounded-xl border shadow-sm hover:shadow-md transition-all duration-300 overflow-hidden w-full max-w-md h-[460px] flex flex-col">
-
+    <div className="group relative bg-background-card rounded-xl border shadow-sm hover:shadow-md transition-all duration-300 overflow-hidden w-full max-w-md h-[540px] flex flex-col">
       {/* Image */}
       <div className="">
         <Link
           href={`/business/${slug}`}
           target="_blank"
           rel="noopener noreferrer"
-          className="block relative w-full h-[170px] aspect-video overflow-hidden"
+          className="block relative w-full h-[200px] md:h-[220px] aspect-video overflow-hidden"
         >
           {IMAGE_URL ? (
             <Image
               src={IMAGE_URL}
               alt={BUSINESS_NAME}
-              height={1000}
-              width={1000}
-              className="object-cover transition-transform duration-500 group-hover:scale-105 aspect-video"
+              height={1200}
+              width={1200}
+              className="object-cover transition-transform duration-500 group-hover:scale-105 aspect-video rounded-t-2xl"
               sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
               priority
             />
           ) : (
             <div className="w-full h-full flex items-center justify-center bg-gray-200">
-              <span className="text-3xl font-bold text-gray-600 uppercase">
+              <span className="text-4xl md:text-6xl font-bold text-gray-600 uppercase">
                 {BUSINESS_NAME.charAt(0)}
               </span>
             </div>
@@ -101,36 +98,21 @@ const BusinessCard: React.FC<BusinessCardProps> = ({ business }) => {
       {/* Content */}
       <div className="flex-1 flex flex-col justify-between p-4">
         <div className="flex items-center justify-between gap-2">
+          <FoodTypeBadges
+            HALAL={HALAL || 0}
+            VEGAN={VEGAN || 0}
+            VEGETARIAN={VEGETARIAN || 0}
+          />
 
-          <div className="flex items-center gap-2">
-            {HALAL == 1 && (
-              <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800 border border-green-200">
-                <CheckCircle2 size={12} className="mr-1" />
-                Halal 
-              </span>
-            )}
-            {VEGAN == 1 && (
-              <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-emerald-100 text-emerald-800 border border-emerald-200">
-                <Leaf size={12} className="mr-1" />
-                Vegan
-              </span>
-            )}
-            {VEGETARIAN == 1 && (
-              <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-teal-100 text-teal-800 border border-teal-200">
-                <Sprout size={12} className="mr-1" />
-                Vegetarian
-              </span>
-            )}
-          </div>
           {rating !== null && (
             <div className="flex items-center gap-1.5">
               <div className="flex items-center gap-0.5">
                 {[...Array(5)].map((_, i) => {
                   const starValue = Math.min(1, Math.max(0, rating - i));
-                  return <StarIcon key={i} fillLevel={starValue} size={16} />;
+                  return <StarIcon key={i} fillLevel={starValue} className="w-4 h-4 lg:w-5 lg:h-5" />;
                 })}
               </div>
-              <span className="text-sm font-medium text-accent">
+              <span className="text-sm lg:text-lg font-medium text-accent">
                 {rating.toFixed(1)}
               </span>
             </div>
@@ -143,14 +125,14 @@ const BusinessCard: React.FC<BusinessCardProps> = ({ business }) => {
             target="_blank"
             rel="noopener noreferrer"
           >
-            <h3 className="text-lg font-semibold text-primary  line-clamp-2">
+            <h3 className="text-lg lg:text-2xl font-semibold text-primary  line-clamp-2">
               {BUSINESS_NAME}
             </h3>
           </Link>
 
           {/* Description */}
           {DESCRIPTION && (
-            <p className="mt-2 text-sm text-text-main line-clamp-2">
+            <p className="mt-2 text-sm lg:text-base text-text-main line-clamp-2">
               {DESCRIPTION}
             </p>
           )}
@@ -159,7 +141,7 @@ const BusinessCard: React.FC<BusinessCardProps> = ({ business }) => {
           {ADDRESS_TOWN &&
             (GOOGLE_PROFILE ? (
               <Link href={GOOGLE_PROFILE} target="_blank">
-                <p className="mt-6 flex items-center text-sm text-text-main  hover:text-accent transition">
+                <p className="mt-6 flex items-center text-sm lg:text-base text-text-main  hover:text-accent transition">
                   <MapPin size={14} className="mr-1.5 text-primary" />
                   <span className="line-clamp-1">{ADDRESS_TOWN}</span>
                 </p>
@@ -172,7 +154,7 @@ const BusinessCard: React.FC<BusinessCardProps> = ({ business }) => {
             ))}
 
           {/* Contact Info */}
-          <div className="mt-1 space-y-1 text-sm text-text-main">
+          <div className="mt-1 space-y-1 text-sm lg:text-base text-text-main">
             {PHONE_NUMBER && (
               <div className="flex items-center">
                 <Phone size={14} className="mr-2 text-primary" />
@@ -186,7 +168,7 @@ const BusinessCard: React.FC<BusinessCardProps> = ({ business }) => {
             )}
 
             {WEB_ADDRESS && (
-              <div className="flex items-center text-text-main">
+              <div className="flex items-center text-sm lg:text-base text-text-main">
                 <Globe size={14} className="mr-2 text-primary" />
                 <a
                   href={formatUrl(WEB_ADDRESS) || "#"}
@@ -219,7 +201,7 @@ const BusinessCard: React.FC<BusinessCardProps> = ({ business }) => {
             target="_blank"
             rel="noopener noreferrer"
             className={cn(
-              "text-sm font-medium flex items-center gap-1",
+              "text-sm lg:text-lg font-medium flex items-center gap-1",
               EMAIL_ADDRESS
                 ? "text-primary hover:underline"
                 : "text-text-muted cursor-not-allowed pointer-events-none"

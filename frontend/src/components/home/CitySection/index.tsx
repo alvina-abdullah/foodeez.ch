@@ -51,8 +51,6 @@ export default function CitySection() {
   const fetchBusinesses = useCallback(async () => {
     try {
       setLoading((prev) => ({ ...prev, businesses: true }));
-
-      console.log("Fetching businesses for:", selectedCity, searchZipCode);
   
       // Determine which parameter to use for search
       const params: { city?: string; zipCode?: string; limit?: number } = {
@@ -66,8 +64,6 @@ export default function CitySection() {
       }
 
       const data = await getBusinessesByLocation(params);
-
-      console.log(data);
   
       if (!data || data.length === 0) {
         throw new Error("No businesses found");

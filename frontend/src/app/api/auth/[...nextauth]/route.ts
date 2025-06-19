@@ -102,7 +102,7 @@ const authOptions: NextAuthOptions = {
     async session({ session, token }) {
       if (session.user) {
         session.user.id = token.sub!;
-        
+
         // Fetch the latest user data from the database
         const user = await prisma.visitors_account.findUnique({
           where: { EMAIL_ADDRESS: session.user.email! }
@@ -143,7 +143,6 @@ const authOptions: NextAuthOptions = {
     }
   },
   secret: process.env.NEXTAUTH_SECRET,
-  debug: process.env.NODE_ENV === 'development',
 };
 
 const handler = NextAuth(authOptions);

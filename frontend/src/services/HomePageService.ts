@@ -227,3 +227,97 @@ export async function getAdsLinkData() {
     return [];
   }
 }
+
+export async function getBusinessByFoodtypeCategoryLocation (params : {
+  foodType: string;
+  categoryId?: number;
+  city?: string;
+  zipCode?: string;
+  limit?: number;
+  skip?: number;
+}) {
+  const { foodType, categoryId, city, zipCode, limit = 12, skip = 0 } = params;
+  const normalizedType = foodType.toLowerCase();
+
+  try {
+    let whereClause: Prisma.business_detail_view_allWhereInput | undefined;
+
+    if (zipCode) {
+      const numericZip = Number(zipCode);
+      if (!isNaN(numericZip)) {
+        whereClause = { ADDRESS_ZIP: { equals: numericZip } };
+      }
+    } else if (city) {
+      whereClause = { CITY_NAME: { equals: city } };
+    }
+
+    if (categoryId !== undefined) {
+      const businessCategoryLinks = await prisma.business_2_business_category_view.findMany({
+        where: {
+          BUSINESS_CATEGORY_ID: categoryId,
+          STATUS: 1
+        },
+        select: {
+          BUSINESS_ID: true
+        }
+      });
+
+      const businessIdsInCategory = businessCategoryLinks
+        .map(link => Number(link.BUSINESS_ID))
+        .filter((id): id is number => !isNaN(id) && id !== null && id !== undefined);
+
+      if (businessIdsInCategory.length === 0) {
+        return { businesses: [], totalCount: 0 };
+      }
+
+      whereClause = {
+        ...whereClause,
+        BUSINESS_ID: { in: businessIdsInCategory }
+      };
+    }
+
+    let businesses: BusinessDetail[] = [];
+    let totalCount = 0;
+
+    const getData = async (model: any) => {
+      const [data, count] = await Promise.all([
+        model.findMany({
+          where: whereClause,
+          take: limit,
+          skip,
+          orderBy: { BUSINESS_NAME: 'asc' }
+        }),
+        model.count({
+          where: whereClause
+        })
+      ]);
+      return { data, count };
+    };
+
+    try {
+      if (normalizedType === 'halal') {
+        ({ data: businesses, count: totalCount } = await getData(prisma.business_detail_view_halal));
+      } else if (normalizedType === 'vegan') {
+        ({ data: businesses, count: totalCount } = await getData(prisma.business_detail_view_vegan));
+      } else if (normalizedType === 'vegetarian') {
+        ({ data: businesses, count: totalCount } = await getData(prisma.business_detail_view_vegetarian));
+      } else {
+        ({ data: businesses, count: totalCount } = await getData(prisma.business_detail_view_all));
+      }
+    } catch (dbError) {
+      console.error("dbError:", dbError);
+      ({ data: businesses, count: totalCount } = await getData(prisma.business_detail_view_all));
+    }
+
+    return {
+      businesses: businesses,
+      totalCount
+    };
+  } catch (error) {
+    console.error(`[ERROR] Error in getBusinessByFoodtypeCategoryLocation:`, error);
+    return {
+      businesses: [],
+      totalCount: 0
+    };
+  }
+}

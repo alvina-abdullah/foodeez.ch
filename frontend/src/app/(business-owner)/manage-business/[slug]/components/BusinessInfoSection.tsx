@@ -55,7 +55,6 @@ const BusinessInfoSection: React.FC<{ business: BusinessDetail }> = ({
         <SocialLinks
           facebook={business.FACEBOOK_LINK}
           instagram={business.INSTA_LINK}
-          tiktok={business.TIKTOK_LINK}
           whatsapp={business.WHATSAPP_NUMBER}
           size="xl"
           className="gap-2 [&>a]:text-primary"

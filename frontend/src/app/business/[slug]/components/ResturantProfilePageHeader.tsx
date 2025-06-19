@@ -1,4 +1,4 @@
-import Image from 'next/image';
+import FoodTypeBadges from '@/components/core/FoodTypeBadges';
 import React from 'react'
 
 interface ResturantProfilePageHeaderProps {
@@ -21,41 +21,11 @@ const ResturantProfilePageHeader = ({BUSINESS_NAME , CITY_NAME , HALAL,VEGAN, VE
               </>
             )}
           </h1>
-         <div className='flex items-center gap-2 mt-2 md:mt-0'>
-         {HALAL == 1 && (
-              <span className="inline-flex items-center gap-2 px-2 py-1 rounded-full text-xs md:text-lg  font-medium bg-green-100 text-green-800 border border-green-200">
-                <Image
-                src='/images/foodtypes/halal.png'
-                alt='halal'
-                width={30}
-                height={30}
-                />
-                Halal 
-              </span>
-            )}
-            {VEGAN == 1 && (
-              <span className="inline-flex items-center gap-2 px-2 py-1 rounded-full text-xs md:text-lg font-medium bg-emerald-100 text-emerald-800 border border-emerald-200">
-                 <Image
-                src='/images/foodtypes/vegan.png'
-                alt='vegan'
-                width={30}
-                height={30}
-                />
-                Vegan
-              </span>
-            )}
-            {VEGETARIAN == 1 && (
-              <span className="inline-flex items-center gap-2 px-2 py-1 rounded-full text-xs md:text-lg font-medium bg-teal-100 text-teal-800 border border-teal-200">
-                <Image
-                src='/images/foodtypes/vegetarian.png'
-                alt='halal'
-                width={30}
-                height={30}
-                />
-                Vegetarian
-              </span>
-            )}
-         </div>
+      <FoodTypeBadges 
+        HALAL={HALAL || 0}
+        VEGAN={VEGAN || 0}
+        VEGETARIAN={VEGETARIAN || 0}
+      />
         </div>
 
   )

@@ -1,15 +1,11 @@
 import Image from "next/image";
 import Link from "next/link";
-import { cn } from "@/lib/utils/cn"; // optional utility for class merging
+import { cn } from "@/lib/utils/cn";
 
 interface SocialLinksProps {
   facebook?: string | null;
   instagram?: string | null;
   whatsapp?: string | null;
-  twitter?: string | null;
-  linkedin?: string | null;
-  youtube?: string | null;
-  tiktok?: string | null;
   size?: "sm" | "md" | "lg" | "xl" | "2xl";
   variant?: "default" | "circle" | "filled";
   className?: string;
@@ -27,10 +23,6 @@ export function SocialLinks({
   facebook,
   instagram,
   whatsapp,
-  twitter,
-  linkedin,
-  youtube,
-  tiktok,
   size = "md",
   variant = "default",
   className = "",
@@ -38,13 +30,22 @@ export function SocialLinks({
   const sizePx = ICON_SIZE[size];
 
   const platforms = [
-    { name: "facebook", url: facebook },
-    { name: "instagram", url: instagram },
-    { name: "whatsapp", url: whatsapp?.startsWith("http") ? whatsapp : `https://wa.me/${whatsapp?.replace(/\D/g, "")}` },
-    { name: "twitter", url: twitter },
-    { name: "linkedin", url: linkedin },
-    { name: "youtube", url: youtube },
-    { name: "tiktok", url: tiktok },
+    {
+      name: "facebook",
+      url: facebook,
+    },
+    {
+      name: "instagram",
+      url: instagram,
+    },
+    {
+      name: "whatsapp",
+      url: whatsapp
+        ? whatsapp.startsWith("http")
+          ? whatsapp
+          : `https://wa.me/${whatsapp.replace(/\D/g, "")}`
+        : null,
+    },
   ];
 
   const baseWrapperStyle = {
@@ -55,27 +56,41 @@ export function SocialLinks({
 
   return (
     <div className={cn("flex flex-wrap items-center gap-4", className)}>
-      {platforms.map(
-        ({ name, url }) =>
-          url && (
-            <Link
-              key={name}
-              href={url}
-              target="_blank"
-              rel="noopener noreferrer"
-              className={cn("group transition-all duration-200", baseWrapperStyle[variant])}
-              aria-label={name}
-            >
-              <Image
-                src={`/svgs/${name}.svg`}
-                alt={`${name} icon`}
-                width={sizePx}
-                height={sizePx}
-                className="object-contain"
-              />
-            </Link>
-          )
-      )}
+      {platforms.map(({ name, url }) => {
+        const icon = (
+          <Image
+            src={`/svgs/${name}.svg`}
+            alt={`${name} icon`}
+            width={sizePx}
+            height={sizePx}
+            className={cn(
+              "object-contain transition-all duration-200",
+              !url && "grayscale opacity-50"
+            )}
+          />
+        );
+
+        return url ? (
+          <Link
+            key={name}
+            href={url}
+            target="_blank"
+            rel="noopener noreferrer"
+            className={cn("group", baseWrapperStyle[variant])}
+            aria-label={name}
+          >
+            {icon}
+          </Link>
+        ) : (
+          <span
+            key={name}
+            aria-label={`${name} (not available)`}
+            className={cn(baseWrapperStyle[variant])}
+          >
+            {icon}
+          </span>
+        );
+      })}
     </div>
   );
 }
