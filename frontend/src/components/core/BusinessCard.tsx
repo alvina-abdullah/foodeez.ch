@@ -3,12 +3,7 @@
 import React from "react";
 import Link from "next/link";
 import Image from "next/image";
-import {
-  MapPin,
-  Calendar,
-  Globe,
-  Phone,
-} from "lucide-react";
+import { MapPin, Calendar, Globe, Phone } from "lucide-react";
 import { generateSlug } from "@/lib/utils/genSlug";
 import { BusinessDetail } from "@/types/business.types";
 import { SocialLinks } from "@/components/core/SocialLinks";
@@ -109,7 +104,13 @@ const BusinessCard: React.FC<BusinessCardProps> = ({ business }) => {
               <div className="flex items-center gap-0.5">
                 {[...Array(5)].map((_, i) => {
                   const starValue = Math.min(1, Math.max(0, rating - i));
-                  return <StarIcon key={i} fillLevel={starValue} className="w-4 h-4 lg:w-5 lg:h-5" />;
+                  return (
+                    <StarIcon
+                      key={i}
+                      fillLevel={starValue}
+                      className="w-4 h-4 lg:w-5 lg:h-5"
+                    />
+                  );
                 })}
               </div>
               <span className="text-sm lg:text-lg font-medium text-accent">
@@ -201,13 +202,13 @@ const BusinessCard: React.FC<BusinessCardProps> = ({ business }) => {
             target="_blank"
             rel="noopener noreferrer"
             className={cn(
-              "text-sm lg:text-lg font-medium flex items-center gap-1",
+              "text-sm lg:text-lg px-4 py-2 rounded-full font-medium flex items-center gap-2 border-2 transition-colors duration-300 ease-in-out",
               EMAIL_ADDRESS
-                ? "text-primary hover:underline"
-                : "text-text-muted cursor-not-allowed pointer-events-none"
+                ? "border-primary text-primary hover:bg-primary hover:text-white hover:border-primary"
+                : "border-gray-300 text-gray-400 cursor-not-allowed pointer-events-none opacity-60"
             )}
           >
-            <Calendar size={14} />
+            <Calendar size={16} className="shrink-0" />
             Reserve Table
           </Link>
         </div>

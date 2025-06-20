@@ -57,6 +57,7 @@ export const Navbar = () => {
             height={144}
             width={144}
             className="md:w-36 md:h-36 p-4 md:p-0"
+            priority
           />
         </Link>
 

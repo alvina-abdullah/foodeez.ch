@@ -8,9 +8,11 @@ import HeroSection from "@/components/home/HeroSection";
 import FeaturedBusiness from "@/components/home/FeaturedBusiness";
 import QuickSearch from "@/components/home/QuickSearch";
 import CitySection from "@/components/home/CitySection/index";
-import ScrollingBusinessBar from "@/components/home/ScrollingBusinessBar";
+// import ScrollingBusinessBar from "@/components/home/ScrollingBusinessBar";
 import MapSection from "@/components/home/MapSection";
 import GoogleMapsProvider from "@/components/providers/GoogleMapsProvider";
+import AdsBar1 from "@/components/home/AdsBar1";
+import AdsBar2 from "@/components/home/AdsBar2";
 // import BenefitsSection from "@/components/home/BenefitsSection";
 // import AboutSection from "@/components/home/AboutSection";
 // import TestimonialsSection from "@/components/home/TestimonialsSection";
@@ -19,10 +21,15 @@ export default function Home() {
   return (
     <div className="">
       {/* Hero Section with Search */}
+      <AdsBar1 />
+
       <HeroSection />
 
+      <AdsBar2 />
+
       {/* Scrolling Business Bar */}
-      <ScrollingBusinessBar />
+    
+      {/* <ScrollingBusinessBar /> */}
 
       {/* Featured Business Grid */}
       <FeaturedBusiness />

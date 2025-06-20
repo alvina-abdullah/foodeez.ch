@@ -23,13 +23,12 @@ const faqs: FaqItem[] = [
   },
   {
     question: "Why should I register my business on Foodeez?",
-    answer:
-      `<ul class='list-disc pl-5 space-y-1'>
+    answer: `<ul class='list-disc pl-5 space-y-1'>
         <li>Get discovered on our map and food app</li>
         <li>Reach tourists in your area</li>
         <li>Improve your online visibility (Google, Instagram, etc.)</li>
         <li>Access free and premium marketing services</li>
-      </ul>`
+      </ul>`,
   },
   {
     question: "Do I need to be on Google or Instagram to join?",
@@ -37,13 +36,13 @@ const faqs: FaqItem[] = [
       "No — in fact, Foodeez helps you get there! If you're not yet visible online, our Premium plan includes setup for Google My Business and social media accounts, at no extra cost during your first year.",
   },
   {
-    question: "Can Foodeez help set up Google Maps and Instagram for my restaurant?",
-    answer:
-      `<ul class='list-disc pl-5 space-y-1'>
+    question:
+      "Can Foodeez help set up Google Maps and Instagram for my restaurant?",
+    answer: `<ul class='list-disc pl-5 space-y-1'>
         <li>Google My Business creation or optimization</li>
         <li>Instagram and Facebook setup or refresh</li>
         <li>Help creating your first social media posts or reels</li>
-      </ul>`
+      </ul>`,
   },
 ];
 
@@ -58,9 +57,12 @@ export default function FaqSection() {
     <section className="py-16 px-2 md:px-0">
       <div className="">
         <div className="text-center mb-14">
-          <h2 className="text-4xl md:text-5xl font-extrabold text-primary mb-4">Frequently Asked Questions</h2>
+          <h2 className="text-4xl md:text-5xl font-extrabold text-primary mb-4">
+            Frequently Asked Questions
+          </h2>
           <p className="text-lg md:text-xl text-accent-dark max-w-2xl mx-auto">
-            Everything you need to know about using Foodeez as a business or food lover.
+            Everything you need to know about using Foodeez as a business or
+            food lover.
           </p>
         </div>
 
@@ -105,16 +107,19 @@ export default function FaqSection() {
           ))}
         </div>
 
-        <div className="mt-16 text-center space-y-4">
-          <Link href="/faq">
-            <button className="px-8 py-3 rounded-full bg-gray-100 hover:bg-gray-200 text-lg md:text-xl font-semibold text-gray-700 transition-colors shadow-md">
-              Have more questions?
+        <div className="mt-16 flex flex-col items-center text-center space-y-4">
+          {/* FAQ Button */}
+          <Link href="/faq" aria-label="View all frequently asked questions">
+            <button className="inline-flex items-center gap-2 px-8 py-3 rounded-full bg-gray-100 hover:bg-gray-200 text-lg md:text-xl font-semibold text-gray-700 transition-all duration-200 shadow-md">
+              <span>View All FAQs</span>
+              <ArrowRight size={24} />
             </button>
           </Link>
 
-          <Link href="/contact">
-            <button className="inline-flex items-center gap-2 px-8 py-3 rounded-full bg-primary text-white hover:bg-primary-700 transition-colors text-lg md:text-xl font-semibold shadow-md">
-              <span>Contact Us</span>
+          {/* Contact Us Button */}
+          <Link href="/contact" aria-label="Contact our support team">
+            <button className="inline-flex items-center gap-2 px-8 py-3 rounded-full bg-primary text-white hover:bg-primary/90 transition-all duration-200 text-lg md:text-xl font-semibold shadow-md">
+              <span>Still have questions? Contact Us</span>
               <ArrowRight size={24} />
             </button>
           </Link>

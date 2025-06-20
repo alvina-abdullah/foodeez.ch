@@ -12,7 +12,6 @@ interface ZipCodeSearchProps {
   onSearchSubmit: (zip: string) => void;
 }
 
-// Add type declaration for Google Maps
 declare global {
   interface Window {
     google?: {
@@ -24,7 +23,7 @@ declare global {
           ) => google.maps.places.Autocomplete;
         };
       };
-    };
+    }
   }
 }
 
@@ -39,7 +38,6 @@ export default function ZipCodeSearch({
   const autocompleteRef = useRef<google.maps.places.Autocomplete | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
-  // Check for Google Maps API loading
   useEffect(() => {
     if (window.google?.maps?.places) {
       setIsGoogleMapsLoaded(true);
@@ -56,7 +54,6 @@ export default function ZipCodeSearch({
     return () => clearInterval(checkInterval);
   }, []);
 
-  // Initialize Google Places Autocomplete
   useEffect(() => {
     if (!isGoogleMapsLoaded || !inputRef.current) return;
 
@@ -72,12 +69,10 @@ export default function ZipCodeSearch({
 
       autocompleteRef.current.addListener("place_changed", () => {
         const place = autocompleteRef.current?.getPlace();
-
         if (place?.address_components) {
-          const postalCodeComponent = place.address_components.find(
-            (component) => component.types.includes("postal_code")
+          const postalCodeComponent = place.address_components.find((comp) =>
+            comp.types.includes("postal_code")
           );
-
           if (postalCodeComponent) {
             const zipOnly = postalCodeComponent.long_name.trim();
             setZipCode(zipOnly);
@@ -87,7 +82,7 @@ export default function ZipCodeSearch({
         }
       });
     } catch (error) {
-      console.error("Error initializing Google Places Autocomplete:", error);
+      console.error("Google Places Autocomplete error:", error);
     }
   }, [isGoogleMapsLoaded, setZipCode, setSearchZipCode, onSearchSubmit]);
 
@@ -96,8 +91,7 @@ export default function ZipCodeSearch({
     const raw = inputRef.current?.value.trim();
     if (!raw) return;
 
-    // Extract 4-digit Swiss ZIP only from input like "8050 Zürich"
-    const zipOnly = raw.match(/\b\d{4}\b/)?.[0]; // Matches "8050"
+    const zipOnly = raw.match(/\b\d{4}\b/)?.[0];
     if (zipOnly) {
       setZipCode(zipOnly);
       setSearchZipCode(zipOnly);
@@ -108,67 +102,62 @@ export default function ZipCodeSearch({
   const handleClear = () => {
     setZipCode("");
     setSearchZipCode("");
-    if (inputRef.current) {
-      inputRef.current.focus();
-    }
+    inputRef.current?.focus();
   };
 
   return (
-    <>
-      <GoogleMapsProvider>
-        <div className="max-w-md mx-auto mb-10">
-          <motion.form
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-            onSubmit={handleSubmit}
-            className="flex items-center"
-          >
-            <div className="relative w-full">
-              <div
-                className={`relative ${isFocused ? "ring-2 ring-primary/20" : ""}`}
+    <GoogleMapsProvider>
+      <motion.form
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+        onSubmit={handleSubmit}
+        className="mx-auto mb-10 w-full max-w-xl px-4 sm:px-6"
+      >
+        <div className="flex flex-col sm:flex-row items-stretch w-full">
+          {/* Input Field */}
+          <div className="relative w-full sm:rounded-l-lg sm:border-r-0 border border-gray-300 rounded-lg sm:rounded-none">
+            <MapPin
+              size={18}
+              className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
+            />
+            <input
+              ref={inputRef}
+              type="text"
+              value={zipCode}
+              onChange={(e) => setZipCode(e.target.value)}
+              onFocus={() => setIsFocused(true)}
+              onBlur={() => setIsFocused(false)}
+              placeholder="Search by postal code..."
+              aria-label="Search by postal code"
+              className={`w-full py-3 pl-10 pr-10 text-base placeholder:text-gray-400 transition rounded-lg sm:rounded-none sm:rounded-l-lg focus:outline-none focus:ring-2 focus:ring-primary/30 ${
+                isFocused ? "ring-2 ring-primary/20" : ""
+              }`}
+            />
+            {zipCode && (
+              <motion.button
+                type="button"
+                onClick={handleClear}
+                whileTap={{ scale: 0.9 }}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-primary"
+                aria-label="Clear search"
               >
-                <MapPin
-                  size={18}
-                  className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
-                />
-                <input
-                  ref={inputRef}
-                  type="text"
-                  value={zipCode}
-                  onChange={(e) => {
-                    setZipCode(e.target.value);
-                  }}
-                  onFocus={() => setIsFocused(true)}
-                  onBlur={() => setIsFocused(false)}
-                  placeholder="Search by postal code..."
-                  className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-tl-lg rounded-bl-lg bg-white focus:border-primary focus:outline-none text-base placeholder:text-gray-400 transition shadow-sm"
-                  aria-label="Search by postal code"
-                />
-                {zipCode && (
-                  <motion.button
-                    type="button"
-                    onClick={handleClear}
-                    whileTap={{ scale: 0.9 }}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-primary"
-                    aria-label="Clear search"
-                  >
-                    <X size={18} />
-                  </motion.button>
-                )}
-              </div>
-            </div>
-            <motion.button
-              type="submit"
-              whileTap={{ scale: 0.97 }}
-              className="px-8 py-4 lg:px-6 lg:py-3 bg-primary text-white rounded-tr-lg rounded-br-lg hover:bg-primary/90 transition-colors shadow-sm flex items-center gap-2"
-            >
-              <Search size={18} />
-              <span className="hidden sm:inline">Search</span>
-            </motion.button>
-          </motion.form>
+                <X size={18} />
+              </motion.button>
+            )}
+          </div>
+
+          {/* Submit Button */}
+          <motion.button
+            type="submit"
+            whileTap={{ scale: 0.97 }}
+            className="mt-3 sm:mt-0 sm:ml-2 px-5 py-3 sm:px-6 sm:py-3 bg-primary text-white rounded-lg sm:rounded-r-lg sm:rounded-l-none hover:bg-primary/90 transition-colors flex items-center justify-center gap-2"
+          >
+            <Search size={18} />
+            <span className="hidden sm:inline">Search</span>
+          </motion.button>
         </div>
-      </GoogleMapsProvider>
-    </>
+      </motion.form>
+    </GoogleMapsProvider>
   );
 }
