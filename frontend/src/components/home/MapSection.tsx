@@ -1,7 +1,7 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { GoogleMap, LoadScript, Marker } from "@react-google-maps/api";
+import { useEffect, useState, useRef } from "react";
+import { GoogleMap } from "@react-google-maps/api";
 
 const containerStyle = {
   width: "100%",
@@ -10,14 +10,14 @@ const containerStyle = {
 
 const defaultZoom = 14;
 
-const libraries: ("places" | "geometry" | "drawing" | "visualization")[] = ["places"];
-
 export default function MapSection() {
   const [hasPermission, setHasPermission] = useState<boolean | null>(null);
   const [userLocation, setUserLocation] = useState<{
     lat: number;
     lng: number;
   } | null>(null);
+  const mapRef = useRef<google.maps.Map | null>(null);
+  const markerRef = useRef<any>(null);
 
   const requestLocation = () => {
     if (!navigator.geolocation) {
@@ -44,6 +44,34 @@ export default function MapSection() {
     requestLocation();
   }, []);
 
+  // Add AdvancedMarkerElement when map and userLocation are ready
+  const handleMapLoad = (map: google.maps.Map) => {
+    mapRef.current = map;
+    if (userLocation && window.google?.maps?.marker?.AdvancedMarkerElement) {
+      if (markerRef.current) {
+        markerRef.current.setMap(null);
+      }
+      markerRef.current = new window.google.maps.marker.AdvancedMarkerElement({
+        map,
+        position: userLocation,
+        title: "You are here!",
+      });
+    }
+  };
+
+  useEffect(() => {
+    if (mapRef.current && userLocation && window.google?.maps?.marker?.AdvancedMarkerElement) {
+      if (markerRef.current) {
+        markerRef.current.setMap(null);
+      }
+      markerRef.current = new window.google.maps.marker.AdvancedMarkerElement({
+        map: mapRef.current,
+        position: userLocation,
+        title: "You are here!",
+      });
+    }
+  }, [userLocation]);
+
   return (
     <div className="relative w-full h-[600px] mt-10 rounded-xl overflow-hidden shadow-md">
       {hasPermission === null && (
@@ -53,25 +81,17 @@ export default function MapSection() {
       )}
 
       {hasPermission === true && userLocation && (
-        <>
-          <LoadScript
-            googleMapsApiKey={process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY!}
-            libraries={libraries}
-          >
-            <GoogleMap
-              mapContainerStyle={containerStyle}
-              center={userLocation}
-              zoom={defaultZoom}
-              options={{
-                mapTypeControl: true,
-                streetViewControl: true,
-                fullscreenControl: true,
-              }}
-            >
-              <Marker position={userLocation} title="You are here!" />
-            </GoogleMap>
-          </LoadScript>
-        </>
+        <GoogleMap
+          mapContainerStyle={containerStyle}
+          center={userLocation}
+          zoom={defaultZoom}
+          options={{
+            mapTypeControl: true,
+            streetViewControl: true,
+            fullscreenControl: true,
+          }}
+          onLoad={handleMapLoad}
+        />
       )}
 
       {hasPermission === false && (

@@ -2,8 +2,8 @@
 
 import { useState, useEffect, useRef } from "react";
 import { MapPin, Search, X } from "lucide-react";
-import Script from "next/script";
 import { motion } from "framer-motion";
+import GoogleMapsProvider from "@/components/providers/GoogleMapsProvider";
 
 interface ZipCodeSearchProps {
   zipCode: string;
@@ -61,11 +61,14 @@ export default function ZipCodeSearch({
     if (!isGoogleMapsLoaded || !inputRef.current) return;
 
     try {
-      autocompleteRef.current = new google.maps.places.Autocomplete(inputRef.current, {
-        types: ["(regions)"],
-        componentRestrictions: { country: "ch" },
-        fields: ["address_components", "formatted_address"],
-      });
+      autocompleteRef.current = new google.maps.places.Autocomplete(
+        inputRef.current,
+        {
+          types: ["(regions)"],
+          componentRestrictions: { country: "ch" },
+          fields: ["address_components", "formatted_address"],
+        }
+      );
 
       autocompleteRef.current.addListener("place_changed", () => {
         const place = autocompleteRef.current?.getPlace();
@@ -87,13 +90,12 @@ export default function ZipCodeSearch({
       console.error("Error initializing Google Places Autocomplete:", error);
     }
   }, [isGoogleMapsLoaded, setZipCode, setSearchZipCode, onSearchSubmit]);
-  
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     const raw = inputRef.current?.value.trim();
     if (!raw) return;
-  
+
     // Extract 4-digit Swiss ZIP only from input like "8050 Zürich"
     const zipOnly = raw.match(/\b\d{4}\b/)?.[0]; // Matches "8050"
     if (zipOnly) {
@@ -102,8 +104,6 @@ export default function ZipCodeSearch({
       onSearchSubmit(zipOnly);
     }
   };
-  
-  
 
   const handleClear = () => {
     setZipCode("");
@@ -115,61 +115,60 @@ export default function ZipCodeSearch({
 
   return (
     <>
-      <Script
-        src={`https://maps.googleapis.com/maps/api/js?key=${process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}&libraries=places`}
-        strategy="lazyOnload"
-      />
-      
-      <div className="max-w-md mx-auto mb-10">
-        <motion.form
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-          onSubmit={handleSubmit}
-          className="flex items-center"
-        >
-          <div className="relative w-full">
-            <div className={`relative ${isFocused ? "ring-2 ring-primary/20" : ""}`}>
-              <MapPin
-                size={18}
-                className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
-              />
-              <input
-                ref={inputRef}
-                type="text"
-                value={zipCode}
-                onChange={(e) => {
-                  setZipCode(e.target.value);
-                }}
-                onFocus={() => setIsFocused(true)}
-                onBlur={() => setIsFocused(false)}
-                placeholder="Search by postal code..."
-                className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-tl-lg rounded-bl-lg bg-white focus:border-primary focus:outline-none text-base placeholder:text-gray-400 transition shadow-sm"
-                aria-label="Search by postal code"
-              />
-              {zipCode && (
-                <motion.button
-                  type="button"
-                  onClick={handleClear}
-                  whileTap={{ scale: 0.9 }}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-primary"
-                  aria-label="Clear search"
-                >
-                  <X size={18} />
-                </motion.button>
-              )}
-            </div>
-          </div>
-          <motion.button
-            type="submit"
-            whileTap={{ scale: 0.97 }}
-            className="px-6 py-3 bg-primary text-white rounded-tr-lg rounded-br-lg hover:bg-primary/90 transition-colors shadow-sm flex items-center gap-2"
+      <GoogleMapsProvider>
+        <div className="max-w-md mx-auto mb-10">
+          <motion.form
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+            onSubmit={handleSubmit}
+            className="flex items-center"
           >
-            <Search size={18} />
-            <span className="hidden sm:inline">Search</span>
-          </motion.button>
-        </motion.form>
-      </div>
+            <div className="relative w-full">
+              <div
+                className={`relative ${isFocused ? "ring-2 ring-primary/20" : ""}`}
+              >
+                <MapPin
+                  size={18}
+                  className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
+                />
+                <input
+                  ref={inputRef}
+                  type="text"
+                  value={zipCode}
+                  onChange={(e) => {
+                    setZipCode(e.target.value);
+                  }}
+                  onFocus={() => setIsFocused(true)}
+                  onBlur={() => setIsFocused(false)}
+                  placeholder="Search by postal code..."
+                  className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-tl-lg rounded-bl-lg bg-white focus:border-primary focus:outline-none text-base placeholder:text-gray-400 transition shadow-sm"
+                  aria-label="Search by postal code"
+                />
+                {zipCode && (
+                  <motion.button
+                    type="button"
+                    onClick={handleClear}
+                    whileTap={{ scale: 0.9 }}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-primary"
+                    aria-label="Clear search"
+                  >
+                    <X size={18} />
+                  </motion.button>
+                )}
+              </div>
+            </div>
+            <motion.button
+              type="submit"
+              whileTap={{ scale: 0.97 }}
+              className="px-8 py-4 lg:px-6 lg:py-3 bg-primary text-white rounded-tr-lg rounded-br-lg hover:bg-primary/90 transition-colors shadow-sm flex items-center gap-2"
+            >
+              <Search size={18} />
+              <span className="hidden sm:inline">Search</span>
+            </motion.button>
+          </motion.form>
+        </div>
+      </GoogleMapsProvider>
     </>
   );
 }

@@ -9,7 +9,8 @@ import FeaturedBusiness from "@/components/home/FeaturedBusiness";
 import QuickSearch from "@/components/home/QuickSearch";
 import CitySection from "@/components/home/CitySection/index";
 import ScrollingBusinessBar from "@/components/home/ScrollingBusinessBar";
-// import MapSection from "@/components/home/MapSection";
+import MapSection from "@/components/home/MapSection";
+import GoogleMapsProvider from "@/components/providers/GoogleMapsProvider";
 // import BenefitsSection from "@/components/home/BenefitsSection";
 // import AboutSection from "@/components/home/AboutSection";
 // import TestimonialsSection from "@/components/home/TestimonialsSection";
@@ -54,8 +55,9 @@ export default function Home() {
 
 
       {/* Map  Section */}
-      {/* <MapSection /> */}
-
+      <GoogleMapsProvider>
+        <MapSection />
+      </GoogleMapsProvider>
 
     </div>
   );
