@@ -20,7 +20,7 @@ const AdsBar1: React.FC = () => {
   return (
     <div
       ref={containerRef}
-      className="w-full px-2 sm:px-4 mx-auto no-scrollbar"
+      className="w-full no-scrollbar"
       aria-label="Scrolling list of featured businesses"
     >
       <div
@@ -44,12 +44,12 @@ const AdsBar1: React.FC = () => {
             title={biz.BUSINESS_NAME || ""}
             className="flex flex-col items-center justify-start transition-transform duration-300 hover:scale-105 p-4"
           >
-            <div className=" border border-primary relative w-[clamp(100px,20vw,160px)] h-[clamp(100px,20vw,160px)] rounded-xl bg-white shadow-md hover:shadow-lg  flex items-center justify-center">
+            <div className="relative w-[clamp(100px,20vw,160px)] h-[clamp(100px,20vw,160px)] rounded-xl bg-white shadow-md hover:shadow-lg  flex items-center justify-center">
               <Image
                 src={biz.LOGO_FILE || "/placeholder.png"}
                 alt={biz.BUSINESS_NAME || "Business"}
                 fill
-                className="object-contain "
+                className="object-contain border shadow-lg"
                 sizes="(max-width: 768px) 96px, 144px p-4"
               />
             </div>

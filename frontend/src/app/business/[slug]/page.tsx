@@ -19,7 +19,6 @@ import BusinessInfoSection from "./components/BusinessInfoSection";
 import BusinessProfilePageLoadingSkeleton from "./components/BusinessProfilePageLoadingSkeleton";
 import { BusinessDetail } from "@/types/business.types";
 import ResturantProfilePageHeader from "./components/ResturantProfilePageHeader";
-import ResturantProfilePageSeperator from "./components/ResturantProfilePageSeperator";
 
 const BusinessDetailPage = () => {
   const [business, setBusiness] = useState<BusinessDetail | null>(null);
@@ -122,7 +121,7 @@ const BusinessDetailPage = () => {
         <link rel="canonical" href={url} />
       </head>
 
-      <div className="py-4">
+      <div className="">
         <ResturantProfilePageHeader
           BUSINESS_NAME={business.BUSINESS_NAME || ""}
           CITY_NAME={business.CITY_NAME || ""}
@@ -167,16 +166,10 @@ const BusinessDetailPage = () => {
             }}
           /> */}
 
-          <ResturantProfilePageSeperator
-            text={`${business.BUSINESS_NAME} Reviews`}
-          />
-
           {/* Reviews */}
           <div className="">
             <GoogleReviews reviews={googleBusinessData?.reviews || []} />
           </div>
-
-          <ResturantProfilePageSeperator text={`Location`} />
 
           {/* Google Map */}
           <MapCard placeId={placeId} />

@@ -246,7 +246,7 @@ export default function FeaturedBusiness() {
   // const visibleBusinesses = businesses.slice(0, perPage * currentBatch);
 
   return (
-    <section className="py-12">
+    <section className="py-20">
       <div className="text-center mb-10">
         <h2 className="main-heading">Foodeez's Top Selection</h2>
         <p className="main-heading-description">

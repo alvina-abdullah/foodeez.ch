@@ -21,7 +21,7 @@ export default function CategoryFilter({
   isPending: boolean;
 }) {
   return (
-    <div className="hidden border border-accent mb-8 bg-secondary-light rounded-lg text-accent-dark">
+    <div className=" border border-accent mb-8 bg-secondary-light rounded-lg text-accent-dark">
       <div className="grid grid-cols-2 lg:flex gap-y-2 relative">
         {visibleCategories.map((category) => {
           const isSelected = selectedCategory === category;

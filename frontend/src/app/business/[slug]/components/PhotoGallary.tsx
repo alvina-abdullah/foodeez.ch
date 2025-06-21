@@ -24,17 +24,12 @@ export default function GooglePhotoGallery({
   }
 
   return (
-    <div className="py-8 ">
+    <div className="py-8 px-4 lg:px-0">
       <div className="flex items-center sub-heading !mb-10">
-        <h2 className="flex items-center">
-          Photo Gallery{" "}
-          {businessName && (
-            <>
-              of&nbsp;<span className="text-secondary">{businessName}</span>
-            </>
-          )}
+        <h2 className="">
+          Photo Gallery
         </h2>
-        <Camera className="ml-2" size={48} />
+        <Camera className="ml-2 w-5 h-5 lg:w-10 lg:h-10" size={48} />
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">

@@ -14,7 +14,7 @@ const BusinessInfoSection: React.FC<{ business: BusinessDetail }> = ({
   );
 
   return (
-    <div className="space-y-6 my-10">
+    <div className="py-8 px-4 lg:px-0 space-y-8 lg:space-y-4">
       {/* Description Section */}
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
         <h2 className="sub-heading">Description</h2>

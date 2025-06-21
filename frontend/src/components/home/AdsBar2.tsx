@@ -20,7 +20,7 @@ const AdsBar2: React.FC = () => {
   return (
     <div
       ref={containerRef}
-      className="w-full py-6 px-2 sm:px-4 mx-auto no-scrollbar"
+      className="w-full no-scrollbar"
       aria-label="Scrolling list of featured businesses"
     >
       <div
@@ -42,18 +42,18 @@ const AdsBar2: React.FC = () => {
             target="_blank"
             rel="noopener noreferrer"
             title={biz.BUSINESS_NAME || ""}
-            className="flex flex-col items-center justify-start transition-transform duration-300 hover:scale-105 "
+            className="flex flex-col items-center justify-start transition-transform duration-300 hover:scale-105 p-4"
           >
-            <div className="relative w-[clamp(100px,20vw,160px)] h-[clamp(100px,20vw,160px)] rounded-xl bg-white shadow-md hover:shadow-lg p-2 flex items-center justify-center">
+            <div className="relative w-[clamp(100px,20vw,160px)] h-[clamp(100px,20vw,160px)] rounded-xl bg-white shadow-md hover:shadow-lg  flex items-center justify-center">
               <Image
                 src={biz.LOGO_FILE || "/placeholder.png"}
                 alt={biz.BUSINESS_NAME || "Business"}
                 fill
-                className="object-contain"
-                sizes="(max-width: 768px) 96px, 144px"
+                className="object-contain border shadow-lg"
+                sizes="(max-width: 768px) 96px, 144px p-4"
               />
             </div>
-            <span className="text-xs sm:text-sm mt-2 text-center text-text-main font-medium max-w-[140px] truncate sm:line-clamp-2">
+            <span className="text-xs sm:text-sm mt-4 text-center text-text-main font-medium max-w-[140px] truncate sm:line-clamp-2">
               {biz.BUSINESS_NAME}
             </span>
           </a>

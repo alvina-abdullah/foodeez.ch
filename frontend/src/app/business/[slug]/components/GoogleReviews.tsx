@@ -47,7 +47,8 @@ export default function GoogleReviews({ reviews }: GoogleReviewsProps) {
   }
 
   return (
-    <div className="relative w-full mb-8">
+    <div className="relative w-full py-8 px-4 lg:px-0">
+      <h2 className="sub-heading">Google Reviews</h2>
       <div className="relative group">
         {/* Left button */}
         {showLeftButton && (
@@ -64,7 +65,7 @@ export default function GoogleReviews({ reviews }: GoogleReviewsProps) {
         <div
         id="no-scrollbar"
           ref={scrollRef}
-          className="flex overflow-x-auto scroll-smooth px-6 space-x-4 py-2 scrollbar-hide"
+          className="flex overflow-x-auto scroll-smooth space-x-4 py-2 scrollbar-hide"
           onScroll={checkScrollPosition}
         >
           {reviews.map((review, idx) => (
@@ -73,7 +74,7 @@ export default function GoogleReviews({ reviews }: GoogleReviewsProps) {
               whileHover={{ scale: 1.02 }}
               className="flex-shrink-0"
             >
-              <Card className="w-[350px] h-[340px] rounded-2xl border border-gray-200 bg-white p-5 shadow-md hover:shadow-lg transition-all flex flex-col">
+              <Card className="w-[350px] h-[340px] rounded-2xl border-2 border-gray-200 bg-white p-5 shadow-md hover:shadow-lg transition-all flex flex-col">
                 {/* Top: Avatar + Name */}
                 <div className="flex items-center gap-4 mb-3">
                   {review.profile_photo_url ? (

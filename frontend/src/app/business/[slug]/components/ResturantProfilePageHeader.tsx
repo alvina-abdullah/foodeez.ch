@@ -11,8 +11,8 @@ interface ResturantProfilePageHeaderProps {
 
 const ResturantProfilePageHeader = ({BUSINESS_NAME , CITY_NAME , HALAL,VEGAN, VEGETARIAN} : ResturantProfilePageHeaderProps) => {
   return (
-    <div className="flex flex-col md:flex-row md:items-center md:justify-between">
-          <h1 className="sub-heading">
+    <div className="py-8 px-4 lg:pb-0 lg:px-0 flex flex-col md:flex-row md:items-center md:justify-between">
+          <h1 className="main-heading">
             {BUSINESS_NAME}
             {CITY_NAME && (
               <>
@@ -26,7 +26,7 @@ const ResturantProfilePageHeader = ({BUSINESS_NAME , CITY_NAME , HALAL,VEGAN, VE
         VEGAN={VEGAN || 0}
         VEGETARIAN={VEGETARIAN || 0}
       />
-        </div>
+   </div>
 
   )
 }

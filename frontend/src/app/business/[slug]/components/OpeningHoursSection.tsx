@@ -15,7 +15,7 @@ const OpeningHours: React.FC<OpeningHoursProps> = ({
   const currentDay = format(new Date(), "EEEE"); // Get current day as full name
 
   return (
-    <div className="py-8">
+    <div className="py-8 px-4 lg:px-0">
       <div className="">
         {/* Title Section */}
         <div className="flex items-center justify-between mb-4">
