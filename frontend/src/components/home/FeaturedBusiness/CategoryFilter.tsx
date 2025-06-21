@@ -2,6 +2,7 @@
 
 import { cn } from "@/lib/utils/cn";
 import { AnimatePresence, motion } from "framer-motion";
+import { BusinessCategory } from "@/types/business.types";
 
 export default function CategoryFilter({
   visibleCategories,
@@ -12,8 +13,8 @@ export default function CategoryFilter({
   setIsDropdownOpen,
   isPending,
 }: {
-  visibleCategories: string[];
-  hiddenCategories: string[];
+  visibleCategories: BusinessCategory[];
+  hiddenCategories: BusinessCategory[];
   selectedCategory: string;
   onSelect: (cat: string) => void;
   isDropdownOpen: boolean;
@@ -24,11 +25,12 @@ export default function CategoryFilter({
     <div className=" border border-accent mb-8 bg-secondary-light rounded-lg text-accent-dark">
       <div className="grid grid-cols-2 lg:flex gap-y-2 relative">
         {visibleCategories.map((category) => {
-          const isSelected = selectedCategory === category;
+          const isSelected = selectedCategory === category.CATEGORY;
+          const displayName = category.CATEGORY ? `${category.CATEGORY} (${category.CNT || 0})` : '';
           return (
             <button
-              key={category}
-              onClick={() => onSelect(category)}
+              key={category.BUSINESS_CATEGORY_ID}
+              onClick={() => onSelect(category.CATEGORY || '')}
               className={cn(
                 "lg:px-10 py-2 text-sm md:text-base transition-colors relative text-center",
 
@@ -38,7 +40,7 @@ export default function CategoryFilter({
               )}
               disabled={isPending}
             >
-              {category}
+              {displayName}
               {isPending && isSelected && (
                 <span className="absolute -top-1 -right-1 w-3 h-3 bg-primary animate-pulse rounded-full" />
               )}
@@ -60,7 +62,7 @@ export default function CategoryFilter({
             >
               More Categories
               {isPending &&
-                hiddenCategories.includes(selectedCategory as any) && (
+                hiddenCategories.some(cat => cat.CATEGORY === selectedCategory) && (
                   <span className="absolute -top-1 -right-1 w-3 h-3 bg-secondary rounded-full animate-pulse" />
                 )}
             </button>
@@ -77,12 +79,13 @@ export default function CategoryFilter({
                 >
                   <div className="p-2 space-y-1">
                     {hiddenCategories.map((category) => {
-                      const isSelected = selectedCategory === category;
+                      const isSelected = selectedCategory === category.CATEGORY;
+                      const displayName = category.CATEGORY ? `${category.CATEGORY} (${category.CNT || 0})` : '';
                       return (
                         <button
-                          key={category}
+                          key={category.BUSINESS_CATEGORY_ID}
                           onClick={() => {
-                            onSelect(category);
+                            onSelect(category.CATEGORY || '');
                             setIsDropdownOpen(false);
                           }}
                           className={cn(
@@ -93,7 +96,7 @@ export default function CategoryFilter({
                           )}
                           disabled={isPending}
                         >
-                          {category}
+                          {displayName}
                           {isPending && isSelected && (
                             <span className="absolute top-2 right-2 w-2 h-2 bg-secondary rounded-full animate-pulse" />
                           )}
@@ -106,9 +109,12 @@ export default function CategoryFilter({
             </AnimatePresence>
           </div>
         )}
-        {hiddenCategories.includes(selectedCategory as any) && (
+        {hiddenCategories.some(cat => cat.CATEGORY === selectedCategory) && (
           <span className="lg:px-10 py-2 text-center bg-primary text-white  text-sm md:text-base font-semibold">
-            {selectedCategory}
+            {(() => {
+              const selectedCat = hiddenCategories.find(cat => cat.CATEGORY === selectedCategory);
+              return selectedCat ? `${selectedCat.CATEGORY} (${selectedCat.CNT || 0})` : selectedCategory;
+            })()}
           </span>
         )}
       </div>

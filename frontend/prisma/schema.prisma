@@ -217,6 +217,66 @@ model business_2_business_category2 {
   DISPLAY_SEQ                   Int?
 }
 
+model upcoming_events {
+  UPCOMING_EVENTS_ID Int       @id
+  CREATION_DATETIME  DateTime? @db.DateTime(0)
+  EVENT_DATE_FROM    DateTime? @db.Date
+  EVENT_DATE_TO      DateTime? @db.Date
+  EVENT_TIME_FROM    String?   @db.VarChar(45)
+  EVENT_TIME_TO      String?   @db.VarChar(45)
+  EVENT_TITLE        String?   @db.VarChar(100)
+  EVENT_DESCRIPTION  String?   @db.VarChar(255)
+  ADDRESS_CITY       String?   @db.VarChar(45)
+  ADDRESS_ZIPCODE    String?   @db.VarChar(10)
+  ADDRESS_STREET     String?   @db.VarChar(100)
+  ADDRESS_HOUSE_NO   Int?
+  ADDRESS_TOWN       String?   @db.VarChar(100)
+}
+
+model visitor_business_review {
+  VISITOR_BUSINESS_REVIEW_ID Int       @id @default(autoincrement())
+  CREATION_DATETIME          DateTime? @db.DateTime(0)
+  VISITOR_ID                 Int
+  BUSINESS_ID                Int
+  RATING                     String    @default("5") @db.VarChar(10)
+  REMARKS                    String    @default("Excellent") @db.VarChar(1000)
+  PIC_1                      String?   @db.VarChar(255)
+  PIC_2                      String?   @db.VarChar(255)
+  PIC_3                      String?   @db.VarChar(255)
+  PIC_4                      String?   @db.VarChar(255)
+  PIC_5                      String?   @db.VarChar(255)
+  PIC_6                      String?   @db.VarChar(255)
+  PIC_7                      String?   @db.VarChar(255)
+  PIC_8                      String?   @db.VarChar(255)
+  PIC_9                      String?   @db.VarChar(255)
+  PIC_10                     String?   @db.VarChar(255)
+  VIDEO_1                    String?   @db.VarChar(255)
+  THUMB_UP_COUNT             Int?      @default(1)
+  THUMB_DOWN_COUNT           Int?      @default(0)
+  LIKE_COUNT                 Int?      @default(1)
+}
+
+model visitor_favorite_restaurants {
+  VISITOR_FAVORITE_RESTAURANTS_ID Int       @id @default(autoincrement())
+  CREATION_DATETIME               DateTime? @db.DateTime(0)
+  VISITORS_ACCOUNT_ID             Int?
+  BUSINESS_ID                     Int?
+}
+
+model visitor_followed_events {
+  VISITOR_FOLLOWED_EVENTS_ID Int       @id @default(autoincrement())
+  CREATION_DATETIME          DateTime? @db.DateTime(0)
+  VISITORS_ACCOUNT_ID        Int?
+  UPCOMING_EVENTS_ID         Int?
+}
+
+model visitor_followed_restaurants {
+  VISITOR_FOLLOWED_RESTAURANTS_ID Int       @id @default(autoincrement())
+  CREATION_DATETIME               DateTime? @db.DateTime(0)
+  VISITORS_ACCOUNT_ID             Int?
+  BUSINESS_ID                     Int?
+}
+
 view adlink_view {
   ADLINK_ID     Int     @id @default(0)
   BUSINESS_NAME String? @db.VarChar(255)
@@ -236,6 +296,7 @@ view business_category_view {
   CNT                  BigInt  @default(0)
   BUSINESS_CATEGORY_ID Int     @id @default(0)
   CATEGORY_NAME        String? @db.VarChar(100)
+  CATEGORY             String? @db.VarChar(100)
 }
 
 view business_detail_view_all {
@@ -360,4 +421,43 @@ view business_detail_view_vegetarian {
   VEGAN           Int     @default(0)
   VEGETARIAN      Int     @default(0)
   HALAL           Int     @default(0)
+}
+
+view visitor_business_review_view {
+  VISITOR_BUSINESS_REVIEW_ID Int       @id @default(0)
+  CREATION_DATETIME          DateTime? @db.DateTime(0)
+  VISITOR_ID                 Int
+  BUSINESS_ID                Int
+  RATING                     String    @default("5") @db.VarChar(10)
+  REMARKS                    String    @default("Excellent") @db.VarChar(1000)
+  PIC_1                      String?   @db.VarChar(255)
+  PIC_2                      String?   @db.VarChar(255)
+  PIC_3                      String?   @db.VarChar(255)
+  PIC_4                      String?   @db.VarChar(255)
+  PIC_5                      String?   @db.VarChar(255)
+  PIC_6                      String?   @db.VarChar(255)
+  PIC_7                      String?   @db.VarChar(255)
+  PIC_8                      String?   @db.VarChar(255)
+  PIC_9                      String?   @db.VarChar(255)
+  PIC_10                     String?   @db.VarChar(255)
+  VIDEO_1                    String?   @db.VarChar(255)
+  THUMB_UP_COUNT             Int?      @default(1)
+  THUMB_DOWN_COUNT           Int?      @default(0)
+  LIKE_COUNT                 Int?      @default(1)
+}
+
+view visitor_favorite_restaurants_view {
+  VISITOR_FAVORITE_RESTAURANTS_ID Int       @id @default(0)
+  CREATION_DATETIME               DateTime? @db.DateTime(0)
+  VISITORS_ACCOUNT_ID             Int?
+  BUSINESS_ID                     Int?
+  BUSINESS_NAME                   String?   @db.VarChar(255)
+  DESCRIPTION                     String?   @db.VarChar(1000)
+  LOGO                            String?   @db.VarChar(255)
+  IMAGE_URL                       String?   @db.VarChar(1000)
+  CITY_NAME                       String?   @db.VarChar(100)
+  ADDRESS_TOWN                    String?   @db.VarChar(100)
+  GOOGLE_PROFILE                  String?   @db.VarChar(1000)
+  WEB_ADDRESS                     String?   @db.VarChar(1000)
+  PHONE_NUMBER_SHORT              String?   @db.VarChar(45)
 }

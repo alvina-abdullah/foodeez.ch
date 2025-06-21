@@ -34,10 +34,10 @@ export interface BusinessDetail {
 }
 
 export type BusinessCategory = {
-  id?: number;
-  CNT?: number;
+  CNT?: bigint;
   BUSINESS_CATEGORY_ID: number;
-  CATEGORY_NAME: string;
+  CATEGORY_NAME: string | null;
+  CATEGORY: string | null;
 };
 
 export type BusinessResult = Prisma.business_detail_view_allGetPayload<{

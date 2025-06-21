@@ -129,95 +129,6 @@ export async function getBusinessesByLocation({
   }
 }
 
-export async function getBusinessesByTypeAndCategories(params: {
-  foodType: string;
-  categoryId?: number;
-  limit?: number;
-  skip?: number;
-}): Promise<{ businesses: BusinessDetail[]; totalCount: number }> {
-  const { foodType, categoryId, limit, skip = 0 } = params;
-  const normalizedType = foodType.toLowerCase();
-
-  try {
-    let businessIdsInCategory: number[] = [];
-
-    // 🔹 Step 1: Get businesses by category
-    if (categoryId !== undefined) {
-
-      const businessCategoryLinks = await prisma.business_2_business_category_view.findMany({
-        where: {
-          BUSINESS_CATEGORY_ID: categoryId,
-          STATUS: 1
-        },
-        select: {
-          BUSINESS_ID: true
-        }
-      });
-
-      businessIdsInCategory = businessCategoryLinks
-        .map(link => Number(link.BUSINESS_ID))
-        .filter((id): id is number => !isNaN(id) && id !== null && id !== undefined);
-
-
-
-      if (businessIdsInCategory.length === 0) {
-        // console.log(`No businesses found for category ${categoryId}, returning empty result.`);
-        return { businesses: [], totalCount: 0 };
-      }
-    }
-
-    // 🔹 Step 2: Prepare view and where clause
-    const whereClause = categoryId !== undefined
-      ? { BUSINESS_ID: { in: businessIdsInCategory } }
-      : {};
-
-    let businesses: BusinessDetail[] = [];
-    let totalCount = 0;
-
-    const getData = async (model: any) => {
-      const [data, count] = await Promise.all([
-        model.findMany({
-          where: whereClause,
-          take: limit,
-          skip,
-          orderBy: { BUSINESS_NAME: 'asc' }
-        }),
-        model.count({
-          where: whereClause
-        })
-      ]);
-      return { data, count };
-    };
-
-    try {
-      if (normalizedType === 'halal') {
-        ({ data: businesses, count: totalCount } = await getData(prisma.business_detail_view_halal));
-      } else if (normalizedType === 'vegan') {
-        ({ data: businesses, count: totalCount } = await getData(prisma.business_detail_view_vegan));
-      } else if (normalizedType === 'vegetarian') {
-        ({ data: businesses, count: totalCount } = await getData(prisma.business_detail_view_vegetarian));
-      } else {
-        ({ data: businesses, count: totalCount } = await getData(prisma.business_detail_view_all));
-      }
-    } catch (dbError) {
-      console.error("dbError:", dbError);
-
-      ({ data: businesses, count: totalCount } = await getData(prisma.business_detail_view_all));
-    }
-
-    return {
-      businesses: businesses,
-      totalCount
-    };
-  } catch (error) {
-    console.error(`[ERROR] Error in getBusinessesByTypeAndCategories:`, error);
-    return {
-      businesses: [],
-      totalCount: 0
-    };
-  }
-}
-
 export async function getAdsLinkData() {
   try {
     const adsLinkData = await prisma.adlink_view.findMany();
@@ -227,6 +138,17 @@ export async function getAdsLinkData() {
     return [];
   }
 }
+
+export async function getBusinessCategories() {
+  try {
+    const categories = await prisma.business_category_view.findMany({});
+    return categories;
+  } catch (error) {
+    console.error('Error fetching business categories:', error);
+    return [];
+  }
+}
+
 
 export async function getBusinessByFoodtypeCategoryLocation (params : {
   foodType: string;

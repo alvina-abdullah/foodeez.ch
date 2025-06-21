@@ -1,10 +1,11 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
-import { BusinessDetail } from "@/types/business.types";
+import { BusinessDetail, BusinessCategory } from "@/types/business.types";
 import { useTransition } from "react";
 import {
   getBusinessByFoodtypeCategoryLocation,
+  getBusinessCategories,
   getCities,
 } from "@/services/HomePageService";
 import FoodTypeFilter from "./FoodTypeFilter";
@@ -19,41 +20,7 @@ import CitySelectionButtons from "../CitySection/CitySelectionButtons";
 import ZipCodeSearch from "../CitySection/ZipCodeSearch";
 
 const FOOD_TYPES = ["All", "Halal", "Vegetarian", "Vegan"] as const;
-const FOOD_CATEGORIES = [
-  "Pizza",
-  "Pasta",
-  "Fast Food",
-  "Desserts",
-  "Kebab & Donner",
-  "Sushi",
-  "Burgers",
-  "Fried Chicken",
-  "Tacos",
-  "Biryani",
-  "BBQ",
-  "Vegan",
-  "Vegetarian",
-  "Seafood",
-  "Chinese",
-  "Italian",
-  "Thai",
-  "Middle Eastern",
-  "Breakfast",
-  "Salads",
-  "Wraps",
-  "Smoothies",
-  "Ice Cream",
-  "Cakes",
-  "Curry",
-  "Noodles",
-  "Grill",
-  "Steakhouse",
-  "Bakery",
-  "Juices",
-] as const;
-
 const INITIAL_FOOD_TYPE = "All";
-const VISIBLE_CATEGORIES_LIMIT = 5;
 
 const MAIN_CITIES = [
   "Zurich",
@@ -83,13 +50,18 @@ export default function FeaturedBusiness() {
   const [error, setError] = useState<string | null>(null);
   const [perPage, setPerPage] = useState(PER_PAGE_OPTIONS[0]);
   const [totalCountofBusiness, setTotalCountOfBusiness] = useState(0);
-  const visibleCategories = FOOD_CATEGORIES.slice(0, VISIBLE_CATEGORIES_LIMIT);
-  const hiddenCategories = FOOD_CATEGORIES.slice(VISIBLE_CATEGORIES_LIMIT);
   const [cities, setCities] = useState<{ CITY_NAME: string }[]>([]);
   const [selectedCity, setSelectedCity] = useState<string>("");
   const [zipCode, setZipCode] = useState<string>("");
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [searchZipCode, setSearchZipCode] = useState("");
+
+  const [categories, setCategories] = useState<BusinessCategory[]>([]);
+  const [visibleCategories, setVisibleCategories] = useState<BusinessCategory[]>([]);
+  const [hiddenCategories, setHiddenCategories] = useState<BusinessCategory[]>(
+    []
+  );
+
 
   // Handler for city selection
   const handleCitySelect = (city: string) => {
@@ -109,19 +81,32 @@ export default function FeaturedBusiness() {
   // Update selected category ID when category changes
   useEffect(() => {
     if (selectedCategory) {
-      const categoryIndex = FOOD_CATEGORIES.indexOf(selectedCategory as any);
-      if (categoryIndex !== -1) {
-        setSelectedCategoryId(categoryIndex + 1);
+      const category = categories.find(
+        (cat) =>
+          cat.CATEGORY?.toLowerCase() === selectedCategory.toLowerCase() ||
+          cat.CATEGORY_NAME?.toLowerCase() === selectedCategory.toLowerCase()
+      );
+      if (category) {
+        setSelectedCategoryId(category.BUSINESS_CATEGORY_ID);
       } else {
         setSelectedCategoryId(undefined);
       }
     } else {
       setSelectedCategoryId(undefined);
     }
-  }, [selectedCategory]);
+  }, [selectedCategory, categories]);
 
-  // Fetch city list on mount
+  // Fetch city list and categories on mount
   useEffect(() => {
+    getBusinessCategories().then((categories) => {
+      setCategories(categories);
+
+      const visible = categories.slice(0, 6); // Show first 6 categories
+      const hidden = categories.slice(6); // Hide the rest
+      setVisibleCategories(visible);
+      setHiddenCategories(hidden);
+    });
+
     getCities().then((cities) => {
       setCities(
         cities
@@ -146,7 +131,7 @@ export default function FeaturedBusiness() {
           const response = await getBusinessByFoodtypeCategoryLocation({
             foodType: selectedFoodType,
             categoryId: selectedCategoryId,
-            city: searchZipCode? undefined : selectedCity, // city only if zipCode is empty
+            city: searchZipCode ? undefined : selectedCity, // city only if zipCode is empty
             zipCode: searchZipCode || undefined,
             limit,
           });
