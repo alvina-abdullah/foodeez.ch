@@ -149,6 +149,99 @@ export async function getBusinessCategories() {
   }
 }
 
+// export async function getUpcomingEvents() {
+//   try {
+//     const events = await prisma.upcoming_events.findMany({
+//       where: {
+//         EVENT_DATE_FROM: {
+//           gte: new Date(),
+//         },
+//       },
+//       orderBy: {
+//         EVENT_DATE_FROM: 'asc',
+//       },
+//       take: 4,
+//     });
+//     return events;
+//   } catch (error) {
+//     console.error('Error fetching upcoming events:', error);
+//     return [];
+//   }
+// }
+
+export async function getUpcomingEvents() {
+  try {
+    // ✅ Mock data
+    const mockEvents = [
+      {
+        UPCOMING_EVENTS_ID: 1,
+        CREATION_DATETIME: new Date('2025-06-01T10:00:00'),
+        EVENT_DATE_FROM: new Date('2025-07-05'),
+        EVENT_DATE_TO: new Date('2025-07-05'),
+        EVENT_TIME_FROM: '14:00',
+        EVENT_TIME_TO: '18:00',
+        EVENT_TITLE: 'Food Festival 2025',
+        EVENT_DESCRIPTION: 'A celebration of local and international cuisines.',
+        ADDRESS_CITY: 'Karachi',
+        ADDRESS_ZIPCODE: '75500',
+        ADDRESS_STREET: 'Main Clifton Road',
+        ADDRESS_HOUSE_NO: 101,
+        ADDRESS_TOWN: 'Clifton',
+      },
+      {
+        UPCOMING_EVENTS_ID: 2,
+        CREATION_DATETIME: new Date('2025-06-10T11:30:00'),
+        EVENT_DATE_FROM: new Date('2025-07-15'),
+        EVENT_DATE_TO: new Date('2025-07-15'),
+        EVENT_TIME_FROM: '10:00',
+        EVENT_TIME_TO: '13:00',
+        EVENT_TITLE: 'Tech Expo Karachi',
+        EVENT_DESCRIPTION: 'Showcasing the latest in technology and innovation.',
+        ADDRESS_CITY: 'Karachi',
+        ADDRESS_ZIPCODE: '75300',
+        ADDRESS_STREET: 'Expo Center Rd',
+        ADDRESS_HOUSE_NO: 22,
+        ADDRESS_TOWN: 'Gulshan-e-Iqbal',
+      },
+      {
+        UPCOMING_EVENTS_ID: 3,
+        CREATION_DATETIME: new Date('2025-06-15T15:00:00'),
+        EVENT_DATE_FROM: new Date('2025-08-01'),
+        EVENT_DATE_TO: new Date('2025-08-02'),
+        EVENT_TIME_FROM: '09:00',
+        EVENT_TIME_TO: '17:00',
+        EVENT_TITLE: 'Startup Pitch Day',
+        EVENT_DESCRIPTION: 'Meet investors and pitch your startup idea.',
+        ADDRESS_CITY: 'Lahore',
+        ADDRESS_ZIPCODE: '54000',
+        ADDRESS_STREET: 'TechHub Street',
+        ADDRESS_HOUSE_NO: 5,
+        ADDRESS_TOWN: 'Model Town',
+      },
+      {
+        UPCOMING_EVENTS_ID: 4,
+        CREATION_DATETIME: new Date('2025-06-18T08:45:00'),
+        EVENT_DATE_FROM: new Date('2025-08-10'),
+        EVENT_DATE_TO: new Date('2025-08-10'),
+        EVENT_TIME_FROM: '12:00',
+        EVENT_TIME_TO: '14:30',
+        EVENT_TITLE: 'Healthy Living Seminar',
+        EVENT_DESCRIPTION: 'Tips and strategies for a healthy lifestyle.',
+        ADDRESS_CITY: 'Islamabad',
+        ADDRESS_ZIPCODE: '44000',
+        ADDRESS_STREET: 'Blue Area Avenue',
+        ADDRESS_HOUSE_NO: 12,
+        ADDRESS_TOWN: 'Blue Area',
+      },
+    ];
+
+    return mockEvents;
+  } catch (error) {
+    console.error('Error fetching upcoming events:', error);
+    return [];
+  }
+}
+
 
 export async function getBusinessByFoodtypeCategoryLocation (params : {
   foodType: string;

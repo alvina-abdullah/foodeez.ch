@@ -19,6 +19,7 @@
     "@react-google-maps/api": "^2.20.6",
     "@tailwindcss/typography": "^0.5.16",
     "@types/lodash": "^4.17.16",
+    "add-to-calendar-button-react": "^2.9.1",
     "bcryptjs": "^3.0.2",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",

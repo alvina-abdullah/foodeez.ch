@@ -54,13 +54,13 @@ export default function FaqSection() {
   };
 
   return (
-    <section className="py-16 px-2 md:px-0">
+    <section className="pt-16 px-2 md:px-0">
       <div className="">
         <div className="text-center mb-14">
-          <h2 className="text-4xl md:text-5xl font-extrabold text-primary mb-4">
+          <h2 className="sub-heading">
             Frequently Asked Questions
           </h2>
-          <p className="text-lg md:text-xl text-accent-dark max-w-2xl mx-auto">
+          <p className="sub-heading-description">
             Everything you need to know about using Foodeez as a business or
             food lover.
           </p>

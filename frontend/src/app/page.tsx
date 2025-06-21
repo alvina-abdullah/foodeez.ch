@@ -13,6 +13,7 @@ import MapSection from "@/components/home/MapSection";
 import GoogleMapsProvider from "@/components/providers/GoogleMapsProvider";
 import AdsBar1 from "@/components/home/AdsBar1";
 import AdsBar2 from "@/components/home/AdsBar2";
+import UpcomingEvents from "@/components/home/UpcomingEvents";
 // import BenefitsSection from "@/components/home/BenefitsSection";
 // import AboutSection from "@/components/home/AboutSection";
 // import TestimonialsSection from "@/components/home/TestimonialsSection";
@@ -58,8 +59,8 @@ export default function Home() {
       <FaqSection />
 
       {/* Main CTA Section */}
+      <UpcomingEvents />
       <CtaSection />
-
 
       {/* Map  Section */}
       <GoogleMapsProvider>
