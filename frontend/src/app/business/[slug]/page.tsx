@@ -1,8 +1,7 @@
 "use client";
 
 import { useParams } from "next/navigation";
-import { getBusinessById } from "@/services/HomePageService";
-import { parseSlug } from "@/lib/utils/genSlug";
+import { generateSlug, parseSlug } from "@/lib/utils/genSlug";
 import BusinessImage from "./components/BusinessImage";
 import React, { useState, useEffect } from "react";
 import MapCard from "./components/MapSectionBusinesProfile";
@@ -13,12 +12,17 @@ import {
 } from "./components/fetchGooglePlaceDetails";
 import { extractPlaceIdFromUrl } from "@/lib/utils/google";
 import GoogleReviews from "./components/GoogleReviews";
-// import { ActionButtons } from "./components/action-buttons";
 import OpeningHours from "./components/OpeningHoursSection";
 import BusinessInfoSection from "./components/BusinessInfoSection";
 import BusinessProfilePageLoadingSkeleton from "./components/BusinessProfilePageLoadingSkeleton";
 import { BusinessDetail } from "@/types/business.types";
 import ResturantProfilePageHeader from "./components/ResturantProfilePageHeader";
+import FoodeezReviews from "./components/FoodeezReviews";
+import {
+  getBusinessById,
+  getBusinessReviews,
+} from "@/services/BusinessProfilePageService";
+import { visitor_business_review_view } from "@prisma/client";
 
 const BusinessDetailPage = () => {
   const [business, setBusiness] = useState<BusinessDetail | null>(null);
@@ -26,11 +30,17 @@ const BusinessDetailPage = () => {
   const [loading, setLoading] = useState(true);
   const [googleBusinessData, setGoogleBusinessData] =
     useState<GooglePlaceDetails>();
+  const [reviews, setReviews] = useState<visitor_business_review_view[]>([]);
 
   const slug = useParams();
   const parsedId = parseSlug(slug?.slug as unknown as string);
 
   const id = parsedId.id;
+
+  const genSlug = generateSlug(
+    business?.BUSINESS_NAME || "business",
+    business?.BUSINESS_ID || 0
+  );
 
   useEffect(() => {
     async function fetchBusiness() {
@@ -53,8 +63,15 @@ const BusinessDetailPage = () => {
           String(mapped.GOOGLE_PROFILE || "")
         );
         setPlaceId(placeId);
+
+        // Fetch business reviews
+        const businessReviews = await getBusinessReviews(
+          Number(mapped.BUSINESS_ID)
+        );
+        setReviews(businessReviews);
       } else {
         setBusiness(null);
+        setReviews([]);
       }
 
       setLoading(false);
@@ -140,7 +157,7 @@ const BusinessDetailPage = () => {
           />
 
           {/* Info Section */}
-          <BusinessInfoSection business={business} />
+          <BusinessInfoSection business={business} genSlug={genSlug} />
 
           <GooglePhotoGallery
             photos={googleBusinessData?.photos || []}
@@ -168,7 +185,13 @@ const BusinessDetailPage = () => {
 
           {/* Reviews */}
           <div className="">
-            <GoogleReviews reviews={googleBusinessData?.reviews || []} />
+            <FoodeezReviews reviews={reviews} genSlug={genSlug} />
+          </div>
+          <div className="">
+            <GoogleReviews
+              reviews={googleBusinessData?.reviews || []}
+              GOOGLE_PROFILE={business.GOOGLE_PROFILE || ""}
+            />
           </div>
 
           {/* Google Map */}

@@ -23,31 +23,32 @@ model adlinks {
 }
 
 model business {
-  BUSINESS_ID        Int      @id @default(autoincrement())
-  CREATION_DATETIME  DateTime @db.DateTime(0)
-  BUSINESS_NAME      String?  @db.VarChar(255)
-  SHORT_NAME         String?  @db.VarChar(20)
-  DESCRIPTION        String?  @db.VarChar(1000)
-  ADDRESS_STREET     String?  @db.VarChar(100)
+  BUSINESS_ID        Int                @id @default(autoincrement())
+  CREATION_DATETIME  DateTime           @db.DateTime(0)
+  BUSINESS_NAME      String?            @db.VarChar(255)
+  SHORT_NAME         String?            @db.VarChar(20)
+  DESCRIPTION        String?            @db.VarChar(1000)
+  ADDRESS_STREET     String?            @db.VarChar(100)
   ADDRESS_ZIP        BigInt?
   ADDRESS_CITY_ID    Int?
-  ADDRESS_TOWN       String?  @db.VarChar(100)
-  ADDRESS_COUNTRY    String?  @db.VarChar(100)
-  PHONE_NUMBER       String?  @db.VarChar(45)
-  PHONE_NUMBER_SHORT String?  @db.VarChar(45)
-  EMAIL_ADDRESS      String?  @db.VarChar(255)
-  WHATSAPP_NUMBER    String?  @db.VarChar(45)
-  WEB_ADDRESS        String?  @db.VarChar(1000)
-  LOGO               String?  @db.VarChar(255)
-  FACEBOOK_LINK      String?  @db.VarChar(1000)
-  INSTA_LINK         String?  @db.VarChar(1000)
-  TIKTOK_LINK        String?  @db.VarChar(1000)
-  GOOGLE_PROFILE     String?  @db.VarChar(1000)
-  IMAGE_URL          String?  @db.VarChar(1000)
-  GOOGLE_RATING      String?  @db.VarChar(10)
-  WHATSAPP_LINK      String?  @db.VarChar(255)
-  APPROVED           Int?     @default(0) @db.TinyInt
-  STATUS             Int?     @default(0) @db.TinyInt
+  ADDRESS_TOWN       String?            @db.VarChar(100)
+  ADDRESS_COUNTRY    String?            @db.VarChar(100)
+  PHONE_NUMBER       String?            @db.VarChar(45)
+  PHONE_NUMBER_SHORT String?            @db.VarChar(45)
+  EMAIL_ADDRESS      String?            @db.VarChar(255)
+  WHATSAPP_NUMBER    String?            @db.VarChar(45)
+  WEB_ADDRESS        String?            @db.VarChar(1000)
+  LOGO               String?            @db.VarChar(255)
+  FACEBOOK_LINK      String?            @db.VarChar(1000)
+  INSTA_LINK         String?            @db.VarChar(1000)
+  TIKTOK_LINK        String?            @db.VarChar(1000)
+  GOOGLE_PROFILE     String?            @db.VarChar(1000)
+  IMAGE_URL          String?            @db.VarChar(1000)
+  GOOGLE_RATING      String?            @db.VarChar(10)
+  WHATSAPP_LINK      String?            @db.VarChar(255)
+  APPROVED           Int?               @default(0) @db.TinyInt
+  STATUS             Int?               @default(0) @db.TinyInt
+  business_product   business_product[]
 }
 
 model business_2_business_category {
@@ -277,6 +278,141 @@ model visitor_followed_restaurants {
   BUSINESS_ID                     Int?
 }
 
+model business_product_category_2_tag {
+  BUSINESS_PRODUCT_CATEGORY_2_TAG_ID Int       @id @default(autoincrement())
+  CREATION_DATETIME                  DateTime? @db.DateTime(0)
+  BUSINESS_PRODUCT_CATEGORY_ID       Int?
+  BUSINESS_PRODUCT_TAG_ID            Int?
+
+  @@map("business product_category_2_tag")
+}
+
+model business_food_menu_card {
+  BUSINESS_FOOD_MENU_CARD_ID Int       @id @default(autoincrement())
+  CREATION_DATETIME          String?   @db.VarChar(45)
+  BUSINESS_ID                Int?
+  TITLE                      String?   @db.VarChar(45)
+  VALID_FROM                 DateTime? @db.DateTime(0)
+  VALID_TO                   DateTime? @db.DateTime(0)
+}
+
+model business_food_menu_card_detail {
+  BUSINESS_FOOD_MENU_CARD_DETAIL_ID Int  @id @default(autoincrement())
+  BUSINESS_FOOD_MENU_CARD_ID        Int?
+  BUSINESS_PRODUCT_CATEGORY_ID      Int?
+  DISPLAY_ORDER                     Int? @default(1)
+  STATUS                            Int? @default(1) @db.TinyInt
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model business_order {
+  BUSINESS_ORDER_ID     Int       @id
+  CREATION_DATETIME     DateTime? @db.DateTime(0)
+  BUSINESS_ID           Int?
+  VISITOR_ID            Int?      @default(0)
+  PAYMENT_DONE          Int?      @default(1) @db.TinyInt
+  PAYMENT_MODE          String?   @db.VarChar(45)
+  DELIVERY_ET           DateTime? @db.DateTime(0)
+  ORDER_STATUS          Int?      @default(1)
+  DELIVERY_DATETIME     DateTime? @db.DateTime(0)
+  TERMINAL              String?   @db.VarChar(100)
+  STAFF_MEMBER          String?   @db.VarChar(100)
+  FIRST_NAME            String?   @db.VarChar(100)
+  LAST_NAME             String?   @db.VarChar(100)
+  ADDRESS_STREET        String?   @db.VarChar(100)
+  ADDRESS_ZIP           String?   @db.VarChar(10)
+  ADDRESS_TOWN          String?   @db.VarChar(100)
+  ADDRESS_COUNTRY_CODE  String?   @default("CH") @db.VarChar(45)
+  PHONE_NUMBER          String?   @db.VarChar(20)
+  EMAIL_ADDRESS         String?   @db.VarChar(255)
+  ORDER_GROSS_AMOUNT    Decimal?  @default(0.00) @db.Decimal(8, 2)
+  ORDER_TAX_AMOUNT      Decimal?  @default(0.00) @db.Decimal(8, 2)
+  ORDER_NET_AMOUNT      Decimal?  @default(0.00) @db.Decimal(8, 2)
+  ORDER_DISCOUNT_AMOUNT Decimal?  @default(0.00) @db.Decimal(8, 2)
+  ORDER_AMOUNT          Decimal?  @default(0.00) @db.Decimal(8, 2)
+  SHIPPING_CHARGES      Decimal?  @default(0.00) @db.Decimal(8, 2)
+  ORDER_REFUND_AMOUNT   Decimal?  @default(0.00) @db.Decimal(8, 2)
+  ORDER_FINAL_AMOUNT    Decimal?  @default(0.00) @db.Decimal(8, 2)
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model business_order_detail {
+  BUSINESS_ORDER_DETAIL_ID Int       @id
+  CREATION_DATETIME        DateTime? @db.DateTime(0)
+  BUSINESS_ORDER_ID        Int?
+  BUSINESS_PRODUCT_ID      Int?
+  ORDER_QUANTITY           Int?
+  QUANTITY_DELIVERED       Int?
+  PRODUCT_SELL_PRICE       Decimal?  @db.Decimal(8, 2)
+  PRODUCT_DISCOUNT         Decimal?  @db.Decimal(8, 2)
+  PRODUCT_PRICE            Decimal?  @db.Decimal(8, 2)
+  QUANTITY_BALANCE         Int?      @default(0)
+  QUANTITY__REFUND         Int?      @default(0) @map("QUANTITY:_REFUND")
+}
+
+model business_product {
+  BUSINESS_PRODUCT_ID Int       @id @default(autoincrement())
+  CREATION_DATETIME   DateTime? @db.DateTime(0)
+  BUSINESS_ID         Int?
+  TITLE               String    @db.VarChar(100)
+  DESCRIPTION         String?   @db.VarChar(1000)
+  COST_PRICE          Decimal?  @default(0.00) @db.Decimal(6, 2)
+  PRODUCT_PRICE       Decimal   @db.Decimal(6, 2)
+  COMPARE_AS_PRICE    Decimal?  @default(0.00) @db.Decimal(6, 2)
+  TRACK_INVENTORY     Int?      @default(0) @db.TinyInt
+  INVENTORY_ON_HAND   Int?      @default(0)
+  INVENTORY_AVAILABLE Int?      @default(0)
+  INVENTORY_COMMITED  Int?      @default(0)
+  WEIGHT              Int?      @default(0)
+  WEIGHT_UNIT         String?   @default("gm") @db.VarChar(10)
+  STATUS              Int?      @default(1) @db.TinyInt
+  business            business? @relation(fields: [BUSINESS_ID], references: [BUSINESS_ID], onDelete: NoAction, onUpdate: NoAction, map: "BUSINESS_ID")
+
+  @@index([BUSINESS_ID], map: "BUSINESS_ID_idx")
+}
+
+model business_product_2_tag {
+  BUSINESS_PRODUCT_2_TAG_ID Int       @id @default(autoincrement())
+  CREATION_DATETIME         DateTime? @db.DateTime(0)
+  BUSINESS_PRODUCT_ID       Int?
+  BUSINESS_PRODUCT_TAG_ID   Int?
+}
+
+model business_product_category {
+  BUSINESS_PRODUCT_CATEGORY_ID Int       @id @default(autoincrement())
+  CREATION_DATETIME            DateTime? @db.DateTime(0)
+  BUSINESS_ID                  Int?
+  TITLE                        String?   @db.VarChar(45)
+  STATUS                       Int?      @default(1) @db.TinyInt
+}
+
+model business_product_tag {
+  BUSINESS_PRODUCT_TAG_ID Int       @id @default(autoincrement())
+  CREATION_DATETIME       DateTime? @db.DateTime(0)
+  BUSINESS_ID             Int?
+  TITLE                   String?   @db.VarChar(45)
+}
+
+model reserve_table {
+  RESERVE_TABLE_ID    Int       @id @default(autoincrement())
+  CREATION_DATETIME   DateTime? @db.DateTime(0)
+  BUSINESS_ID         Int?
+  RESERVATION_SOURCE  Int?      @default(1)
+  VISITOR_ID          Int?      @default(0)
+  RESERVATION_AS_NAME String?   @db.VarChar(100)
+  EMAIL_ADDRESS       String?   @db.VarChar(255)
+  PHONE_NUMBER        String?   @db.VarChar(20)
+  RESERVATION_FOR     String?   @db.VarChar(100)
+  REMARKS             String?   @db.VarChar(255)
+  RESERVATION_DATE    DateTime? @db.Date
+  EXPECTED_TIME       String?   @db.VarChar(45)
+  RESERVATION_NUMBER  Int?
+  REMINDER_1          Int?
+  REMINDER_2          Int?
+  STATUS              Int?      @default(1)
+  ADMIN_REMARKS       String?   @db.VarChar(100)
+}
+
 view adlink_view {
   ADLINK_ID     Int     @id @default(0)
   BUSINESS_NAME String? @db.VarChar(255)
@@ -460,4 +596,17 @@ view visitor_favorite_restaurants_view {
   GOOGLE_PROFILE                  String?   @db.VarChar(1000)
   WEB_ADDRESS                     String?   @db.VarChar(1000)
   PHONE_NUMBER_SHORT              String?   @db.VarChar(45)
+}
+
+view business_food_menu_view {
+  BUSINESS_ID                  Int      @id @default(0)
+  BUSINESS_NAME                String?  @db.VarChar(255)
+  BUSINESS_FOOD_MENU_CARD_ID   Int      @default(0)
+  MENU_NAME                    String?  @db.VarChar(45)
+  BUSINESS_PRODUCT_CATEGORY_ID Int?
+  CATEGORY                     String?  @db.VarChar(45)
+  PRODUCT_NAME                 String   @db.VarChar(100)
+  PRODUCT_DESCRIPTION          String?  @db.VarChar(1000)
+  PRODUCT_PRICE                Decimal  @db.Decimal(6, 2)
+  COMPARE_AS_PRICE             Decimal? @default(0.00) @db.Decimal(6, 2)
 }

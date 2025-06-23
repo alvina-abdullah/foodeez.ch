@@ -1,17 +1,13 @@
 import { SocialLinks } from "@/components/core/SocialLinks";
 import { MapPin, Phone, Globe } from "lucide-react";
 import { BusinessDetail } from "@/types/business.types";
-import { generateSlug } from "@/lib/utils/genSlug";
 import Link from "next/link";
 import FoodTypeBadges from "@/components/core/FoodTypeBadges";
 
-const BusinessInfoSection: React.FC<{ business: BusinessDetail }> = ({
+const BusinessInfoSection: React.FC<{ business: BusinessDetail , genSlug: string }> = ({
   business,
+  genSlug,
 }) => {
-  const genslug = generateSlug(
-    business?.BUSINESS_NAME || "business",
-    business?.BUSINESS_ID
-  );
 
   return (
     <div className="py-8 px-4 lg:px-0 space-y-8 lg:space-y-4">
@@ -67,7 +63,7 @@ const BusinessInfoSection: React.FC<{ business: BusinessDetail }> = ({
       {/* Social & Reserve */}
       <div className="flex items-center justify-between border-t pt-8">
         {business.EMAIL_ADDRESS ? (
-          <Link href={`/business/${genslug}/reservation`} target="_blank">
+          <Link href={`/business/${genSlug}/reservation`} target="_blank">
             <button className="btn-primary">Reserve Table</button>
           </Link>
         ) : (

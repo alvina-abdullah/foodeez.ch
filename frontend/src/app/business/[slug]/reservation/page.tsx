@@ -5,7 +5,6 @@ import Link from "next/link";
 import { useParams } from "next/navigation";
 import { ChevronLeft } from "lucide-react";
 import { extractBusinessId, parseSlug } from "@/lib/utils/genSlug";
-import { getBusinessById } from "@/services/HomePageService";
 import ReservationHero from "./components/ReservationHero";
 import ContactInfoCard from "./components/ContactInfoCard";
 import ReservationImage from "./components/ReservationImage";
@@ -14,6 +13,7 @@ import ReservationSummary from "./components/ReservationSummary";
 import ReservationSuccess from "./components/ReservationSuccess";
 import LoadingSkeleton from "./components/LoadingSkeleton";
 import Banner from "@/components/core/Banner";
+import { getBusinessById } from "@/services/BusinessProfilePageService";
 
 export default function ReservationPage() {
   const params = useParams();
