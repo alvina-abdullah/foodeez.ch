@@ -16,6 +16,9 @@ import { extractBusinessId, parseSlug } from "@/lib/utils/genSlug";
 import Link from "next/link";
 import ReviewForm from "./components/ReviewForm";
 import { X } from "lucide-react";
+import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
+import Modal from "@/components/core/Modal";
 
 export default function AllFoodeezReviewsPage() {
   const params = useParams();
@@ -28,6 +31,9 @@ export default function AllFoodeezReviewsPage() {
   const [loading, setLoading] = useState(true);
   const [likeCounts, setLikeCounts] = useState<{ [id: number]: number }>({});
   const [showReviewModal, setShowReviewModal] = useState(false);
+  const { data: session } = useSession();
+  const router = useRouter();
+  const [showAuthModal, setShowAuthModal] = useState(false);
 
   // Fetch business data
   useEffect(() => {
@@ -79,8 +85,12 @@ export default function AllFoodeezReviewsPage() {
     }));
   };
 
-  const handleDislike = (id: number) => {};
-  const handleShare = (id: number) => {};
+  const handleDislike = (id: number) => {
+ console.log("Dislike clicked for review ID:", id);
+  };
+  const handleShare = (id: number) => {
+ console.log( "Share clicked for review ID:", id);
+  };
 
   // Helper for address
   const getFullAddress = (b: business_detail_view_all | null | undefined) => {
@@ -166,7 +176,13 @@ export default function AllFoodeezReviewsPage() {
             <div className="col-span-full flex justify-end mb-4">
               <button
                 className="btn-primary"
-                onClick={() => setShowReviewModal(true)}
+                onClick={() => {
+                  if (!session) {
+                    setShowAuthModal(true);
+                  } else {
+                    setShowReviewModal(true);
+                  }
+                }}
               >
                 Write a Review
               </button>
@@ -205,6 +221,25 @@ export default function AllFoodeezReviewsPage() {
           </div>
         </div>
       )}
+      <Modal isOpen={showAuthModal} onClose={() => setShowAuthModal(false)} title="Login Required">
+        <div className="text-center">
+          <p className="mb-4">You must be logged in to write a review.</p>
+          <div className="flex justify-center gap-4">
+            <button
+              className="btn-primary"
+              onClick={() => router.push('/auth/signin')}
+            >
+              Sign In
+            </button>
+            <button
+              className="btn-secondary"
+              onClick={() => router.push('/auth/signup')}
+            >
+              Sign Up
+            </button>
+          </div>
+        </div>
+      </Modal>
     </div>
   );
 }

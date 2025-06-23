@@ -10,6 +10,7 @@ interface ReservationFormProps {
   isSubmitting: boolean;
   handleSubmit: (e: React.FormEvent) => void;
   children?: React.ReactNode;
+  onNextStep?: () => void;
 }
 
 const ReservationForm: React.FC<ReservationFormProps> = ({
@@ -19,7 +20,8 @@ const ReservationForm: React.FC<ReservationFormProps> = ({
   setCurrentStep,
   isSubmitting,
   handleSubmit,
-  children
+  children,
+  onNextStep
 }) => {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
@@ -126,7 +128,7 @@ const ReservationForm: React.FC<ReservationFormProps> = ({
           <div className="flex justify-end pt-4">
             <button
               type="button"
-              onClick={nextStep}
+              onClick={onNextStep ? onNextStep : nextStep}
               className="px-6 py-2.5 bg-primary hover:bg-primary-dark text-white font-medium rounded-md shadow-sm transition-colors"
             >
               Continue
@@ -149,7 +151,6 @@ const ReservationForm: React.FC<ReservationFormProps> = ({
                 name="name"
                 required
                 value={formData.name}
-
                 onChange={handleChange}
                 className="block w-full px-3 py-2.5 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-primary focus:border-primary transition"
                 placeholder="Your name"

@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { ChevronLeft } from "lucide-react";
 import { extractBusinessId, parseSlug } from "@/lib/utils/genSlug";
 import ReservationHero from "./components/ReservationHero";
@@ -14,6 +14,8 @@ import ReservationSuccess from "./components/ReservationSuccess";
 import LoadingSkeleton from "./components/LoadingSkeleton";
 import Banner from "@/components/core/Banner";
 import { getBusinessById } from "@/services/BusinessProfilePageService";
+import { useSession } from "next-auth/react";
+import Modal from "@/components/core/Modal";
 
 export default function ReservationPage() {
   const params = useParams();
@@ -37,6 +39,9 @@ export default function ReservationPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
   const [currentStep, setCurrentStep] = useState(1);
+  const { data: session } = useSession();
+  const router = useRouter();
+  const [showAuthModal, setShowAuthModal] = useState(false);
 
   // Fetch business data
   useEffect(() => {
@@ -70,6 +75,7 @@ export default function ReservationPage() {
         },
         body: JSON.stringify({
           ...formData,
+          businessId: business.BUSINESS_ID,
           businessName: business.BUSINESS_NAME,
           businessEmail: business.EMAIL_ADDRESS,
         }),
@@ -85,6 +91,15 @@ export default function ReservationPage() {
     } finally {
       setIsSubmitting(false);
     }
+  };
+
+  // Custom nextStep handler for auth check
+  const handleNextStep = () => {
+    if (!session) {
+      setShowAuthModal(true);
+      return;
+    }
+    setCurrentStep((prev) => prev + 1);
   };
 
   if (loading) {
@@ -185,7 +200,7 @@ export default function ReservationPage() {
                     setCurrentStep={setCurrentStep}
                     isSubmitting={isSubmitting}
                     handleSubmit={handleSubmit}
-          
+                    onNextStep={handleNextStep}
                   >
                     {currentStep === 2 && (
                       <ReservationSummary
@@ -203,6 +218,25 @@ export default function ReservationPage() {
           </div>
         </div>
       </div>
+      <Modal isOpen={showAuthModal} onClose={() => setShowAuthModal(false)} title="Login Required">
+        <div className="text-center">
+          <p className="mb-4">You must be logged in to reserve a table.</p>
+          <div className="flex justify-center gap-4">
+            <button
+              className="btn-primary"
+              onClick={() => router.push('/auth/signin')}
+            >
+              Sign In
+            </button>
+            <button
+              className="btn-secondary"
+              onClick={() => router.push('/auth/signup')}
+            >
+              Sign Up
+            </button>
+          </div>
+        </div>
+      </Modal>
     </>
   );
 }

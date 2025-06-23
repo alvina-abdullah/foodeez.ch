@@ -1,3 +1,4 @@
+import Image from 'next/image';
 import React, { useState, ChangeEvent, FormEvent } from 'react';
 
 interface ReviewFormProps {
@@ -97,10 +98,12 @@ const ReviewForm: React.FC<ReviewFormProps> = ({ businessId, onSuccess }) => {
         <div className="flex gap-2 mt-2">
           {images.map((img, idx) => (
             <div key={idx} className="w-16 h-16 rounded overflow-hidden border">
-              <img
+              <Image
                 src={URL.createObjectURL(img)}
                 alt={`Preview ${idx + 1}`}
                 className="object-cover w-full h-full"
+                width={64}
+                height={64}
               />
             </div>
           ))}

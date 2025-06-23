@@ -58,10 +58,12 @@ export default function FoodeezReviews({ reviews, genSlug }: FoodeezReviewsProps
   };
 
   const handleDisLike = (id: number) => {
+    console.log(`Dislike clicked for review ID: ${id}`);
     // TODO: Optionally, call an API to persist dislike
   };
 
   const handleShare = (id: number) => {
+    console.log(`Share clicked for review ID: ${id}`);
     // TODO: Implement share logic
   };
 

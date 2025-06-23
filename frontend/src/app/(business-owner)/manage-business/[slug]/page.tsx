@@ -1,7 +1,6 @@
 "use client";
 
 import { useParams } from "next/navigation";
-import { getBusinessById } from "@/services/HomePageService";
 import { parseSlug } from "@/lib/utils/genSlug";
 import BusinessImage from "./components/BusinessImage";
 import React, { useState, useEffect } from "react";
@@ -19,6 +18,7 @@ import OpeningHours from "./components/OpeningHoursSection";
 import BusinessInfoSection from "./components/BusinessInfoSection";
 import BusinessProfilePageLoadingSkeleton from "./components/BusinessProfilePageLoadingSkeleton";
 import { BusinessDetail } from "@/types/business.types";
+import { getBusinessById } from "@/services/BusinessProfilePageService";
 
 const ManageBusinessDetailPage = () => {
   const [business, setBusiness] = useState<BusinessDetail | null>(null);
