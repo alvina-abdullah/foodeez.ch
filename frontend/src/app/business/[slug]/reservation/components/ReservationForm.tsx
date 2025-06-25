@@ -10,7 +10,6 @@ interface ReservationFormProps {
   isSubmitting: boolean;
   handleSubmit: (e: React.FormEvent) => void;
   children?: React.ReactNode;
-  onNextStep?: () => void;
 }
 
 const ReservationForm: React.FC<ReservationFormProps> = ({
@@ -21,7 +20,6 @@ const ReservationForm: React.FC<ReservationFormProps> = ({
   isSubmitting,
   handleSubmit,
   children,
-  onNextStep
 }) => {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
@@ -89,7 +87,7 @@ const ReservationForm: React.FC<ReservationFormProps> = ({
             </div>
             {/* Party Size */}
             <div className="w-full">
-              <label className="block text-text-main font-medium mb-2">Party Size*</label>
+              <label className="block text-text-main font-medium mb-2">No of Persons*</label>
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                   <Users className="h-5 w-5 text-gray-400" />
@@ -102,7 +100,7 @@ const ReservationForm: React.FC<ReservationFormProps> = ({
                   className="block w-full pl-10 pr-3 py-2.5 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-primary focus:border-primary transition"
                 >
                   {[1,2,3,4,5,6,7,8,9,10].map(num => (
-                    <option key={num} value={num.toString()}>{num} {num === 1 ? 'Guest' : 'Guests'}</option>
+                    <option key={num} value={num.toString()}>{num} {num === 1 ? 'Person' : 'Persons'}</option>
                   ))}
                   <option value="11">More than 10</option>
                 </select>
@@ -110,12 +108,13 @@ const ReservationForm: React.FC<ReservationFormProps> = ({
             </div>
           </div>
           <div>
-            <label className="block text-text-main font-medium mb-2">Occasion (optional)</label>
+            <label className="block text-text-main font-medium mb-2">Reservation For</label>
             <select
               name="occasion"
               value={formData.occasion}
               onChange={handleChange}
               className="block w-full px-3 py-2.5 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-primary focus:border-primary transition"
+              required
             >
               <option value="">Select an occasion</option>
               <option value="Birthday">Birthday</option>
@@ -128,7 +127,7 @@ const ReservationForm: React.FC<ReservationFormProps> = ({
           <div className="flex justify-end pt-4">
             <button
               type="button"
-              onClick={onNextStep ? onNextStep : nextStep}
+              onClick={nextStep}
               className="px-6 py-2.5 bg-primary hover:bg-primary-dark text-white font-medium rounded-md shadow-sm transition-colors"
             >
               Continue

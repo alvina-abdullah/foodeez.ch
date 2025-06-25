@@ -18,9 +18,9 @@ export default function EventCard({ event }: EventCardProps) {
   const location = `${event.ADDRESS_STREET || ""}, ${event.ADDRESS_ZIPCODE || ""} ${event.ADDRESS_TOWN || ""}`;
 
   return (
-    <div className="flex items-center p-6 rounded-lg">
+    <div className="flex items-center p-6 rounded-lg border border-accent border-dashed">
       <div className="flex-shrink-0 text-center mr-6">
-        <div className="bg-background-dark border-2 border-dashed border-accent-dark rounded-lg w-20 h-20 flex flex-col items-center justify-center">
+        <div className="bg-background-card border-2 rounded-lg w-20 h-20 flex flex-col items-center justify-center">
           <span className="text-3xl font-bold text-secondary">{day}</span>
           <span className="text-md text-text-main">{month}</span>
         </div>

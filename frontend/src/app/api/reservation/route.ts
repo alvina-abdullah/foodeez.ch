@@ -9,7 +9,7 @@ export async function POST(request: Request) {
   try {
     const body = await request.json();
     console.log('Request body:', body);
-    
+
     const {
       name,
       email,
@@ -39,7 +39,7 @@ export async function POST(request: Request) {
       const reservation = await prisma.reserve_table.create({
         data: {
           CREATION_DATETIME: new Date(),
-          BUSINESS_ID: businessId ? parseInt(businessId) : undefined,
+          BUSINESS_ID: businessId,
           RESERVATION_SOURCE: 1,
           VISITOR_ID: 0,
           RESERVATION_AS_NAME: name,
@@ -47,10 +47,11 @@ export async function POST(request: Request) {
           PHONE_NUMBER: phone,
           RESERVATION_DATE: new Date(date),
           EXPECTED_TIME: time,
-          RESERVATION_FOR: guests,
+          RESERVATION_FOR: occasion || '',
+          RESERVATION_NUMBER: Number(guests) || 0,
           REMARKS: specialRequests || '',
           STATUS: 1,
-          ADMIN_REMARKS: occasion || ''
+          ADMIN_REMARKS: '',
         }
       });
       console.log('Database operation successful:', reservation);
@@ -122,8 +123,8 @@ export async function POST(request: Request) {
       cause: error instanceof Error ? error.cause : undefined
     });
     return NextResponse.json(
-      { 
-        error: 'Failed to submit reservation request', 
+      {
+        error: 'Failed to submit reservation request',
         details: error instanceof Error ? error.message : 'Unknown error'
       },
       { status: 500 }

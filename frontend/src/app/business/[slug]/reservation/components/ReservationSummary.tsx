@@ -29,12 +29,12 @@ const ReservationSummary: React.FC<ReservationSummaryProps> = ({ business, date,
           <span className="font-medium">{time}</span>
         </div>
         <div className="flex justify-between">
-          <span className="text-text-muted">Party size:</span>
-          <span className="font-medium">{guests} {guests === '1' ? 'Guest' : 'Guests'}</span>
+          <span className="text-text-muted">No of Persons:</span>
+          <span className="font-medium">{guests} {guests === '1' ? 'Person' : 'Persons'}</span>
         </div>
         {occasion && (
           <div className="flex justify-between">
-            <span className="text-text-muted">Occasion:</span>
+            <span className="text-text-muted">Reservation For:</span>
             <span className="font-medium">{occasion}</span>
           </div>
         )}

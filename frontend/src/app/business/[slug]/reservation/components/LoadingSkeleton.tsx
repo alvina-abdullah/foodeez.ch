@@ -2,14 +2,14 @@ import React from 'react'
 
 const LoadingSkeleton = () => {
   return (
-    <div className="my-10">
-    <div className="mb-6">
-      <div className="h-6 w-32 bg-gray-200 rounded animate-pulse" />
-    </div>
-    
+    <div className="">
     {/* Hero Skeleton */}
     <div className="mb-8">
-      <div className="h-20 py-20  bg-gray-200 rounded animate-pulse mb-4" />
+      <div className="h-[400px]  bg-gray-200 rounded animate-pulse mb-4" />
+    </div>
+
+    <div className="mb-6">
+      <div className="h-6 w-32 bg-gray-200 rounded animate-pulse" />
     </div>
 
     <div className="grid grid-cols-1 md:grid-cols-2 md:gap-8">
