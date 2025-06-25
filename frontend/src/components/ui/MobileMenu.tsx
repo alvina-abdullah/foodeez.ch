@@ -10,10 +10,8 @@ import {
   User,
   Settings,
   CircleUser,
-  Plus,
 } from "lucide-react"; // Added Plus icon for "Register Business"
 import Image from "next/image";
-import { usePathname } from "next/navigation"; // Keep usePathname for active link styling
 
 // --- Helper Components for better readability and reusability ---
 
@@ -22,6 +20,7 @@ interface NavLinkProps {
   children: React.ReactNode;
   className?: string;
   onClick?: () => void;
+  pathname?: string; // Optional prop to check active link
 }
 
 const NavLink: React.FC<NavLinkProps> = ({
@@ -29,8 +28,8 @@ const NavLink: React.FC<NavLinkProps> = ({
   children,
   className = "",
   onClick,
+  pathname,
 }) => {
-  const pathname = usePathname();
   const isActive = pathname === href;
 
   return (
@@ -54,6 +53,7 @@ interface DropdownItemProps {
   children: React.ReactNode;
   className?: string;
   onClick?: () => void;
+  pathname?: string; // Optional prop to check active link
 }
 
 const DropdownItem: React.FC<DropdownItemProps> = ({
@@ -61,8 +61,8 @@ const DropdownItem: React.FC<DropdownItemProps> = ({
   children,
   className = "",
   onClick,
+  pathname, // Added for active link styling
 }) => {
-  const pathname = usePathname();
   const isActive = pathname === href;
 
   return (
@@ -86,6 +86,7 @@ interface ProfileMenuItemProps {
   href?: string;
   onClick?: () => void;
   isDanger?: boolean;
+  pathname?: string; // Optional prop to check active link
 }
 
 const ProfileMenuItem: React.FC<ProfileMenuItemProps> = ({
@@ -94,6 +95,7 @@ const ProfileMenuItem: React.FC<ProfileMenuItemProps> = ({
   href,
   onClick,
   isDanger = false,
+  pathname, // Added for active link styling
 }) => {
   const content = (
     <>
@@ -109,7 +111,6 @@ const ProfileMenuItem: React.FC<ProfileMenuItemProps> = ({
   `;
 
   if (href) {
-    const pathname = usePathname();
     const isActive = pathname === href;
     return (
       <Link
@@ -138,6 +139,7 @@ interface MobileMenuProps {
   userImage?: string | null;
   onSignOut?: () => void;
   onNavLinkClick?: () => void; // Added for closing menu after navigation
+  pathname?: string; // Added for active link styling
 }
 
 export default function MobileMenu({
@@ -146,10 +148,11 @@ export default function MobileMenu({
   userName,
   userImage,
   onSignOut,
-  onNavLinkClick, // Prop to close menu after clicking a link
+  onNavLinkClick,
+  pathname,
+  // Prop to close menu after clicking a link
 }: MobileMenuProps) {
   const [isPartnerOpen, setIsPartnerOpen] = useState(false);
-  const pathname = usePathname(); // Use usePathname to highlight active links
 
   const togglePartnerMenu = () => setIsPartnerOpen((prev) => !prev);
 
@@ -204,16 +207,22 @@ export default function MobileMenu({
                     <DropdownItem
                       href="/business/register"
                       onClick={handleNavLinkClick}
+                      pathname={pathname} // Pass pathname for active link styling
                     >
                       Register Your Business
                     </DropdownItem>
                     <DropdownItem
                       href="/coming-soon"
                       onClick={handleNavLinkClick}
+                      pathname={pathname} // Pass pathname for active link styling
                     >
                       Pricing
                     </DropdownItem>
-                    <DropdownItem href="/contact" onClick={handleNavLinkClick}>
+                    <DropdownItem
+                      href="/contact"
+                      onClick={handleNavLinkClick}
+                      pathname={pathname} // Pass pathname for active link styling
+                    >
                       Contact Us
                     </DropdownItem>
                   </motion.div>
@@ -221,7 +230,11 @@ export default function MobileMenu({
               </AnimatePresence>
             </div>
             {/* Share Experience */}
-            <NavLink href="/share-experience" onClick={handleNavLinkClick}>
+            <NavLink
+              href="/share-experience"
+              onClick={handleNavLinkClick}
+              pathname={pathname} // Pass pathname for active link styling
+            >
               Share Your Experience
             </NavLink>
             {/* Profile Section */}
@@ -264,18 +277,21 @@ export default function MobileMenu({
                     icon={<User />}
                     label="My Dashboard"
                     onClick={handleNavLinkClick}
+                    pathname={pathname} // Pass pathname for active link styling
                   />
                   <ProfileMenuItem
                     href="/dashboard/profile"
                     icon={<Settings />}
                     label="Update Profile"
                     onClick={handleNavLinkClick}
+                    pathname={pathname} // Pass pathname for active link styling
                   />
                   <ProfileMenuItem
                     icon={<LogOut />}
                     label="Sign Out"
                     onClick={onSignOut}
                     isDanger
+                    pathname={pathname} // Pass pathname for active link styling
                   />
                 </div>
               </div>
@@ -289,6 +305,7 @@ export default function MobileMenu({
                   href="/auth/signin"
                   className="w-full text-center"
                   onClick={handleNavLinkClick}
+                  pathname={pathname}
                 >
                   Sign In
                 </NavLink>
@@ -296,6 +313,7 @@ export default function MobileMenu({
                   href="/auth/signup"
                   className="w-full text-center bg-primary text-white hover:bg-primary/90"
                   onClick={handleNavLinkClick}
+                  pathname={pathname}
                 >
                   Sign Up
                 </NavLink>

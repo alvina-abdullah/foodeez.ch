@@ -137,6 +137,7 @@ export const Navbar = () => {
             userName={session?.user?.name}
             userImage={session?.user?.image || ""}
             onSignOut={handleSignOut}
+            pathname={pathname}
           />
         )}
       </AnimatePresence>
