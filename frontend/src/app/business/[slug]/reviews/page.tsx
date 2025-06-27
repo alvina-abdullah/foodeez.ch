@@ -11,31 +11,27 @@ import {
 import { Skeleton } from "@/components/ui/skeleton";
 import Banner from "@/components/core/Banner";
 import { useParams } from "next/navigation";
-import { extractBusinessId, parseSlug } from "@/lib/utils/genSlug";
+import { extractBusinessId } from "@/lib/utils/genSlug";
 import Link from "next/link";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import Modal from "@/components/core/Modal";
 import { AnimatePresence, motion } from "framer-motion";
-import { extractPlaceIdFromUrl } from "@/lib/utils/google";
 import FoodeezReviewCard from "@/components/core/review/FoodeezReviewCard";
 import ReviewForm from "@/components/core/review/ReviewForm";
 
 export default function AllFoodeezReviewsPage() {
   const params = useParams();
   const slug = params.slug as string;
-  const parsedId = parseSlug(slug);
   const businessId = extractBusinessId(slug);
 
   const [business, setBusiness] = useState<business_detail_view_all | null>();
   const [reviews, setReviews] = useState<visitor_business_review_view[]>([]);
   const [loading, setLoading] = useState(true);
-  const [likeCounts, setLikeCounts] = useState<{ [id: number]: number }>({});
   const [showReviewForm, setShowReviewForm] = useState(false);
   const { data: session } = useSession();
   const router = useRouter();
   const [showAuthModal, setShowAuthModal] = useState(false);
-  const [placeId, setPlaceId] = useState<string>("");
 
   useEffect(() => {
     async function fetchBusiness() {
@@ -53,12 +49,6 @@ export default function AllFoodeezReviewsPage() {
       if (mapped && mapped.BUSINESS_ID) {
         setBusiness(mapped as unknown as any);
 
-        // ✅ Extract place ID from Google profile
-        const placeId = extractPlaceIdFromUrl(
-          String(mapped.GOOGLE_PROFILE || "")
-        );
-        setPlaceId(placeId);
-
         // Fetch business reviews
         const businessReviews = await getBusinessReviews(
           Number(mapped.BUSINESS_ID)
@@ -74,16 +64,6 @@ export default function AllFoodeezReviewsPage() {
 
     fetchBusiness();
   }, [businessId]);
-
-  const handleLike = (id: number) => {
-    setLikeCounts((prev) => ({
-      ...prev,
-      [id]: (prev[id] ?? 0) + 1,
-    }));
-  };
-  const handleShare = (id: number) => {
-    console.log("Share clicked for review ID:", id);
-  };
 
   // Helper for address
   const getFullAddress = (b: business_detail_view_all | null | undefined) => {

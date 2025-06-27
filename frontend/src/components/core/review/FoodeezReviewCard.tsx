@@ -55,7 +55,6 @@ export default function FoodeezReviewCard({
   const [liked, setLiked] = useState(false);
   const { data: session } = useSession();
   const [showEditModal, setShowEditModal] = useState(false);
-  const [editLoading, setEditLoading] = useState(false);
   const [deleteLoading, setDeleteLoading] = useState(false);
   const [deleted, setDeleted] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
@@ -124,7 +123,8 @@ export default function FoodeezReviewCard({
         setShowDeleteModal(false);
       }
     } catch (e) {
-      // Optionally show error
+console.log("Error deleting review:", e);
+      
     } finally {
       setDeleteLoading(false);
     }
@@ -267,7 +267,6 @@ export default function FoodeezReviewCard({
             <button
               className="flex items-center gap-1 text-warning hover:text-danger font-semibold ml-2"
               onClick={handleEdit}
-              disabled={editLoading}
             >
               Edit
             </button>

@@ -58,21 +58,7 @@ export default function FoodeezReviews({
       setTimeout(checkScrollPosition, 300);
     }
   };
-
-  const handleLike = (id: number) => {
-    setLikeCounts((prev) => ({
-      ...prev,
-      [id]: (prev[id] ?? 0) + 1,
-    }));
-    // TODO: Optionally, call an API to persist like count
-  };
-
-
-  const handleShare = (id: number) => {
-    console.log(`Share clicked for review ID: ${id}`);
-    // TODO: Implement share logic
-  };
-
+  
   return (
     <div className="relative w-full py-8 px-2 sm:px-4 lg:px-0">
       <div className="flex justify-between items-center mb-4">

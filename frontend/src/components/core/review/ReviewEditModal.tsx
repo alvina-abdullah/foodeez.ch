@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import ReviewForm from './ReviewForm';
 import { X } from 'lucide-react';
 import ModalPortal from '../ModalPortal';
@@ -9,7 +9,9 @@ interface ReviewEditModalProps {
 }
 
 const ReviewEditModal = ({ review, onClose }: ReviewEditModalProps) => {
-  const [loading, setLoading] = useState(false);
+  
+  // const [loading, setLoading] = useState(false);
+
   return (
     <ModalPortal>
       <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm">

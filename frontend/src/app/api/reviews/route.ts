@@ -32,7 +32,7 @@ export async function POST(request: Request) {
     }
 
     // Handle file uploads
-    let imageUrls: string[] = [];
+    const imageUrls: string[] = [];
     if (images && images.length > 0) {
       for (const img of images) {
         if (typeof img === 'object' && 'arrayBuffer' in img) {
