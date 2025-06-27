@@ -71,12 +71,12 @@ const HeroSection = () => {
       >
         <ChevronLeft />
       </button>
-      <button
+      {/* <button
         className="absolute right-4 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white text-primary  p-2 rounded-full shadow-lg"
         onClick={scrollNext}
       >
         <ChevronRight />
-      </button>
+      </button> */}
 
       {/* Dots Navigation */}
       <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2">
