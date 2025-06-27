@@ -1,5 +1,6 @@
 import React, { useState, ChangeEvent, FormEvent, useRef } from 'react';
 import { Star, UploadCloud, Trash2, Loader2, Info, CheckCircle } from 'lucide-react';
+import Image from 'next/image';
 
 const MAX_IMAGES = 3;
 const MAX_REMARKS = 1000;
@@ -7,14 +8,33 @@ const MAX_REMARKS = 1000;
 interface ReviewFormProps {
   businessId: number;
   onSuccess: () => void;
+  initialRemarks?: string;
+  initialRating?: number;
+  initialImages?: (File | string)[];
+  initialVideo?: File | string;
+  reviewId?: number;
+  isEdit?: boolean;
 }
 
-const ReviewForm: React.FC<ReviewFormProps> = ({ businessId, onSuccess }) => {
-  const [rating, setRating] = useState(5);
+const ReviewForm: React.FC<ReviewFormProps> = ({
+  businessId,
+  onSuccess,
+  initialRemarks = '',
+  initialRating = 5,
+  initialImages = [],
+  initialVideo = null,
+  reviewId,
+  isEdit = false,
+}) => {
+  const [rating, setRating] = useState(initialRating);
   const [hoverRating, setHoverRating] = useState(0);
-  const [remarks, setRemarks] = useState('');
-  const [images, setImages] = useState<File[]>([]);
-  const [video, setVideo] = useState<File | null>(null);
+  const [remarks, setRemarks] = useState(initialRemarks);
+  const [images, setImages] = useState<File[]>(
+    initialImages.filter((img): img is File => img instanceof File)
+  );
+  const [video, setVideo] = useState<File | null>(
+    initialVideo instanceof File ? initialVideo : null
+  );
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [showConfirmation, setShowConfirmation] = useState(false);
@@ -72,10 +92,19 @@ const ReviewForm: React.FC<ReviewFormProps> = ({ businessId, onSuccess }) => {
       formData.append('remarks', remarks);
       images.forEach(img => formData.append('images', img));
       if (video) formData.append('video', video);
-      const response = await fetch('/api/reviews', {
-        method: 'POST',
-        body: formData,
-      });
+      let response;
+      if (isEdit && reviewId) {
+        formData.append('reviewId', String(reviewId));
+        response = await fetch('/api/reviews', {
+          method: 'PUT',
+          body: formData,
+        });
+      } else {
+        response = await fetch('/api/reviews', {
+          method: 'POST',
+          body: formData,
+        });
+      }
       if (!response.ok) throw new Error('Submission failed');
       setShowConfirmation(true);
       setTimeout(() => {
@@ -83,7 +112,7 @@ const ReviewForm: React.FC<ReviewFormProps> = ({ businessId, onSuccess }) => {
         onSuccess();
       }, 2000);
     } catch (err) {
-      setError('Failed to submit review. Please try again.');
+      setError('Failed to submit review. Please try again. ERROR :' + err);
     } finally {
       setLoading(false);
     }
@@ -186,10 +215,11 @@ const ReviewForm: React.FC<ReviewFormProps> = ({ businessId, onSuccess }) => {
             {images.map((img, idx) => (
               <div key={idx} className="relative group">
                 <div className="w-20 h-20 rounded-lg overflow-hidden border border-primary/20 bg-background">
-                  <img
+                  <Image
                     src={URL.createObjectURL(img)}
                     alt={`Preview ${idx + 1}`}
                     className="w-full h-full object-cover"
+                    fill
                   />
                 </div>
                 <button

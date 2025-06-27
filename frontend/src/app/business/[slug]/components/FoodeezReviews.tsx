@@ -3,13 +3,13 @@ import { Card } from "@/components/ui/card";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useRef, useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { business_detail_view_all, visitor_business_review_view } from "@prisma/client";
+import { visitor_business_review_view } from "@prisma/client";
 import Link from "next/link";
-import FoodeezReviewCard from "@/components/core/FoodeezReviewCard";
 import { useSession } from "next-auth/react";
 import Modal from "@/components/core/Modal";
 import { useRouter } from "next/navigation";
-import ReviewForm from "../reviews/components/ReviewForm";
+import FoodeezReviewCard from "@/components/core/review/FoodeezReviewCard";
+import ReviewForm from "@/components/core/review/ReviewForm";
 
 interface FoodeezReviewsProps {
   reviews: visitor_business_review_view[];
@@ -139,8 +139,6 @@ export default function FoodeezReviews({
                 <FoodeezReviewCard
                   review={review}
                   likeCount={likeCounts[review.VISITOR_BUSINESS_REVIEW_ID]}
-                  onLike={handleLike}
-                  onShare={handleShare}
                 />
               </motion.div>
             ))

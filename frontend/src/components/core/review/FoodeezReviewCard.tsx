@@ -1,25 +1,25 @@
 import { Card } from "@/components/ui/card";
-import StarIcon from "@/components/ui/StarIcon";
 import {
   Share2,
   PlayCircle,
   X,
   Heart,
-  Facebook,
-  Twitter,
-  Copy,
-  Phone,
 } from "lucide-react";
 import Image from "next/image";
 import { useState, useEffect } from "react";
 import { visitor_business_review_view } from "@prisma/client";
 import { createPortal } from "react-dom";
+import { useSession } from 'next-auth/react';
+import ReviewEditModal from "./ReviewEditModal";
+import DeleteConfirmModal from './DeleteConfirmModal';
+import UserAvatarAndName from "./UserAvatarAndName";
+import ReviewStars from "./ReviewStars";
+import ReviewGallery from "./ReviewGallery";
+import ReviewShareModal from "./ReviewShareModal";
 
 interface FoodeezReviewCardProps {
   review: visitor_business_review_view;
   likeCount?: number;
-  onLike?: (id: number) => void;
-  onShare?: (id: number) => void;
 }
 
 const getReviewImages = (review: visitor_business_review_view) => {
@@ -39,8 +39,6 @@ const getReviewImages = (review: visitor_business_review_view) => {
 
 export default function FoodeezReviewCard({
   review,
-  onLike,
-  onShare,
   likeCount,
 }: FoodeezReviewCardProps) {
   const [showGallery, setShowGallery] = useState(false);
@@ -55,6 +53,12 @@ export default function FoodeezReviewCard({
     likeCount ?? review.LIKE_COUNT ?? 0
   );
   const [liked, setLiked] = useState(false);
+  const { data: session } = useSession();
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [editLoading, setEditLoading] = useState(false);
+  const [deleteLoading, setDeleteLoading] = useState(false);
+  const [deleted, setDeleted] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
 
   useEffect(() => {
     setMounted(true);
@@ -95,58 +99,55 @@ export default function FoodeezReviewCard({
         setLiked(true);
       }
     } catch (e) {
+      console.error("Error liking review:", e);
       // Optionally show error
     } finally {
       setLikeLoading(false);
     }
   };
 
+  // Check if current user is the owner
+  const isOwner = session?.user?.id && Number(session.user.id) === Number(review.VISITORS_ACCOUNT_ID);
+
+  // Delete handler
+  const handleDelete = async () => {
+    setDeleteLoading(true);
+    try {
+      const res = await fetch('/api/reviews', {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ reviewId: review.VISITOR_BUSINESS_REVIEW_ID }),
+      });
+      const data = await res.json();
+      if (data.success) {
+        setDeleted(true);
+        setShowDeleteModal(false);
+      }
+    } catch (e) {
+      // Optionally show error
+    } finally {
+      setDeleteLoading(false);
+    }
+  };
+
+  // Edit handler (show modal)
+  const handleEdit = () => {
+    setShowEditModal(true);
+  };
+
+  if (deleted) return null;
+
   return (
     <Card className="w-full rounded-2xl border-2 border-gray-200 bg-white p-5 lg:p-6 shadow-md hover:shadow-lg transition-all flex flex-col h-full">
       {/* User Info */}
-      <div className="flex items-center gap-4 mb-3">
-        {userPic ? (
-          <Image
-            src={userPic}
-            alt={userName}
-            width={48}
-            height={48}
-            className="h-12 w-12 rounded-full object-cover border-2 border-primary shadow"
-          />
-        ) : (
-          <div className="h-12 w-12 rounded-full bg-gradient-to-br from-primary/20 to-accent/20 flex items-center justify-center border-2 border-primary">
-            <span className="text-primary text-lg font-bold">
-              {userName.charAt(0)}
-            </span>
-          </div>
-        )}
-        <div>
-          <p className="font-semibold text-lg lg:text-xl text-primary leading-tight">
-            {userName}
-          </p>
-          <p className="text-xs lg:text-lg text-text-muted">
-            {review.CREATION_DATETIME
-              ? new Date(review.CREATION_DATETIME).toLocaleDateString()
-              : ""}
-          </p>
-        </div>
-      </div>
+      <UserAvatarAndName
+        userPic={userPic}
+        userName={userName}
+      />
       {/* Rating */}
-      <div className="flex items-center gap-1 mb-2">
-        {[...Array(5)].map((_, i) => (
-          <StarIcon
-            key={i}
-            fillLevel={i < ratingValue ? 1 : 0}
-            size={22}
-            className={
-              i < ratingValue ? "text-highlight drop-shadow" : "text-gray-800"
-            }
-          />
-        ))}
-        <span className="text-sm lg:text-base text-text-main ml-1 font-medium">
-          {Number(review.RATING).toFixed(1)}
-        </span>
-      </div>
+      <ReviewStars
+        ratingValue={ratingValue}
+      />
       {/* Review Text */}
       <div className="flex-grow overflow-y-auto pr-1 mb-2 h-32 lg:h-40"
       id="no-scrollbar"
@@ -157,50 +158,14 @@ export default function FoodeezReviewCard({
       </div>
       {/* Images & Video */}
       {(images.length > 0 || hasVideo) && (
-        <div className="mt-6 flex flex-wrap gap-2">
-          {images.map((img, idx) => (
-            <button
-              key={img}
-              className="relative w-20 h-20 rounded-lg overflow-hidden border border-primary/20 focus:outline-none focus:ring-2 focus:ring-primary"
-              onClick={() => {
-                setGalleryIndex(idx);
-                setShowGallery(true);
-              }}
-              aria-label="View image"
-              type="button"
-            >
-              <Image
-                src={img}
-                alt={`Review image ${idx + 1}`}
-                fill
-                className="object-cover"
-                sizes="80px"
-              />
-            </button>
-          ))}
-          {hasVideo && (
-            <button
-              className="relative w-20 h-20 rounded-lg overflow-hidden border border-primary/20 flex items-center justify-center bg-black/60"
-              onClick={() => {
-                setGalleryIndex(images.length); // video index
-                setShowGallery(true);
-              }}
-              aria-label="View video"
-              type="button"
-            >
-              <PlayCircle className="w-10 h-10 text-white/90 absolute z-10" />
-              <video
-                src={review.VIDEO_1!}
-                className="object-cover w-full h-full"
-                muted
-                loop
-                playsInline
-                preload="metadata"
-                poster={images[0]}
-              />
-            </button>
-          )}
-        </div>
+        <ReviewGallery
+          images={images}
+          hasVideo={hasVideo}
+          galleryIndex={galleryIndex}
+          setGalleryIndex={setGalleryIndex}
+          showGallery={showGallery}
+          setShowGallery={setShowGallery}
+        />
       )}
       {/* Gallery Modal */}
       {showGallery &&
@@ -269,77 +234,13 @@ export default function FoodeezReviewCard({
       {showShare &&
         mounted &&
         createPortal(
-          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm px-4">
-            <div className="relative bg-white rounded-2xl shadow-2xl p-6 w-full max-w-sm border border-primary/20">
-              {/* Close Button */}
-              <button
-                className="absolute top-3 right-3 text-gray-400 hover:text-primary transition-colors"
-                onClick={() => setShowShare(false)}
-                aria-label="Close share dialog"
-              >
-                <X className="w-5 h-5" />
-              </button>
-
-              {/* Modal Content */}
-              <h3 className="text-xl font-semibold text-primary text-center mb-4">
-                Share This Review
-              </h3>
-
-              {/* Share Link Input */}
-              <div className="flex items-center gap-2 mb-4">
-                <input
-                  type="text"
-                  value={shareUrl}
-                  readOnly
-                  onFocus={(e) => e.target.select()}
-                  className="flex-1 text-sm px-3 py-2 border border-primary/30 rounded-full bg-gray-50"
-                />
-                <button
-                  onClick={handleCopy}
-                  className="p-2 rounded-full bg-primary text-white hover:bg-primary/90 transition-colors"
-                  aria-label="Copy link"
-                >
-                  <Copy className="w-4 h-4" />
-                </button>
-              </div>
-              {copied && (
-                <p className="text-xs text-green-600 text-center mb-2">
-                  Link copied!
-                </p>
-              )}
-
-              {/* Social Share Icons */}
-              <div className="flex justify-center gap-4 mt-2">
-                <a
-                  href={`https://wa.me/?text=${encodeURIComponent(shareUrl)}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="p-2 rounded-full bg-green-500/10 hover:bg-green-500/20 transition"
-                  aria-label="Share on WhatsApp"
-                >
-                  <Phone className="text-green-600 w-5 h-5" />
-                </a>
-                <a
-                  href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="p-2 rounded-full bg-blue-500/10 hover:bg-blue-500/20 transition"
-                  aria-label="Share on Facebook"
-                >
-                  <Facebook className="text-blue-600 w-5 h-5" />
-                </a>
-                <a
-                  href={`https://twitter.com/intent/tweet?url=${encodeURIComponent(shareUrl)}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="p-2 rounded-full bg-sky-500/10 hover:bg-sky-500/20 transition"
-                  aria-label="Share on Twitter"
-                >
-                  <Twitter className="text-sky-500 w-5 h-5" />
-                </a>
-              </div>
-            </div>
-          </div>,
+          <ReviewShareModal
+            showShare={showShare}
+            setShowShare={setShowShare}
+            shareUrl={shareUrl}
+            handleCopy={handleCopy}
+            copied={copied}
+          />,
           document.body
         )}
       {/* Actions */}
@@ -361,7 +262,37 @@ export default function FoodeezReviewCard({
         >
           <Share2 className="h-5 w-5" />
         </button>
+        {isOwner && (
+          <>
+            <button
+              className="flex items-center gap-1 text-warning hover:text-danger font-semibold ml-2"
+              onClick={handleEdit}
+              disabled={editLoading}
+            >
+              Edit
+            </button>
+            <button
+              className="flex items-center gap-1 text-danger hover:text-danger/80 font-semibold ml-2"
+              onClick={() => setShowDeleteModal(true)}
+              disabled={deleteLoading}
+            >
+              {deleteLoading ? 'Deleting...' : 'Delete'}
+            </button>
+          </>
+        )}
       </div>
+      {/* Edit Modal */}
+      {showEditModal && (
+        <ReviewEditModal review={review} onClose={() => setShowEditModal(false)} />
+      )}
+      {/* Delete Confirm Modal */}
+      {showDeleteModal && (
+        <DeleteConfirmModal
+          onConfirm={handleDelete}
+          onCancel={() => setShowDeleteModal(false)}
+          loading={deleteLoading}
+        />
+      )}
     </Card>
   );
 }

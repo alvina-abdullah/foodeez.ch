@@ -1,6 +1,5 @@
 "use client";
 import { useEffect, useState } from "react";
-import FoodeezReviewCard from "@/components/core/FoodeezReviewCard";
 import {
   business_detail_view_all,
   visitor_business_review_view,
@@ -18,9 +17,9 @@ import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import Modal from "@/components/core/Modal";
 import { AnimatePresence, motion } from "framer-motion";
-import ReviewForm from "./components/ReviewForm";
-import { BusinessDetail } from "@/types/business.types";
 import { extractPlaceIdFromUrl } from "@/lib/utils/google";
+import FoodeezReviewCard from "@/components/core/review/FoodeezReviewCard";
+import ReviewForm from "@/components/core/review/ReviewForm";
 
 export default function AllFoodeezReviewsPage() {
   const params = useParams();
@@ -207,9 +206,6 @@ export default function AllFoodeezReviewsPage() {
                 <FoodeezReviewCard
                   key={review.VISITOR_BUSINESS_REVIEW_ID}
                   review={review}
-                  likeCount={likeCounts[review.VISITOR_BUSINESS_REVIEW_ID]}
-                  onLike={handleLike}
-                  onShare={handleShare}
                 />
               ))}
             </div>
