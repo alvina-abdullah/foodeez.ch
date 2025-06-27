@@ -139,7 +139,7 @@ const ReviewForm: React.FC<ReviewFormProps> = ({ businessId, onSuccess }) => {
           maxLength={MAX_REMARKS}
         />
         <div className="flex justify-between mt-1">
-          <span className="text-xs text-text-light">
+          <span className="text-xs text-primary animate-pulse">
             Minimum 50 characters
           </span>
           <span className={`text-xs ${remarks.length > MAX_REMARKS - 50 ? 'text-warning' : 'text-text-light'}`}>

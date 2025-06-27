@@ -148,8 +148,10 @@ export default function FoodeezReviewCard({
         </span>
       </div>
       {/* Review Text */}
-      <div className="flex-grow overflow-y-auto pr-1 hide-scrollbar mb-2">
-        <p className="text-text-main leading-relaxed text-base lg:text-lg font-normal">
+      <div className="flex-grow overflow-y-auto pr-1 mb-2 h-32 lg:h-40"
+      id="no-scrollbar"
+      >
+        <p className="text-text-main leading-relaxed text-base  font-normal">
           {review.REMARKS}
         </p>
       </div>
@@ -343,7 +345,7 @@ export default function FoodeezReviewCard({
       {/* Actions */}
       <div className="flex items-center gap-2 mt-8">
         <button
-          className={`flex items-center gap-1 text-primary hover:text-accent font-semibold transition ${liked ? "opacity-60 pointer-events-none" : ""}`}
+          className={`flex items-center gap-1 text-primary hover:text-accent font-semibold transition ${liked ? "pointer-events-none" : ""}`}
           onClick={handleLikeClick}
           disabled={likeLoading || liked}
           aria-label="Like review"
