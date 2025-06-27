@@ -167,7 +167,7 @@ export async function PUT(request: Request) {
       return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
     }
     // Handle file uploads (optional, similar to POST)
-    let imageUrls: string[] = [];
+    const imageUrls: string[] = [];
     if (images && images.length > 0) {
       for (const img of images) {
         if (typeof img === 'object' && 'arrayBuffer' in img) {
