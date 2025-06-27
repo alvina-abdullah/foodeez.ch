@@ -52,19 +52,19 @@ model business {
 }
 
 model business_2_business_category {
-  BUSINESS_BUSINESS_CATEGORY_ID Int       @id @default(autoincrement())
-  CREATION_DATETIME             DateTime? @db.DateTime(0)
-  BUSINESS_ID                   BigInt?
-  BUSINESS_CATEGORY_ID          BigInt?
-  STATUS                        Int?      @db.TinyInt
-  DISPLAY_SEQ                   Int?
+  BUSINESS_2_BUSINESS_CATEGORY_ID Int       @id @default(autoincrement())
+  CREATION_DATETIME               DateTime? @db.DateTime(0)
+  BUSINESS_ID                     BigInt?
+  BUSINESS_CATEGORY_ID            BigInt?
+  STATUS                          Int?      @db.TinyInt
+  DISPLAY_SEQ                     Int?
 }
 
 model business_2_food_type {
-  BUSINESS_FOOD_TYPE_ID Int       @id @default(autoincrement())
-  CREATION_DATETIME     DateTime? @db.DateTime(0)
-  BUSINESS_ID           BigInt?
-  FOOD_TYPE_ID          BigInt?
+  BUSINESS_2_FOOD_TYPE_ID Int       @id @default(autoincrement())
+  CREATION_DATETIME       DateTime? @db.DateTime(0)
+  BUSINESS_ID             BigInt?
+  FOOD_TYPE_ID            BigInt?
 }
 
 model business_category {
@@ -74,19 +74,15 @@ model business_category {
 }
 
 model business_owner {
-  BUSINESS_OWNER_ID Int      @id @unique(map: "CUSTOMER_ID_UNIQUE") @default(autoincrement())
-  CREATION_DATETIME DateTime @db.DateTime(0)
-  EMAIL_ADDRESS     String   @unique(map: "EMAIL_ADDRESS_UNIQUE") @db.VarChar(255)
-  PASSWORD          String   @db.VarChar(45)
-  FIRST_NAME        String?  @db.VarChar(100)
-  LAST_NAME         String?  @db.VarChar(100)
-  MOBILE_PHONE      String?  @db.VarChar(45)
-  ADDRESS_STREET    String?  @db.VarChar(100)
-  ADDRESS_NO        Int?
-  ADDRESS_ZIP       BigInt?
-  ADDRESS_TOWN      String?  @db.VarChar(100)
-  ADDRESS_COUNTRY   String?  @db.VarChar(100)
-  PIC               String?  @db.VarChar(255)
+  BUSINESS_OWNER_ID   Int      @id @unique(map: "CUSTOMER_ID_UNIQUE") @default(autoincrement())
+  CREATION_DATETIME   DateTime @db.DateTime(0)
+  VISITORS_ACCOUNT_ID Int?
+  MOBILE_PHONE        String?  @db.VarChar(45)
+  ADDRESS_STREET      String?  @db.VarChar(100)
+  ADDRESS_NO          Int?
+  ADDRESS_ZIP         BigInt?
+  ADDRESS_TOWN        String?  @db.VarChar(100)
+  ADDRESS_COUNTRY     String?  @db.VarChar(100)
 }
 
 model business_rating {
@@ -166,11 +162,10 @@ model food_type {
 }
 
 model foodeez_ranking {
-  FOODEEZ_RANKING    Int       @id @default(autoincrement())
-  foodeez_rankingcol String?   @db.VarChar(45)
-  CREATION_DATETIME  DateTime? @db.DateTime(0)
-  BUSINESS_ID        Int?
-  RANKING            Int?      @default(1)
+  FOODEEZ_RANKING   Int       @id @default(autoincrement())
+  CREATION_DATETIME DateTime? @db.DateTime(0)
+  BUSINESS_ID       Int?
+  RANKING           Int?      @default(1)
 }
 
 model foodeez_subscription {
@@ -210,12 +205,14 @@ model visitors_account {
 }
 
 model business_2_business_category2 {
-  BUSINESS_BUSINESS_CATEGORY_ID Int       @id @default(0)
+  BUSINESS_BUSINESS_CATEGORY_ID Int      @id @default(0)
   CREATION_DATETIME             DateTime? @db.DateTime(0)
   BUSINESS_ID                   BigInt?
   BUSINESS_CATEGORY_ID          BigInt?
   STATUS                        Int?      @db.TinyInt
   DISPLAY_SEQ                   Int?
+
+  @@ignore
 }
 
 model upcoming_events {
@@ -237,7 +234,7 @@ model upcoming_events {
 model visitor_business_review {
   VISITOR_BUSINESS_REVIEW_ID Int       @id @default(autoincrement())
   CREATION_DATETIME          DateTime? @db.DateTime(0)
-  VISITOR_ID                 Int
+  VISITORS_ACCOUNT_ID        Int
   BUSINESS_ID                Int
   RATING                     String    @default("5") @db.VarChar(10)
   REMARKS                    String    @default("Excellent") @db.VarChar(1000)
@@ -252,9 +249,8 @@ model visitor_business_review {
   PIC_9                      String?   @db.VarChar(255)
   PIC_10                     String?   @db.VarChar(255)
   VIDEO_1                    String?   @db.VarChar(255)
-  THUMB_UP_COUNT             Int?      @default(1)
-  THUMB_DOWN_COUNT           Int?      @default(0)
   LIKE_COUNT                 Int?      @default(1)
+  APPROVED                   Int?      @default(0) @db.TinyInt
 }
 
 model visitor_favorite_restaurants {
@@ -278,18 +274,9 @@ model visitor_followed_restaurants {
   BUSINESS_ID                     Int?
 }
 
-model business_product_category_2_tag {
-  BUSINESS_PRODUCT_CATEGORY_2_TAG_ID Int       @id @default(autoincrement())
-  CREATION_DATETIME                  DateTime? @db.DateTime(0)
-  BUSINESS_PRODUCT_CATEGORY_ID       Int?
-  BUSINESS_PRODUCT_TAG_ID            Int?
-
-  @@map("business product_category_2_tag")
-}
-
 model business_food_menu_card {
   BUSINESS_FOOD_MENU_CARD_ID Int       @id @default(autoincrement())
-  CREATION_DATETIME          String?   @db.VarChar(45)
+  CREATION_DATETIME          DateTime? @db.DateTime(0)
   BUSINESS_ID                Int?
   TITLE                      String?   @db.VarChar(45)
   VALID_FROM                 DateTime? @db.DateTime(0)
@@ -366,6 +353,7 @@ model business_product {
   WEIGHT              Int?      @default(0)
   WEIGHT_UNIT         String?   @default("gm") @db.VarChar(10)
   STATUS              Int?      @default(1) @db.TinyInt
+  PIC                 String?   @db.VarChar(255)
   business            business? @relation(fields: [BUSINESS_ID], references: [BUSINESS_ID], onDelete: NoAction, onUpdate: NoAction, map: "BUSINESS_ID")
 
   @@index([BUSINESS_ID], map: "BUSINESS_ID_idx")
@@ -383,6 +371,8 @@ model business_product_category {
   CREATION_DATETIME            DateTime? @db.DateTime(0)
   BUSINESS_ID                  Int?
   TITLE                        String?   @db.VarChar(45)
+  DESCRIPTION                  String?   @db.VarChar(255)
+  PIC                          String?   @db.VarChar(255)
   STATUS                       Int?      @default(1) @db.TinyInt
 }
 
@@ -413,6 +403,59 @@ model reserve_table {
   ADMIN_REMARKS       String?   @db.VarChar(100)
 }
 
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model business_owner_2_business {
+  BUSINESS_OWNER_2_BUSINESS_ID Int       @id @default(autoincrement())
+  CREATION_DATETIME            DateTime? @db.DateTime(0)
+  BUSINESS_OWNER_ID            BigInt?
+  BUSINESS_ID                  BigInt?
+  STATUS                       Int?      @default(0) @db.TinyInt
+}
+
+model business_product_category_2_tag {
+  BUSINESS_PRODUCT_CATEGORY_2_TAG_ID Int       @id @default(autoincrement())
+  CREATION_DATETIME                  DateTime? @db.DateTime(0)
+  BUSINESS_PRODUCT_CATEGORY_ID       Int?
+  BUSINESS_PRODUCT_TAG_ID            Int?
+}
+
+model foodeez_review {
+  FOODEEZ_REVIEW_ID BigInt    @id @default(autoincrement())
+  CREATION_DATETIME DateTime? @db.DateTime(0)
+  REVIEWER_NAME     String?   @db.VarChar(255)
+  REVIEWER_EMAIL    String?   @db.VarChar(100)
+  AVATAR            String?   @db.VarChar(100)
+  RATING            Int?      @default(5)
+  REVIEW            String?   @default("Excellent & very helpfull plaform.") @db.VarChar(1000)
+  PIC_1             String?   @db.VarChar(255)
+  PIC_2             String?   @db.VarChar(255)
+  PIC_3             String?   @db.VarChar(255)
+  APPROVED          Int?      @default(0) @db.TinyInt
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model visitor_product_review {
+  VISITOR_PRODUCT_REVIEW_ID Int       @id @default(autoincrement())
+  CREATION_DATETIME         DateTime? @db.DateTime(0)
+  VISITORS_ACCOUNT_ID       Int
+  BUSINESS_PRODUCT_ID       Int
+  RATING                    String    @default("5") @db.VarChar(10)
+  REMARKS                   String    @default("Excellent") @db.VarChar(1000)
+  PIC_1                     String?   @db.VarChar(255)
+  PIC_2                     String?   @db.VarChar(255)
+  PIC_3                     String?   @db.VarChar(255)
+  PIC_4                     String?   @db.VarChar(255)
+  PIC_5                     String?   @db.VarChar(255)
+  PIC_6                     String?   @db.VarChar(255)
+  PIC_7                     String?   @db.VarChar(255)
+  PIC_8                     String?   @db.VarChar(255)
+  PIC_9                     String?   @db.VarChar(255)
+  PIC_10                    String?   @db.VarChar(255)
+  VIDEO_1                   String?   @db.VarChar(255)
+  LIKE_COUNT                Int?      @default(1)
+  APPROVED                  Int?      @default(0) @db.TinyInt
+}
+
 view adlink_view {
   ADLINK_ID     Int     @id @default(0)
   BUSINESS_NAME String? @db.VarChar(255)
@@ -436,136 +479,147 @@ view business_category_view {
 }
 
 view business_detail_view_all {
-  BUSINESS_ID     Int     @id @default(0)
-  BUSINESS_NAME   String? @db.VarChar(255)
-  SHORT_NAME      String? @db.VarChar(20)
-  DESCRIPTION     String? @db.VarChar(1000)
-  ADDRESS_STREET  String? @db.VarChar(100)
-  ADDRESS_ZIP     BigInt?
-  ADDRESS_TOWN    String? @db.VarChar(100)
-  ADDRESS_CITY_ID Int?
-  CITY_CODE       String? @db.VarChar(2)
-  CITY_NAME       String? @db.VarChar(100)
-  EMAIL_ADDRESS   String? @db.VarChar(255)
-  ADDRESS_COUNTRY String? @db.VarChar(100)
-  PHONE_NUMBER    String? @db.VarChar(45)
-  WHATSAPP_NUMBER String? @db.VarChar(45)
-  WEB_ADDRESS     String? @db.VarChar(1000)
-  LOGO            String? @db.VarChar(255)
-  FACEBOOK_LINK   String? @db.VarChar(1000)
-  INSTA_LINK      String? @db.VarChar(1000)
-  TIKTOK_LINK     String? @db.VarChar(1000)
-  GOOGLE_PROFILE  String? @db.VarChar(1000)
-  IMAGE_URL       String? @db.VarChar(1000)
-  GOOGLE_RATING   String? @db.VarChar(10)
-  APPROVED        Int?    @default(0) @db.TinyInt
-  STATUS          Int?    @default(0) @db.TinyInt
-  RANKING         BigInt  @default(0)
-  VEGAN           Int     @default(0)
-  VEGETARIAN      Int     @default(0)
-  HALAL           Int     @default(0)
+  BUSINESS_ID             Int     @id @default(0)
+  BUSINESS_NAME           String? @db.VarChar(255)
+  SHORT_NAME              String? @db.VarChar(20)
+  DESCRIPTION             String? @db.VarChar(1000)
+  ADDRESS_STREET          String? @db.VarChar(100)
+  ADDRESS_ZIP             BigInt?
+  ADDRESS_TOWN            String? @db.VarChar(100)
+  ADDRESS_CITY_ID         Int?
+  CITY_CODE               String? @db.VarChar(2)
+  CITY_NAME               String? @db.VarChar(100)
+  EMAIL_ADDRESS           String? @db.VarChar(255)
+  ADDRESS_COUNTRY         String? @db.VarChar(100)
+  PHONE_NUMBER            String? @db.VarChar(45)
+  WHATSAPP_NUMBER         String? @db.VarChar(45)
+  WEB_ADDRESS             String? @db.VarChar(1000)
+  LOGO                    String? @db.VarChar(255)
+  FACEBOOK_LINK           String? @db.VarChar(1000)
+  INSTA_LINK              String? @db.VarChar(1000)
+  TIKTOK_LINK             String? @db.VarChar(1000)
+  GOOGLE_PROFILE          String? @db.VarChar(1000)
+  IMAGE_URL               String? @db.VarChar(1000)
+  GOOGLE_RATING           String? @db.VarChar(10)
+  APPROVED                Int?    @default(0) @db.TinyInt
+  STATUS                  Int?    @default(0) @db.TinyInt
+  RANKING                 BigInt  @default(0)
+  VEGAN                   Int     @default(0)
+  VEGETARIAN              Int     @default(0)
+  HALAL                   Int     @default(0)
+  CAN_RESERVE_TABLE       Int     @default(0)
+  HAVING_ACTIVE_MENU_CARD Int     @default(0)
 }
 
 view business_detail_view_halal {
-  BUSINESS_ID     Int     @id @default(0)
-  BUSINESS_NAME   String? @db.VarChar(255)
-  SHORT_NAME      String? @db.VarChar(20)
-  DESCRIPTION     String? @db.VarChar(1000)
-  ADDRESS_STREET  String? @db.VarChar(100)
-  ADDRESS_ZIP     BigInt?
-  ADDRESS_TOWN    String? @db.VarChar(100)
-  ADDRESS_CITY_ID Int?
-  CITY_CODE       String? @db.VarChar(2)
-  CITY_NAME       String? @db.VarChar(100)
-  EMAIL_ADDRESS   String? @db.VarChar(255)
-  ADDRESS_COUNTRY String? @db.VarChar(100)
-  PHONE_NUMBER    String? @db.VarChar(45)
-  WHATSAPP_NUMBER String? @db.VarChar(45)
-  WEB_ADDRESS     String? @db.VarChar(1000)
-  LOGO            String? @db.VarChar(255)
-  FACEBOOK_LINK   String? @db.VarChar(1000)
-  INSTA_LINK      String? @db.VarChar(1000)
-  TIKTOK_LINK     String? @db.VarChar(1000)
-  GOOGLE_PROFILE  String? @db.VarChar(1000)
-  IMAGE_URL       String? @db.VarChar(1000)
-  GOOGLE_RATING   String? @db.VarChar(10)
-  APPROVED        Int?    @default(0) @db.TinyInt
-  STATUS          Int?    @default(0) @db.TinyInt
-  RANKING         BigInt  @default(0)
-  VEGAN           Int     @default(0)
-  VEGETARIAN      Int     @default(0)
-  HALAL           Int     @default(0)
+  BUSINESS_ID             Int     @id @default(0)
+  BUSINESS_NAME           String? @db.VarChar(255)
+  SHORT_NAME              String? @db.VarChar(20)
+  DESCRIPTION             String? @db.VarChar(1000)
+  ADDRESS_STREET          String? @db.VarChar(100)
+  ADDRESS_ZIP             BigInt?
+  ADDRESS_TOWN            String? @db.VarChar(100)
+  ADDRESS_CITY_ID         Int?
+  CITY_CODE               String? @db.VarChar(2)
+  CITY_NAME               String? @db.VarChar(100)
+  EMAIL_ADDRESS           String? @db.VarChar(255)
+  ADDRESS_COUNTRY         String? @db.VarChar(100)
+  PHONE_NUMBER            String? @db.VarChar(45)
+  WHATSAPP_NUMBER         String? @db.VarChar(45)
+  WEB_ADDRESS             String? @db.VarChar(1000)
+  LOGO                    String? @db.VarChar(255)
+  FACEBOOK_LINK           String? @db.VarChar(1000)
+  INSTA_LINK              String? @db.VarChar(1000)
+  TIKTOK_LINK             String? @db.VarChar(1000)
+  GOOGLE_PROFILE          String? @db.VarChar(1000)
+  IMAGE_URL               String? @db.VarChar(1000)
+  GOOGLE_RATING           String? @db.VarChar(10)
+  APPROVED                Int?    @default(0) @db.TinyInt
+  STATUS                  Int?    @default(0) @db.TinyInt
+  RANKING                 BigInt  @default(0)
+  VEGAN                   Int     @default(0)
+  VEGETARIAN              Int     @default(0)
+  HALAL                   Int     @default(0)
+  CAN_RESERVE_TABLE       Int     @default(0)
+  HAVING_ACTIVE_MENU_CARD Int     @default(0)
 }
 
 view business_detail_view_vegan {
-  BUSINESS_ID     Int     @id @default(0)
-  BUSINESS_NAME   String? @db.VarChar(255)
-  SHORT_NAME      String? @db.VarChar(20)
-  DESCRIPTION     String? @db.VarChar(1000)
-  ADDRESS_STREET  String? @db.VarChar(100)
-  ADDRESS_ZIP     BigInt?
-  ADDRESS_TOWN    String? @db.VarChar(100)
-  ADDRESS_CITY_ID Int?
-  CITY_CODE       String? @db.VarChar(2)
-  CITY_NAME       String? @db.VarChar(100)
-  EMAIL_ADDRESS   String? @db.VarChar(255)
-  ADDRESS_COUNTRY String? @db.VarChar(100)
-  PHONE_NUMBER    String? @db.VarChar(45)
-  WHATSAPP_NUMBER String? @db.VarChar(45)
-  WEB_ADDRESS     String? @db.VarChar(1000)
-  LOGO            String? @db.VarChar(255)
-  FACEBOOK_LINK   String? @db.VarChar(1000)
-  INSTA_LINK      String? @db.VarChar(1000)
-  TIKTOK_LINK     String? @db.VarChar(1000)
-  GOOGLE_PROFILE  String? @db.VarChar(1000)
-  IMAGE_URL       String? @db.VarChar(1000)
-  GOOGLE_RATING   String? @db.VarChar(10)
-  APPROVED        Int?    @default(0) @db.TinyInt
-  STATUS          Int?    @default(0) @db.TinyInt
-  RANKING         BigInt  @default(0)
-  VEGAN           Int     @default(0)
-  VEGETARIAN      Int     @default(0)
-  HALAL           Int     @default(0)
+  BUSINESS_ID             Int     @id @default(0)
+  BUSINESS_NAME           String? @db.VarChar(255)
+  SHORT_NAME              String? @db.VarChar(20)
+  DESCRIPTION             String? @db.VarChar(1000)
+  ADDRESS_STREET          String? @db.VarChar(100)
+  ADDRESS_ZIP             BigInt?
+  ADDRESS_TOWN            String? @db.VarChar(100)
+  ADDRESS_CITY_ID         Int?
+  CITY_CODE               String? @db.VarChar(2)
+  CITY_NAME               String? @db.VarChar(100)
+  EMAIL_ADDRESS           String? @db.VarChar(255)
+  ADDRESS_COUNTRY         String? @db.VarChar(100)
+  PHONE_NUMBER            String? @db.VarChar(45)
+  WHATSAPP_NUMBER         String? @db.VarChar(45)
+  WEB_ADDRESS             String? @db.VarChar(1000)
+  LOGO                    String? @db.VarChar(255)
+  FACEBOOK_LINK           String? @db.VarChar(1000)
+  INSTA_LINK              String? @db.VarChar(1000)
+  TIKTOK_LINK             String? @db.VarChar(1000)
+  GOOGLE_PROFILE          String? @db.VarChar(1000)
+  IMAGE_URL               String? @db.VarChar(1000)
+  GOOGLE_RATING           String? @db.VarChar(10)
+  APPROVED                Int?    @default(0) @db.TinyInt
+  STATUS                  Int?    @default(0) @db.TinyInt
+  RANKING                 BigInt  @default(0)
+  VEGAN                   Int     @default(0)
+  VEGETARIAN              Int     @default(0)
+  HALAL                   Int     @default(0)
+  CAN_RESERVE_TABLE       Int     @default(0)
+  HAVING_ACTIVE_MENU_CARD Int     @default(0)
 }
 
 view business_detail_view_vegetarian {
-  BUSINESS_ID     Int     @id @default(0)
-  BUSINESS_NAME   String? @db.VarChar(255)
-  SHORT_NAME      String? @db.VarChar(20)
-  DESCRIPTION     String? @db.VarChar(1000)
-  ADDRESS_STREET  String? @db.VarChar(100)
-  ADDRESS_ZIP     BigInt?
-  ADDRESS_TOWN    String? @db.VarChar(100)
-  ADDRESS_CITY_ID Int?
-  CITY_CODE       String? @db.VarChar(2)
-  CITY_NAME       String? @db.VarChar(100)
-  EMAIL_ADDRESS   String? @db.VarChar(255)
-  ADDRESS_COUNTRY String? @db.VarChar(100)
-  PHONE_NUMBER    String? @db.VarChar(45)
-  WHATSAPP_NUMBER String? @db.VarChar(45)
-  WEB_ADDRESS     String? @db.VarChar(1000)
-  LOGO            String? @db.VarChar(255)
-  FACEBOOK_LINK   String? @db.VarChar(1000)
-  INSTA_LINK      String? @db.VarChar(1000)
-  TIKTOK_LINK     String? @db.VarChar(1000)
-  GOOGLE_PROFILE  String? @db.VarChar(1000)
-  IMAGE_URL       String? @db.VarChar(1000)
-  GOOGLE_RATING   String? @db.VarChar(10)
-  APPROVED        Int?    @default(0) @db.TinyInt
-  STATUS          Int?    @default(0) @db.TinyInt
-  RANKING         BigInt  @default(0)
-  VEGAN           Int     @default(0)
-  VEGETARIAN      Int     @default(0)
-  HALAL           Int     @default(0)
+  BUSINESS_ID             Int     @id @default(0)
+  BUSINESS_NAME           String? @db.VarChar(255)
+  SHORT_NAME              String? @db.VarChar(20)
+  DESCRIPTION             String? @db.VarChar(1000)
+  ADDRESS_STREET          String? @db.VarChar(100)
+  ADDRESS_ZIP             BigInt?
+  ADDRESS_TOWN            String? @db.VarChar(100)
+  ADDRESS_CITY_ID         Int?
+  CITY_CODE               String? @db.VarChar(2)
+  CITY_NAME               String? @db.VarChar(100)
+  EMAIL_ADDRESS           String? @db.VarChar(255)
+  ADDRESS_COUNTRY         String? @db.VarChar(100)
+  PHONE_NUMBER            String? @db.VarChar(45)
+  WHATSAPP_NUMBER         String? @db.VarChar(45)
+  WEB_ADDRESS             String? @db.VarChar(1000)
+  LOGO                    String? @db.VarChar(255)
+  FACEBOOK_LINK           String? @db.VarChar(1000)
+  INSTA_LINK              String? @db.VarChar(1000)
+  TIKTOK_LINK             String? @db.VarChar(1000)
+  GOOGLE_PROFILE          String? @db.VarChar(1000)
+  IMAGE_URL               String? @db.VarChar(1000)
+  GOOGLE_RATING           String? @db.VarChar(10)
+  APPROVED                Int?    @default(0) @db.TinyInt
+  STATUS                  Int?    @default(0) @db.TinyInt
+  RANKING                 BigInt  @default(0)
+  VEGAN                   Int     @default(0)
+  VEGETARIAN              Int     @default(0)
+  HALAL                   Int     @default(0)
+  CAN_RESERVE_TABLE       Int     @default(0)
+  HAVING_ACTIVE_MENU_CARD Int     @default(0)
 }
 
 view visitor_business_review_view {
   VISITOR_BUSINESS_REVIEW_ID Int       @id @default(0)
   CREATION_DATETIME          DateTime? @db.DateTime(0)
-  VISITOR_ID                 Int
+  VISITORS_ACCOUNT_ID        Int
+  FIRST_NAME                 String?   @db.VarChar(45)
+  LAST_NAME                  String?   @db.VarChar(45)
+  PIC                        String?   @db.VarChar(255)
   BUSINESS_ID                Int
   RATING                     String    @default("5") @db.VarChar(10)
-  REMARKS                    String    @default("Excellent") @db.VarChar(1000)
+  REMARKS                    String    @db.Text
   PIC_1                      String?   @db.VarChar(255)
   PIC_2                      String?   @db.VarChar(255)
   PIC_3                      String?   @db.VarChar(255)
@@ -577,9 +631,8 @@ view visitor_business_review_view {
   PIC_9                      String?   @db.VarChar(255)
   PIC_10                     String?   @db.VarChar(255)
   VIDEO_1                    String?   @db.VarChar(255)
-  THUMB_UP_COUNT             Int?      @default(1)
-  THUMB_DOWN_COUNT           Int?      @default(0)
   LIKE_COUNT                 Int?      @default(1)
+  APPROVED                   Int?      @default(0) @db.TinyInt
 }
 
 view visitor_favorite_restaurants_view {
@@ -598,15 +651,27 @@ view visitor_favorite_restaurants_view {
   PHONE_NUMBER_SHORT              String?   @db.VarChar(45)
 }
 
-view business_food_menu_view {
-  BUSINESS_ID                  Int      @id @default(0)
+/// The underlying view does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+/// This view or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+view business_food_menu_card_view {
+  BUSINESS_ID                  Int      @default(0)
   BUSINESS_NAME                String?  @db.VarChar(255)
   BUSINESS_FOOD_MENU_CARD_ID   Int      @default(0)
   MENU_NAME                    String?  @db.VarChar(45)
   BUSINESS_PRODUCT_CATEGORY_ID Int?
   CATEGORY                     String?  @db.VarChar(45)
   PRODUCT_NAME                 String   @db.VarChar(100)
-  PRODUCT_DESCRIPTION          String?  @db.VarChar(1000)
+  PRODUCT_DESCRIPTION          String   @db.Text
   PRODUCT_PRICE                Decimal  @db.Decimal(6, 2)
   COMPARE_AS_PRICE             Decimal? @default(0.00) @db.Decimal(6, 2)
+  PIC                          String   @default("") @db.VarChar(255)
+
+  @@ignore
+}
+
+/// The underlying view does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+view business_having_active_menu_card_view {
+  BUSINESS_ID Int?
+
+  @@ignore
 }

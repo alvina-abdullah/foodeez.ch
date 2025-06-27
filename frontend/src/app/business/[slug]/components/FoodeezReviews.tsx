@@ -1,25 +1,35 @@
 "use client";
 import { Card } from "@/components/ui/card";
-import {
-  ChevronLeft,
-  ChevronRight,
-} from "lucide-react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useRef, useState, useEffect } from "react";
-import { motion } from "framer-motion";
-import { visitor_business_review_view } from "@prisma/client";
+import { motion, AnimatePresence } from "framer-motion";
+import { business_detail_view_all, visitor_business_review_view } from "@prisma/client";
 import Link from "next/link";
 import FoodeezReviewCard from "@/components/core/FoodeezReviewCard";
+import { useSession } from "next-auth/react";
+import Modal from "@/components/core/Modal";
+import { useRouter } from "next/navigation";
+import ReviewForm from "../reviews/components/ReviewForm";
 
 interface FoodeezReviewsProps {
   reviews: visitor_business_review_view[];
   genSlug: string;
+  business: any;
 }
 
-export default function FoodeezReviews({ reviews, genSlug }: FoodeezReviewsProps) {
+export default function FoodeezReviews({
+  reviews,
+  genSlug,
+  business,
+}: FoodeezReviewsProps) {
   const scrollRef = useRef<HTMLDivElement>(null);
   const [showLeftButton, setShowLeftButton] = useState(false);
   const [showRightButton, setShowRightButton] = useState(true);
   const [likeCounts, setLikeCounts] = useState<{ [id: number]: number }>({});
+  const [showReviewForm, setShowReviewForm] = useState(false);
+  const { data: session } = useSession();
+  const [showAuthModal, setShowAuthModal] = useState(false);
+  const router = useRouter();
 
   useEffect(() => {
     const initialLikes: { [id: number]: number } = {};
@@ -57,10 +67,6 @@ export default function FoodeezReviews({ reviews, genSlug }: FoodeezReviewsProps
     // TODO: Optionally, call an API to persist like count
   };
 
-  const handleDisLike = (id: number) => {
-    console.log(`Dislike clicked for review ID: ${id}`);
-    // TODO: Optionally, call an API to persist dislike
-  };
 
   const handleShare = (id: number) => {
     console.log(`Share clicked for review ID: ${id}`);
@@ -71,10 +77,38 @@ export default function FoodeezReviews({ reviews, genSlug }: FoodeezReviewsProps
     <div className="relative w-full py-8 px-2 sm:px-4 lg:px-0">
       <div className="flex justify-between items-center mb-4">
         <h2 className="sub-heading">Foodeez Reviews</h2>
-        <Link href={`/business/${genSlug}/reviews?write=1`}>
-          <button className="btn-primary">Write a Review</button>
-        </Link>
+        <button
+          className="inline-flex items-center px-5 py-2 text-sm font-medium text-primary border border-primary rounded-full hover:bg-primary/10 transition-colors"
+          onClick={() => {
+            if (!session) {
+              setShowAuthModal(true);
+            } else {
+              setShowReviewForm((prev) => !prev);
+            }
+          }}
+        >
+          {showReviewForm ? "Cancel" : "Write a Review"}
+        </button>
       </div>
+      {/* Animated Inline Review Form */}
+      <AnimatePresence>
+        {showReviewForm && (
+          <motion.div
+            key="review-form"
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            transition={{ duration: 0.3 }}
+            className="mb-8"
+          >
+            <ReviewForm
+              businessId={business?.BUSINESS_ID ?? 0}
+              onSuccess={() => setShowReviewForm(false)}
+            />
+          </motion.div>
+        )}
+      </AnimatePresence>
+      {/* Review Cards Carousel */}
       <div className="relative group">
         {showLeftButton && (
           <button
@@ -85,8 +119,6 @@ export default function FoodeezReviews({ reviews, genSlug }: FoodeezReviewsProps
             <ChevronLeft className="h-6 w-6 text-gray-700" />
           </button>
         )}
-
-        {/* Review Cards Carousel */}
         <div
           id="no-scrollbar"
           ref={scrollRef}
@@ -108,7 +140,6 @@ export default function FoodeezReviews({ reviews, genSlug }: FoodeezReviewsProps
                   review={review}
                   likeCount={likeCounts[review.VISITOR_BUSINESS_REVIEW_ID]}
                   onLike={handleLike}
-                  onDislike={handleDisLike}
                   onShare={handleShare}
                 />
               </motion.div>
@@ -133,6 +164,25 @@ export default function FoodeezReviews({ reviews, genSlug }: FoodeezReviewsProps
       >
         <button className="btn-primary my-8">View more Foodeez reviews</button>
       </Link>
+      <Modal isOpen={showAuthModal} onClose={() => setShowAuthModal(false)} title="Login Required">
+        <div className="text-center">
+          <p className="mb-4">You must be logged in to write a review.</p>
+          <div className="flex justify-center gap-4">
+            <button
+              className="btn-primary"
+              onClick={() => router.push('/auth/signin')}
+            >
+              Sign In
+            </button>
+            <button
+              className="btn-secondary"
+              onClick={() => router.push('/auth/signup')}
+            >
+              Sign Up
+            </button>
+          </div>
+        </div>
+      </Modal>
     </div>
   );
 }
