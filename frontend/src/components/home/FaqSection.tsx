@@ -54,7 +54,7 @@ export default function FaqSection() {
   };
 
   return (
-    <section className="pt-16 px-2 md:px-0">
+    <section className="pt-16 px-4 lg:px-0">
       <div className="">
         <div className="text-center mb-14">
           <h2 className="sub-heading">
@@ -109,16 +109,17 @@ export default function FaqSection() {
 
         <div className="mt-16 flex flex-col items-center text-center space-y-4">
           {/* FAQ Button */}
-          <Link href="/faq" aria-label="View all frequently asked questions">
-            <button className="inline-flex items-center gap-2 px-8 py-3 rounded-full bg-gray-100 hover:bg-gray-200 text-lg md:text-xl font-semibold text-gray-700 transition-all duration-200 shadow-md">
+          <Link href="/faq" aria-label="View all frequently asked questions" target="_blank" rel="noopener noreferrer"
+          >
+            <button className="flex items-center gap-2 px-6 sm:px-8 py-3 rounded-full bg-gray-200 hover:bg-gray-300 text-base md:text-lg font-semibold text-text-main transition-all duration-200">
               <span>View All FAQs</span>
               <ArrowRight size={24} />
             </button>
           </Link>
 
           {/* Contact Us Button */}
-          <Link href="/contact" aria-label="Contact our support team">
-            <button className="inline-flex items-center gap-2 px-8 py-3 rounded-full bg-primary text-white hover:bg-primary/90 transition-all duration-200 text-lg md:text-xl font-semibold shadow-md">
+          <Link href="/contact" aria-label="Contact our support team" target="_blank" rel="noopener noreferrer">
+            <button className="flex items-center gap-2 px-6 sm:px-8 py-3 rounded-full bg-primary text-white text-base md:text-lg font-semibold hover:bg-secondary transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary">
               <span>Still have questions? Contact Us</span>
               <ArrowRight size={24} />
             </button>

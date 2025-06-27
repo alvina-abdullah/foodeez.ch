@@ -23,7 +23,7 @@ const trendingItems = [
 
 export default function QuickSearch() {
   return (
-    <section className="py-10 space-y-8">
+    <section className="px-4 lg:px-0 py-10 space-y-8">
       {/* Header */}
       <div className="text-center">
         <h2 className="sub-heading flex items-center justify-center gap-2">
@@ -47,7 +47,7 @@ export default function QuickSearch() {
             <button
               key={idx}
               className="bg-secondary/20 text-primary text-sm font-medium px-4 py-2 rounded-md hover:bg-primary/10 transition cursor-pointer w-full text-left"
-              onClick={() => window.open(`/discover?q=${encodeURIComponent(item)}`, '_blank')}
+              // onClick={() => window.open(`/discover?q=${encodeURIComponent(item)}`, '_blank')}
               type="button"
             >
               {item}

@@ -278,6 +278,8 @@ export default function FeaturedBusiness() {
         totalCount={totalCountofBusiness}
         selectedFoodType={selectedFoodType}
         selectedCategory={selectedCategory}
+        selectedCity={selectedCity}
+        zipCode={searchZipCode}
         clearAllFilters={clearAllFilters}
         isPending={isPending}
       />

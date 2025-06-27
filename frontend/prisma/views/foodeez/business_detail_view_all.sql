@@ -41,36 +41,58 @@ SELECT
       WHEN (`halal`.`FOOD_TYPE_ID` IS NULL) THEN 0
       ELSE 1
     END
-  ) AS `HALAL`
+  ) AS `HALAL`,
+(
+    CASE
+      WHEN (
+        (`a`.`EMAIL_ADDRESS` IS NULL)
+        OR (0 <> length((`a`.`EMAIL_ADDRESS` = 0)))
+      ) THEN 0
+      ELSE 1
+    END
+  ) AS `CAN_RESERVE_TABLE`,
+(
+    CASE
+      WHEN (`foodeez`.`menu`.`BUSINESS_ID` IS NULL) THEN 0
+      ELSE 1
+    END
+  ) AS `HAVING_ACTIVE_MENU_CARD`
 FROM
   (
     (
       (
         (
           (
-            `foodeez`.`business` `a`
-            LEFT JOIN `foodeez`.`city` `c` ON((`a`.`ADDRESS_CITY_ID` = `c`.`CITY_ID`))
+            (
+              `foodeez`.`business` `a`
+              LEFT JOIN `foodeez`.`city` `c` ON((`a`.`ADDRESS_CITY_ID` = `c`.`CITY_ID`))
+            )
+            LEFT JOIN `foodeez`.`foodeez_ranking` `d` ON((`a`.`BUSINESS_ID` = `d`.`BUSINESS_ID`))
           )
-          LEFT JOIN `foodeez`.`foodeez_ranking` `d` ON((`a`.`BUSINESS_ID` = `d`.`BUSINESS_ID`))
+          LEFT JOIN `foodeez`.`business_2_food_type` `vegan` ON(
+            (
+              (`a`.`BUSINESS_ID` = `vegan`.`BUSINESS_ID`)
+              AND (`vegan`.`FOOD_TYPE_ID` = 1)
+            )
+          )
         )
-        LEFT JOIN `foodeez`.`business_2_food_type` `vegan` ON(
+        LEFT JOIN `foodeez`.`business_2_food_type` `veg` ON(
           (
-            (`a`.`BUSINESS_ID` = `vegan`.`BUSINESS_ID`)
-            AND (`vegan`.`FOOD_TYPE_ID` = 1)
+            (`a`.`BUSINESS_ID` = `veg`.`BUSINESS_ID`)
+            AND (`veg`.`FOOD_TYPE_ID` = 2)
           )
         )
       )
-      LEFT JOIN `foodeez`.`business_2_food_type` `veg` ON(
+      LEFT JOIN `foodeez`.`business_2_food_type` `halal` ON(
         (
-          (`a`.`BUSINESS_ID` = `veg`.`BUSINESS_ID`)
-          AND (`veg`.`FOOD_TYPE_ID` = 2)
+          (`a`.`BUSINESS_ID` = `halal`.`BUSINESS_ID`)
+          AND (`halal`.`FOOD_TYPE_ID` = 3)
         )
       )
     )
-    LEFT JOIN `foodeez`.`business_2_food_type` `halal` ON(
+    LEFT JOIN `foodeez`.`business_having_active_menu_card_view` `menu` ON(
       (
-        (`a`.`BUSINESS_ID` = `halal`.`BUSINESS_ID`)
-        AND (`halal`.`FOOD_TYPE_ID` = 3)
+        `foodeez`.`menu`.`BUSINESS_ID` = `a`.`BUSINESS_ID`
       )
     )
   )

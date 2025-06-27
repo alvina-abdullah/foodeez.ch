@@ -1,6 +1,5 @@
 "use client";
 import { useEffect, useState } from "react";
-import FoodeezReviewCard from "@/components/core/FoodeezReviewCard";
 import {
   business_detail_view_all,
   visitor_business_review_view,
@@ -12,85 +11,59 @@ import {
 import { Skeleton } from "@/components/ui/skeleton";
 import Banner from "@/components/core/Banner";
 import { useParams } from "next/navigation";
-import { extractBusinessId, parseSlug } from "@/lib/utils/genSlug";
+import { extractBusinessId } from "@/lib/utils/genSlug";
 import Link from "next/link";
-import ReviewForm from "./components/ReviewForm";
-import { X } from "lucide-react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import Modal from "@/components/core/Modal";
+import { AnimatePresence, motion } from "framer-motion";
+import FoodeezReviewCard from "@/components/core/review/FoodeezReviewCard";
+import ReviewForm from "@/components/core/review/ReviewForm";
 
 export default function AllFoodeezReviewsPage() {
   const params = useParams();
   const slug = params.slug as string;
-  const parsedId = parseSlug(slug);
   const businessId = extractBusinessId(slug);
 
   const [business, setBusiness] = useState<business_detail_view_all | null>();
   const [reviews, setReviews] = useState<visitor_business_review_view[]>([]);
   const [loading, setLoading] = useState(true);
-  const [likeCounts, setLikeCounts] = useState<{ [id: number]: number }>({});
-  const [showReviewModal, setShowReviewModal] = useState(false);
+  const [showReviewForm, setShowReviewForm] = useState(false);
   const { data: session } = useSession();
   const router = useRouter();
   const [showAuthModal, setShowAuthModal] = useState(false);
 
-  // Fetch business data
   useEffect(() => {
-    const fetchBusiness = async () => {
-      try {
-        setLoading(true);
-        const data = await getBusinessById(parsedId.id);
-        setBusiness(data);
-      } catch (error) {
-        console.error("Error fetching business:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-    if (businessId) {
-      fetchBusiness();
-    }
-  }, [businessId, slug, parsedId.id]);
+    async function fetchBusiness() {
+      const data = await getBusinessById(Number(businessId));
 
-  useEffect(() => {
-    async function fetchReviews() {
-      let all: visitor_business_review_view[] = [];
-      for (let i = 1; i <= 6; i++) {
-        const reviews = await getBusinessReviews(
-          i,
-          5 + Math.floor(Math.random() * 5)
+      const mapped = data
+        ? Object.fromEntries(
+            Object.entries(data).map(([k, v]) => [
+              k,
+              v === null ? undefined : v,
+            ])
+          )
+        : null;
+
+      if (mapped && mapped.BUSINESS_ID) {
+        setBusiness(mapped as unknown as any);
+
+        // Fetch business reviews
+        const businessReviews = await getBusinessReviews(
+          Number(mapped.BUSINESS_ID)
         );
-        all = all.concat(reviews);
+        setReviews(businessReviews);
+      } else {
+        setBusiness(null);
+        setReviews([]);
       }
-      setReviews(all);
-      setLikeCounts(
-        all.reduce(
-          (acc, r) => {
-            acc[r.VISITOR_BUSINESS_REVIEW_ID] = r.LIKE_COUNT ?? 0;
-            return acc;
-          },
-          {} as { [id: number]: number }
-        )
-      );
+
       setLoading(false);
     }
-    fetchReviews();
-  }, []);
 
-  const handleLike = (id: number) => {
-    setLikeCounts((prev) => ({
-      ...prev,
-      [id]: (prev[id] ?? 0) + 1,
-    }));
-  };
-
-  const handleDislike = (id: number) => {
- console.log("Dislike clicked for review ID:", id);
-  };
-  const handleShare = (id: number) => {
- console.log( "Share clicked for review ID:", id);
-  };
+    fetchBusiness();
+  }, [businessId]);
 
   // Helper for address
   const getFullAddress = (b: business_detail_view_all | null | undefined) => {
@@ -112,7 +85,7 @@ export default function AllFoodeezReviewsPage() {
         alt="Share Your Experience with Foodeez"
       />
       <div className="px-2 sm:px-4 lg:px-0">
-        <h1 className="py-12 main-heading text-center">{`${business?.BUSINESS_NAME || "Business"}-Reviews`}</h1>
+        <h1 className="py-12 main-heading text-center">{`${business?.BUSINESS_NAME || "Business"}`}</h1>
         {/* Business Info Section */}
         <div className="mb-8 flex flex-col md:flex-row md:items-center md:justify-between gap-6 border rounded-xl p-6 bg-white/80 shadow-sm">
           <div className="flex-1 space-y-2">
@@ -171,69 +144,72 @@ export default function AllFoodeezReviewsPage() {
             No reviews found.
           </div>
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            
-            <div className="col-span-full flex justify-end mb-4">
+          <div className="">
+            <div className="">
               <button
-                className="btn-primary"
+                className="inline-flex items-center px-5 py-2 text-sm font-medium text-primary border border-primary rounded-full hover:bg-primary/10 transition-colors"
                 onClick={() => {
                   if (!session) {
                     setShowAuthModal(true);
                   } else {
-                    setShowReviewModal(true);
+                    setShowReviewForm((prev) => !prev);
                   }
                 }}
               >
-                Write a Review
+                {showReviewForm ? "Cancel" : "Write a Review"}
               </button>
+
+              {/* Animated Inline Review Form */}
+              <AnimatePresence>
+                {showReviewForm && (
+                  <motion.div
+                    key="review-form"
+                    initial={{ opacity: 0, y: -20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -20 }}
+                    transition={{ duration: 0.3 }}
+                    className="mb-8"
+                  >
+                    <ReviewForm
+                      businessId={business?.BUSINESS_ID ?? 0}
+                      onSuccess={() => setShowReviewForm(false)}
+                    />
+                  </motion.div>
+                )}
+              </AnimatePresence>
             </div>
-            
-            {reviews.map((review) => (
-              <FoodeezReviewCard
-                key={review.VISITOR_BUSINESS_REVIEW_ID}
-                review={review}
-                likeCount={likeCounts[review.VISITOR_BUSINESS_REVIEW_ID]}
-                onLike={handleLike}
-                onDislike={handleDislike}
-                onShare={handleShare}
-              />
-            ))}
+
+            <h1 className="py-12 main-heading text-center">{`${business?.BUSINESS_NAME || "Business"}-Reviews`}</h1>
+
+            <div className="flex-shrink-0 min-w-[250px] w-full sm:w-[350px] pb-12">
+              {reviews.map((review) => (
+                <FoodeezReviewCard
+                  key={review.VISITOR_BUSINESS_REVIEW_ID}
+                  review={review}
+                />
+              ))}
+            </div>
           </div>
         )}
       </div>
-      {showReviewModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60">
-          <div className="bg-white rounded-xl shadow-lg p-6 relative w-full max-w-lg">
-            <button
-              className="absolute top-2 right-2 text-gray-500 hover:text-gray-800"
-              onClick={() => setShowReviewModal(false)}
-              aria-label="Close"
-            >
-              <X size={24} />
-            </button>
-            <ReviewForm
-              businessId={business?.BUSINESS_ID ?? 0}
-              onSuccess={() => {
-                setShowReviewModal(false);
-                // Optionally refresh reviews here
-              }}
-            />
-          </div>
-        </div>
-      )}
-      <Modal isOpen={showAuthModal} onClose={() => setShowAuthModal(false)} title="Login Required">
+
+      <Modal
+        isOpen={showAuthModal}
+        onClose={() => setShowAuthModal(false)}
+        title="Login Required"
+      >
         <div className="text-center">
           <p className="mb-4">You must be logged in to write a review.</p>
           <div className="flex justify-center gap-4">
             <button
               className="btn-primary"
-              onClick={() => router.push('/auth/signin')}
+              onClick={() => router.push("/auth/signin")}
             >
               Sign In
             </button>
             <button
               className="btn-secondary"
-              onClick={() => router.push('/auth/signup')}
+              onClick={() => router.push("/auth/signup")}
             >
               Sign Up
             </button>

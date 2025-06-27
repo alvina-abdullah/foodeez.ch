@@ -185,7 +185,7 @@ const BusinessDetailPage = () => {
 
           {/* Reviews */}
           <div className="">
-            <FoodeezReviews reviews={reviews} genSlug={genSlug} />
+            <FoodeezReviews reviews={reviews} genSlug={genSlug} business={business} />
           </div>
           <div className="">
             <GoogleReviews

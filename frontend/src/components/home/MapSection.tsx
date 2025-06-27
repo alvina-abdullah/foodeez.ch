@@ -73,11 +73,9 @@ export default function MapSection() {
   }, [userLocation]);
 
   return (
-    <div className="relative w-full h-[600px] mt-10 rounded-xl overflow-hidden shadow-md">
+    <div className="relative w-full h-[600px]  overflow-hidden shadow-md">
       {hasPermission === null && (
-        <div className="flex items-center justify-center h-full text-gray-500">
-          Requesting location permission...
-        </div>
+        <MapSkeleton />
       )}
 
       {hasPermission === true && userLocation && (
@@ -113,3 +111,13 @@ export default function MapSection() {
     </div>
   );
 }
+
+function MapSkeleton() {
+  return (
+    <div className="w-full h-full bg-gray-200 rounded-xl animate-pulse">
+      <div className="absolute top-4 left-4 h-10 w-48 bg-gray-300 rounded-md animate-pulse" />
+      <div className="absolute bottom-20 right-4 h-10 w-10 bg-gray-300 rounded-full animate-pulse" />
+      <div className="absolute bottom-8 right-4 h-10 w-10 bg-gray-300 rounded-full animate-pulse" />
+    </div>
+  );
+} 

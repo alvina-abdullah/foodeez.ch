@@ -5,6 +5,8 @@ export default function ResultCountInfo({
   totalCount,
   selectedFoodType,
   selectedCategory,
+  selectedCity,
+  zipCode,
   clearAllFilters,
   isPending,
 }: {
@@ -12,33 +14,52 @@ export default function ResultCountInfo({
   totalCount: number;
   selectedFoodType: string;
   selectedCategory: string;
+  selectedCity: string;
+  zipCode: string;
   clearAllFilters: () => void;
   isPending: boolean;
 }) {
-  let filterLabel = "";
-  if (selectedFoodType !== "All") filterLabel = selectedFoodType;
-  if (selectedCategory)
-    filterLabel = filterLabel
-      ? `${filterLabel}, ${selectedCategory}`
-      : selectedCategory;
+  const buildDescription = () => {
+    const foodParts = [];
+    if (selectedFoodType && selectedFoodType !== "All") {
+      foodParts.push(selectedFoodType);
+    }
+    if (selectedCategory) {
+      foodParts.push(selectedCategory);
+    }
+
+    const hasFoodFilter = foodParts.length > 0;
+    const hasLocationFilter = selectedCity || zipCode;
+
+    if (!hasFoodFilter && !hasLocationFilter) {
+      return "results";
+    }
+
+    const descriptionParts = [];
+    if (hasFoodFilter) {
+      descriptionParts.push(foodParts.join(" "));
+    }
+    descriptionParts.push("restaurants");
+
+    if (selectedCity) {
+      descriptionParts.push(`in ${selectedCity}`);
+    } else if (zipCode) {
+      descriptionParts.push(`for zip code ${zipCode}`);
+    }
+
+    return descriptionParts.join(" ");
+  };
+
+  const description = buildDescription();
 
   return (
     <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 py-2 border-gray-200 mb-8">
-      <div className="">
-        <p className="text-lg sm:text-2xl text-accent-dark">
+      <div>
+        <p className="text-lg sm:text-2xl text-text-main font-semibold">
           Showing{" "}
-          <span className="text-primary font-semibold">{visibleCount}</span> of{" "}
-          <span className="text-primary font-semibold">{totalCount}</span>{" "}
-          results
-          {filterLabel && (
-            <>
-              {" "}
-              for{" "}
-              <span className="text-primary font-semibold">
-                "{filterLabel}"
-              </span>
-            </>
-          )}
+          <span className="text-primary">{visibleCount}</span> of{" "}
+          <span className="text-primary">{totalCount}</span>{" "}
+          <span className="text-test-main">{description}</span>
         </p>
       </div>
 
