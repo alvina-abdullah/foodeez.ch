@@ -1,17 +1,12 @@
 import { Card } from "@/components/ui/card";
-import {
-  Share2,
-  PlayCircle,
-  X,
-  Heart,
-} from "lucide-react";
+import { Share2, PlayCircle, X, Heart } from "lucide-react";
 import Image from "next/image";
 import { useState, useEffect } from "react";
 import { visitor_business_review_view } from "@prisma/client";
 import { createPortal } from "react-dom";
-import { useSession } from 'next-auth/react';
+import { useSession } from "next-auth/react";
 import ReviewEditModal from "./ReviewEditModal";
-import DeleteConfirmModal from './DeleteConfirmModal';
+import DeleteConfirmModal from "./DeleteConfirmModal";
 import UserAvatarAndName from "./UserAvatarAndName";
 import ReviewStars from "./ReviewStars";
 import ReviewGallery from "./ReviewGallery";
@@ -106,15 +101,17 @@ export default function FoodeezReviewCard({
   };
 
   // Check if current user is the owner
-  const isOwner = session?.user?.id && Number(session.user.id) === Number(review.VISITORS_ACCOUNT_ID);
+  const isOwner =
+    session?.user?.id &&
+    Number(session.user.id) === Number(review.VISITORS_ACCOUNT_ID);
 
   // Delete handler
   const handleDelete = async () => {
     setDeleteLoading(true);
     try {
-      const res = await fetch('/api/reviews', {
-        method: 'DELETE',
-        headers: { 'Content-Type': 'application/json' },
+      const res = await fetch("/api/reviews", {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ reviewId: review.VISITOR_BUSINESS_REVIEW_ID }),
       });
       const data = await res.json();
@@ -123,8 +120,7 @@ export default function FoodeezReviewCard({
         setShowDeleteModal(false);
       }
     } catch (e) {
-console.log("Error deleting review:", e);
-      
+      console.log("Error deleting review:", e);
     } finally {
       setDeleteLoading(false);
     }
@@ -140,17 +136,13 @@ console.log("Error deleting review:", e);
   return (
     <Card className="w-full rounded-2xl border-2 border-gray-200 bg-white p-5 lg:p-6 shadow-md hover:shadow-lg transition-all flex flex-col h-full">
       {/* User Info */}
-      <UserAvatarAndName
-        userPic={userPic}
-        userName={userName}
-      />
+      <UserAvatarAndName userPic={userPic} userName={userName} />
       {/* Rating */}
-      <ReviewStars
-        ratingValue={ratingValue}
-      />
+      <ReviewStars ratingValue={ratingValue} />
       {/* Review Text */}
-      <div className="flex-grow overflow-y-auto pr-1 mb-2 h-32 lg:h-40"
-      id="no-scrollbar"
+      <div
+        className="flex-grow overflow-y-auto pr-1 mb-2 h-32 lg:h-40"
+        id="no-scrollbar"
       >
         <p className="text-text-main leading-relaxed text-base  font-normal">
           {review.REMARKS}
@@ -275,14 +267,17 @@ console.log("Error deleting review:", e);
               onClick={() => setShowDeleteModal(true)}
               disabled={deleteLoading}
             >
-              {deleteLoading ? 'Deleting...' : 'Delete'}
+              {deleteLoading ? "Deleting..." : "Delete"}
             </button>
           </>
         )}
       </div>
       {/* Edit Modal */}
       {showEditModal && (
-        <ReviewEditModal review={review} onClose={() => setShowEditModal(false)} />
+        <ReviewEditModal
+          review={review}
+          onClose={() => setShowEditModal(false)}
+        />
       )}
       {/* Delete Confirm Modal */}
       {showDeleteModal && (
