@@ -1,10 +1,8 @@
 'use client';
 
-import React, { useState } from 'react';
+import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X } from 'lucide-react';
 import { FoodeezReview } from '@/types/foodeez-review.types';
-import { FoodeezReviewService } from '@/services/FoodeezReviewService';
 import ReviewForm from './ReviewForm';
 
 interface EditReviewModalProps {
@@ -20,18 +18,13 @@ const EditReviewModal: React.FC<EditReviewModalProps> = ({
   onClose,
   onUpdate,
 }) => {
-  const [isSubmitting, setIsSubmitting] = useState(false);
-
   const handleSubmit = async () => {
-    setIsSubmitting(true);
     try {
       // The form will handle the update
       onUpdate();
       onClose();
     } catch (error) {
       console.error('Error updating review:', error);
-    } finally {
-      setIsSubmitting(false);
     }
   };
 
@@ -54,8 +47,23 @@ const EditReviewModal: React.FC<EditReviewModalProps> = ({
             className="bg-white rounded-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto relative"
             onClick={(e) => e.stopPropagation()}
           >
-  
-          
+            {/* Header */}
+            <div className="sticky top-0 bg-white border-b border-gray-200 px-6 py-4 rounded-t-2xl">
+              <div className="flex items-center justify-between">
+                <h2 className="text-xl font-bold text-gray-800">
+                  Edit Your Review
+                </h2>
+                <button
+                  onClick={onClose}
+                  className="p-2 hover:bg-gray-100 rounded-full transition-colors"
+                >
+                  <svg className="w-6 h-6 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </button>
+              </div>
+            </div>
+
             {/* Content */}
             <div className="p-6">
               <ReviewForm

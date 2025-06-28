@@ -229,7 +229,7 @@ const TestimonialsSection: React.FC = () => {
         <LoginRequiredModal 
           isOpen={showAuthModal} 
           onClose={() => setShowAuthModal(false)} 
-          title="Login Required"
+          message="Please log in to share your experience with Foodeez."
         />
       </div>
     </section>
