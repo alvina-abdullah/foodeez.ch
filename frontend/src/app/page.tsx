@@ -16,7 +16,7 @@ import AdsBar2 from "@/components/home/AdsBar2";
 import UpcomingEvents from "@/components/home/UpcomingEvents";
 // import BenefitsSection from "@/components/home/BenefitsSection";
 // import AboutSection from "@/components/home/AboutSection";
-// import TestimonialsSection from "@/components/home/TestimonialsSection";
+import TestimonialsSection from "@/components/home/FoodeezTestimonials/TestimonialsSection";
 
 export default function Home() {
   return (
@@ -45,7 +45,7 @@ export default function Home() {
       {/* <AboutSection /> */}
 
       {/* Testimonials from Google Reviews */}
-      {/* <TestimonialsSection /> */}
+      <TestimonialsSection />
 
       <QuickSearch />
 

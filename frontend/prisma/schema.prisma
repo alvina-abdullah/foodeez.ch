@@ -205,14 +205,12 @@ model visitors_account {
 }
 
 model business_2_business_category2 {
-  BUSINESS_BUSINESS_CATEGORY_ID Int      @id @default(0)
+  BUSINESS_BUSINESS_CATEGORY_ID Int       @id @default(0)
   CREATION_DATETIME             DateTime? @db.DateTime(0)
   BUSINESS_ID                   BigInt?
   BUSINESS_CATEGORY_ID          BigInt?
   STATUS                        Int?      @db.TinyInt
   DISPLAY_SEQ                   Int?
-
-  @@ignore
 }
 
 model upcoming_events {
@@ -651,12 +649,10 @@ view visitor_favorite_restaurants_view {
   PHONE_NUMBER_SHORT              String?   @db.VarChar(45)
 }
 
-/// The underlying view does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
-/// This view or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
 view business_food_menu_card_view {
   BUSINESS_ID                  Int      @default(0)
   BUSINESS_NAME                String?  @db.VarChar(255)
-  BUSINESS_FOOD_MENU_CARD_ID   Int      @default(0)
+  BUSINESS_FOOD_MENU_CARD_ID   Int     @id @default(0)
   MENU_NAME                    String?  @db.VarChar(45)
   BUSINESS_PRODUCT_CATEGORY_ID Int?
   CATEGORY                     String?  @db.VarChar(45)
@@ -665,13 +661,23 @@ view business_food_menu_card_view {
   PRODUCT_PRICE                Decimal  @db.Decimal(6, 2)
   COMPARE_AS_PRICE             Decimal? @default(0.00) @db.Decimal(6, 2)
   PIC                          String   @default("") @db.VarChar(255)
-
-  @@ignore
 }
 
-/// The underlying view does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
 view business_having_active_menu_card_view {
-  BUSINESS_ID Int?
+  BUSINESS_ID Int  @id @default(0)
+}
 
-  @@ignore
+view foodeez_review_view {
+  FOODEEZ_REVIEW_ID BigInt    @id @default(0)
+  CREATION_DATETIME DateTime? @db.DateTime(0)
+  REVIEWER_NAME     String?   @db.VarChar(255)
+  REVIEWER_EMAIL    String?   @db.VarChar(100)
+  AVATAR            String?   @db.VarChar(100)
+  RATING            Int?      @default(5)
+  REVIEW            String?   @default("Excellent & very helpfull plaform.") @db.VarChar(1000)
+  PIC_1             String?   @db.VarChar(255)
+  PIC_2             String?   @db.VarChar(255)
+  PIC_3             String?   @db.VarChar(255)
+  APPROVED          Int?      @default(0) @db.TinyInt
+
 }

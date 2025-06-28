@@ -14,13 +14,13 @@ import { useParams } from "next/navigation";
 import { extractBusinessId } from "@/lib/utils/genSlug";
 import Link from "next/link";
 import { useSession } from "next-auth/react";
-import { useRouter } from "next/navigation";
-import Modal from "@/components/core/Modal";
 import { AnimatePresence, motion } from "framer-motion";
 import FoodeezReviewCard from "@/components/core/review/FoodeezReviewCard";
 import ReviewForm from "@/components/core/review/ReviewForm";
+import LoginRequiredModal from "@/components/core/LoginRequiredModal";
 
 export default function AllFoodeezReviewsPage() {
+  const { data: session } = useSession();
   const params = useParams();
   const slug = params.slug as string;
   const businessId = extractBusinessId(slug);
@@ -29,8 +29,6 @@ export default function AllFoodeezReviewsPage() {
   const [reviews, setReviews] = useState<visitor_business_review_view[]>([]);
   const [loading, setLoading] = useState(true);
   const [showReviewForm, setShowReviewForm] = useState(false);
-  const { data: session } = useSession();
-  const router = useRouter();
   const [showAuthModal, setShowAuthModal] = useState(false);
 
   useEffect(() => {
@@ -192,30 +190,11 @@ export default function AllFoodeezReviewsPage() {
           </div>
         )}
       </div>
-
-      <Modal
+      <LoginRequiredModal
         isOpen={showAuthModal}
         onClose={() => setShowAuthModal(false)}
-        title="Login Required"
-      >
-        <div className="text-center">
-          <p className="mb-4">You must be logged in to write a review.</p>
-          <div className="flex justify-center gap-4">
-            <button
-              className="btn-primary"
-              onClick={() => router.push("/auth/signin")}
-            >
-              Sign In
-            </button>
-            <button
-              className="btn-secondary"
-              onClick={() => router.push("/auth/signup")}
-            >
-              Sign Up
-            </button>
-          </div>
-        </div>
-      </Modal>
+        message="Please log in to write a review."
+      />
     </div>
   );
 }

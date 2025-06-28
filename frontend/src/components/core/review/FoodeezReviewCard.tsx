@@ -232,7 +232,8 @@ export default function FoodeezReviewCard({
             shareUrl={shareUrl}
             handleCopy={handleCopy}
             copied={copied}
-          />,
+          />
+          ,
           document.body
         )}
       {/* Actions */}

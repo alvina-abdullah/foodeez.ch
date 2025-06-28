@@ -1,4 +1,8 @@
+'use client';
+
 import { X, Copy, Facebook, Twitter, Phone } from 'lucide-react';
+import React from 'react';
+import Image from 'next/image';
 
 interface ReviewShareModalProps {
   showShare: boolean;
@@ -8,11 +12,18 @@ interface ReviewShareModalProps {
   copied: boolean;
 }
 
-export default function ReviewShareModal({ showShare, setShowShare, shareUrl, handleCopy, copied }: ReviewShareModalProps) {
+const ReviewShareModal: React.FC<ReviewShareModalProps> = ({
+  showShare,
+  setShowShare,
+  shareUrl,
+  handleCopy,
+  copied,
+}) => {
   if (!showShare) return null;
+
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm px-4">
-      <div className="relative bg-white rounded-2xl shadow-2xl p-6 w-full max-w-sm border border-primary/20">
+      <div className="relative w-full max-w-sm sm:max-w-md bg-white rounded-2xl border border-primary/20 shadow-2xl p-6 sm:p-8">
         {/* Close Button */}
         <button
           className="absolute top-3 right-3 text-gray-400 hover:text-primary transition-colors"
@@ -21,18 +32,34 @@ export default function ReviewShareModal({ showShare, setShowShare, shareUrl, ha
         >
           <X className="w-5 h-5" />
         </button>
-        {/* Modal Content */}
-        <h3 className="text-xl font-semibold text-primary text-center mb-4">
+
+        {/* Logo & Tagline */}
+        <div className="text-center mb-6">
+          <Image
+            src="/Logo/LogoFoodeezMain.svg"
+            alt="Foodeez"
+            width={120}
+            height={40}
+            className="mx-auto mb-4"
+          />
+          <p className="text-sm font-medium text-secondary">
+            Discover Amazing Restaurants
+          </p>
+        </div>
+
+        {/* Heading */}
+        <h3 className="text-center text-primary font-semibold text-xl sm:text-2xl mb-4">
           Share This Review
         </h3>
-        {/* Share Link Input */}
+
+        {/* Share URL */}
         <div className="flex items-center gap-2 mb-4">
           <input
             type="text"
             value={shareUrl}
             readOnly
             onFocus={(e) => e.target.select()}
-            className="flex-1 text-sm px-3 py-2 border border-primary/30 rounded-full bg-gray-50"
+            className="flex-1 text-sm px-3 py-2 border border-primary/30 rounded-full bg-gray-50 text-gray-700 focus:outline-none focus:ring-2 focus:ring-primary"
           />
           <button
             onClick={handleCopy}
@@ -42,13 +69,19 @@ export default function ReviewShareModal({ showShare, setShowShare, shareUrl, ha
             <Copy className="w-4 h-4" />
           </button>
         </div>
+
+        {/* Copy Confirmation */}
         {copied && (
-          <p className="text-xs text-green-600 text-center mb-2">
+          <p className="text-xs text-green-600 text-center mb-2 animate-fadeIn">
             Link copied!
           </p>
         )}
-        {/* Social Share Icons */}
-        <div className="flex justify-center gap-4 mt-2">
+
+        {/* Divider */}
+        <div className="my-4 border-t border-gray-100" />
+
+        {/* Social Icons */}
+        <div className="flex justify-center gap-4">
           <a
             href={`https://wa.me/?text=${encodeURIComponent(shareUrl)}`}
             target="_blank"
@@ -77,7 +110,31 @@ export default function ReviewShareModal({ showShare, setShowShare, shareUrl, ha
             <Twitter className="text-sky-500 w-5 h-5" />
           </a>
         </div>
+
+        {/* Footer Note */}
+        <div className="mt-6 text-xs text-gray-500 text-center">
+          Help others discover great food experiences!
+        </div>
       </div>
+
+      {/* Animations */}
+      <style jsx global>{`
+        @keyframes fadeIn {
+          0% {
+            opacity: 0;
+            transform: translateY(5px);
+          }
+          100% {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+        .animate-fadeIn {
+          animation: fadeIn 0.3s ease-out;
+        }
+      `}</style>
     </div>
   );
-} 
+};
+
+export default ReviewShareModal;

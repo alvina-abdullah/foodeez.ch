@@ -6,10 +6,9 @@ import { motion, AnimatePresence } from "framer-motion";
 import { visitor_business_review_view } from "@prisma/client";
 import Link from "next/link";
 import { useSession } from "next-auth/react";
-import Modal from "@/components/core/Modal";
-import { useRouter } from "next/navigation";
 import FoodeezReviewCard from "@/components/core/review/FoodeezReviewCard";
 import ReviewForm from "@/components/core/review/ReviewForm";
+import LoginRequiredModal from "@/components/core/LoginRequiredModal";
 
 interface FoodeezReviewsProps {
   reviews: visitor_business_review_view[];
@@ -29,7 +28,6 @@ export default function FoodeezReviews({
   const [showReviewForm, setShowReviewForm] = useState(false);
   const { data: session } = useSession();
   const [showAuthModal, setShowAuthModal] = useState(false);
-  const router = useRouter();
 
   useEffect(() => {
     const initialLikes: { [id: number]: number } = {};
@@ -58,7 +56,7 @@ export default function FoodeezReviews({
       setTimeout(checkScrollPosition, 300);
     }
   };
-  
+
   return (
     <div className="relative w-full py-8 px-2 sm:px-4 lg:px-0">
       <div className="flex justify-between items-center mb-4">
@@ -148,25 +146,12 @@ export default function FoodeezReviews({
       >
         <button className="btn-primary my-8">View more Foodeez reviews</button>
       </Link>
-      <Modal isOpen={showAuthModal} onClose={() => setShowAuthModal(false)} title="Login Required">
-        <div className="text-center">
-          <p className="mb-4">You must be logged in to write a review.</p>
-          <div className="flex justify-center gap-4">
-            <button
-              className="btn-primary"
-              onClick={() => router.push('/auth/signin')}
-            >
-              Sign In
-            </button>
-            <button
-              className="btn-secondary"
-              onClick={() => router.push('/auth/signup')}
-            >
-              Sign Up
-            </button>
-          </div>
-        </div>
-      </Modal>
+
+      <LoginRequiredModal
+        isOpen={showAuthModal}
+        onClose={() => setShowAuthModal(false)}
+        message="Please log in to leave a review."
+      />
     </div>
   );
 }
