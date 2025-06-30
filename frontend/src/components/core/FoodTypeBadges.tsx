@@ -38,7 +38,7 @@ const FoodTypeBadges: React.FC<FoodTypeBadgesProps> = ({
   const types = { HALAL, VEGAN, VEGETARIAN };
 
   return (
-    <div className="flex items-center flex-wrap gap-2 mt-2 md:mt-0">
+    <div className="flex items-center flex-wrap  gap-2 lg:gap-1 mt-2 md:mt-0">
       {badges.map(
         ({ key, label, color, img }) =>
           types[key as keyof FoodTypeBadgesProps] === 1 && (

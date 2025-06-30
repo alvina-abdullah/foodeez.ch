@@ -121,7 +121,7 @@ const ReviewForm: React.FC<ReviewFormProps> = ({
   const displayRating = hoverRating || rating;
 
   return (
-    <form className="space-y-6 max-w-2xl mx-auto bg-primary/10 p-10 rounded-lg border-primary border" onSubmit={handleSubmit}>
+    <form className="my-8 space-y-6 max-w-2xl mx-auto bg-primary/10 p-10 rounded-lg border-primary border" onSubmit={handleSubmit}>
       {/* Rating Section */}
       <div className="text-center">
         <label className="block text-text-main text-lg font-semibold mb-4">
@@ -167,10 +167,7 @@ const ReviewForm: React.FC<ReviewFormProps> = ({
           required
           maxLength={MAX_REMARKS}
         />
-        <div className="flex justify-between mt-1">
-          <span className="text-xs text-primary animate-pulse">
-            Minimum 50 characters
-          </span>
+        <div className="flex justify-end  mt-1">
           <span className={`text-xs ${remarks.length > MAX_REMARKS - 50 ? 'text-warning' : 'text-text-light'}`}>
             {remarks.length}/{MAX_REMARKS}
           </span>
@@ -298,7 +295,7 @@ const ReviewForm: React.FC<ReviewFormProps> = ({
       {/* Submit Button */}
       <button
         type="submit"
-        disabled={loading || remarks.length < 50}
+        disabled={loading}
         className={`w-full py-4 rounded-xl text-white font-bold text-lg shadow-lg transition-all duration-300 ${
           loading 
             ? 'bg-gray-400 cursor-not-allowed' 

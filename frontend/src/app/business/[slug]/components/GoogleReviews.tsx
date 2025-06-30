@@ -1,4 +1,5 @@
 "use client";
+
 import { Card } from "@/components/ui/card";
 import { Star, ChevronLeft, ChevronRight } from "lucide-react";
 import Image from "next/image";
@@ -11,7 +12,13 @@ interface GoogleReviewsProps {
   GOOGLE_PROFILE: string;
 }
 
-export default function GoogleReviews({ reviews , GOOGLE_PROFILE }: GoogleReviewsProps) {
+export default function GoogleReviews({
+  reviews,
+  GOOGLE_PROFILE,
+}: GoogleReviewsProps) {
+  // 🔒 If no reviews, hide entire component
+  if (!reviews || reviews.length === 0) return null;
+
   const scrollRef = useRef<HTMLDivElement>(null);
   const [showLeftButton, setShowLeftButton] = useState(false);
   const [showRightButton, setShowRightButton] = useState(true);
@@ -52,77 +59,73 @@ export default function GoogleReviews({ reviews , GOOGLE_PROFILE }: GoogleReview
             <ChevronLeft className="h-6 w-6 text-gray-700" />
           </button>
         )}
+
         <div
           id="no-scrollbar"
           ref={scrollRef}
           className="flex overflow-x-auto scroll-smooth space-x-4 py-2 scrollbar-hide"
           onScroll={checkScrollPosition}
         >
-          {!reviews || reviews.length === 0 ? (
-            <Card className="w-full min-w-[250px] max-w-md mx-auto h-40 flex items-center justify-center text-gray-500 text-base">
-              No reviews available.
-            </Card>
-          ) : (
-            reviews.map((review, idx) => (
-              <motion.div
-                key={idx}
-                whileHover={{ scale: 1.02 }}
-                className="flex-shrink-0 min-w-[250px] w-full sm:w-[350px]"
-              >
-                <Card className="h-[340px] rounded-2xl border-2 border-gray-200 bg-white p-5 shadow-md hover:shadow-lg transition-all flex flex-col">
-                  <div className="flex items-center gap-4 mb-3">
-                    {review.profile_photo_url ? (
-                      <Image
-                        src={review.profile_photo_url}
-                        alt={review.author_name}
-                        width={48}
-                        height={48}
-                        className="rounded-full object-cover h-12 w-12"
-                      />
-                    ) : (
-                      <div className="h-12 w-12 rounded-full bg-gray-300 flex items-center justify-center">
-                        <span className="text-gray-600 text-lg">
-                          {review.author_name.charAt(0).toUpperCase()}
-                        </span>
-                      </div>
-                    )}
-                    <div>
-                      <p className="font-semibold text-gray-800">
-                        {review.author_name}
-                      </p>
-                      <p className="text-sm text-gray-500">
-                        {review.relative_time_description}
-                      </p>
+          {reviews.map((review, idx) => (
+            <motion.div
+              key={idx}
+              whileHover={{ scale: 1.02 }}
+              className="flex-shrink-0 min-w-[250px] w-full sm:w-[350px]"
+            >
+              <Card className="h-[340px] rounded-2xl border-2 border-gray-200 bg-white p-5 shadow-md hover:shadow-lg transition-all flex flex-col">
+                <div className="flex items-center gap-4 mb-3">
+                  {review.profile_photo_url ? (
+                    <Image
+                      src={review.profile_photo_url}
+                      alt={review.author_name}
+                      width={48}
+                      height={48}
+                      className="rounded-full object-cover h-12 w-12"
+                    />
+                  ) : (
+                    <div className="h-12 w-12 rounded-full bg-gray-300 flex items-center justify-center">
+                      <span className="text-gray-600 text-lg">
+                        {review.author_name.charAt(0).toUpperCase()}
+                      </span>
                     </div>
-                  </div>
-                  <div className="flex items-center gap-1 mb-2">
-                    {[...Array(5)].map((_, i) => (
-                      <Star
-                        key={i}
-                        className={`h-5 w-5 ${
-                          i < review.rating
-                            ? "text-yellow-500 fill-yellow-500"
-                            : "text-gray-300"
-                        }`}
-                      />
-                    ))}
-                    <span className="text-sm text-gray-600 ml-1">
-                      {review.rating.toFixed(1)}
-                    </span>
-                  </div>
-                  <div
-                    id="no-scrollbar"
-                    className="flex-grow overflow-y-auto pr-1 hide-scrollbar"
-                  >
-                    <p className="text-gray-700 leading-relaxed text-sm">
-                      {review.text}
+                  )}
+                  <div>
+                    <p className="font-semibold text-gray-800">
+                      {review.author_name}
+                    </p>
+                    <p className="text-sm text-gray-500">
+                      {review.relative_time_description}
                     </p>
                   </div>
-                </Card>
-              </motion.div>
-            ))
-          )}
+                </div>
+                <div className="flex items-center gap-1 mb-2">
+                  {[...Array(5)].map((_, i) => (
+                    <Star
+                      key={i}
+                      className={`h-5 w-5 ${
+                        i < review.rating
+                          ? "text-yellow-500 fill-yellow-500"
+                          : "text-gray-300"
+                      }`}
+                    />
+                  ))}
+                  <span className="text-sm text-gray-600 ml-1">
+                    {review.rating.toFixed(1)}
+                  </span>
+                </div>
+                <div
+                  id="no-scrollbar"
+                  className="flex-grow overflow-y-auto pr-1 hide-scrollbar"
+                >
+                  <p className="text-gray-700 leading-relaxed text-sm">
+                    {review.text}
+                  </p>
+                </div>
+              </Card>
+            </motion.div>
+          ))}
         </div>
+
         {showRightButton && reviews.length > 0 && (
           <button
             onClick={() => scroll("right")}
@@ -133,14 +136,16 @@ export default function GoogleReviews({ reviews , GOOGLE_PROFILE }: GoogleReview
           </button>
         )}
       </div>
-      <a
-        href={GOOGLE_PROFILE}
-        target="_blank"
-        rel="noopener noreferrer"
-        className=""
-      >
-        <button className="btn-primary my-8">View more Google reviews</button>
-      </a>
+      {reviews.length > 0 && (
+        <a
+          href={GOOGLE_PROFILE}
+          target="_blank"
+          rel="noopener noreferrer"
+          className=""
+        >
+          <button className="btn-primary my-8">View more Google reviews</button>
+        </a>
+      )}
     </div>
   );
 }

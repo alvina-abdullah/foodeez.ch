@@ -15,6 +15,7 @@ import ReviewShareModal from "./ReviewShareModal";
 interface FoodeezReviewCardProps {
   review: visitor_business_review_view;
   likeCount?: number;
+  onEdit?: () => void;
 }
 
 const getReviewImages = (review: visitor_business_review_view) => {
@@ -35,6 +36,7 @@ const getReviewImages = (review: visitor_business_review_view) => {
 export default function FoodeezReviewCard({
   review,
   likeCount,
+  onEdit,
 }: FoodeezReviewCardProps) {
   const [showGallery, setShowGallery] = useState(false);
   const [galleryIndex, setGalleryIndex] = useState(0);
@@ -101,9 +103,10 @@ export default function FoodeezReviewCard({
   };
 
   // Check if current user is the owner
-  const isOwner =
+  const isOwner = Boolean(
     session?.user?.id &&
-    Number(session.user.id) === Number(review.VISITORS_ACCOUNT_ID);
+      Number(session.user.id) === Number(review.VISITORS_ACCOUNT_ID)
+  );
 
   // Delete handler
   const handleDelete = async () => {
@@ -128,7 +131,11 @@ export default function FoodeezReviewCard({
 
   // Edit handler (show modal)
   const handleEdit = () => {
-    setShowEditModal(true);
+    if (onEdit) {
+      onEdit();
+    } else {
+      setShowEditModal(true);
+    }
   };
 
   if (deleted) return null;
@@ -136,12 +143,19 @@ export default function FoodeezReviewCard({
   return (
     <Card className="w-full rounded-2xl border-2 border-gray-200 bg-white p-5 lg:p-6 shadow-md hover:shadow-lg transition-all flex flex-col h-full">
       {/* User Info */}
-      <UserAvatarAndName userPic={userPic} userName={userName} />
+      <UserAvatarAndName
+        userPic={userPic}
+        userName={userName}
+        isOwner={isOwner}
+        onEdit={handleEdit}
+        onDelete={() => setShowDeleteModal(true)}
+      />
+
       {/* Rating */}
-      <ReviewStars ratingValue={ratingValue} />
+      <ReviewStars rating={ratingValue} size={20} />
       {/* Review Text */}
       <div
-        className="flex-grow overflow-y-auto pr-1 mb-2 h-32 lg:h-40"
+        className="flex-grow overflow-y-auto pr-1 my-4 h-32 lg:h-40"
         id="no-scrollbar"
       >
         <p className="text-text-main leading-relaxed text-base  font-normal">
@@ -232,8 +246,7 @@ export default function FoodeezReviewCard({
             shareUrl={shareUrl}
             handleCopy={handleCopy}
             copied={copied}
-          />
-          ,
+          />,
           document.body
         )}
       {/* Actions */}
@@ -255,23 +268,6 @@ export default function FoodeezReviewCard({
         >
           <Share2 className="h-5 w-5" />
         </button>
-        {isOwner && (
-          <>
-            <button
-              className="flex items-center gap-1 text-warning hover:text-danger font-semibold ml-2"
-              onClick={handleEdit}
-            >
-              Edit
-            </button>
-            <button
-              className="flex items-center gap-1 text-danger hover:text-danger/80 font-semibold ml-2"
-              onClick={() => setShowDeleteModal(true)}
-              disabled={deleteLoading}
-            >
-              {deleteLoading ? "Deleting..." : "Delete"}
-            </button>
-          </>
-        )}
       </div>
       {/* Edit Modal */}
       {showEditModal && (
@@ -286,6 +282,7 @@ export default function FoodeezReviewCard({
           onConfirm={handleDelete}
           onCancel={() => setShowDeleteModal(false)}
           loading={deleteLoading}
+          isOpen={showDeleteModal}
         />
       )}
     </Card>

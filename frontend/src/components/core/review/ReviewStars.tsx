@@ -1,24 +1,35 @@
-import StarIcon from "@/components/ui/StarIcon";
+import { Star } from "lucide-react";
 
 interface ReviewStarsProps {
-  ratingValue: number;
-  ratingRaw?: string | number;
+  rating: number | null | undefined;
+  size?: number;
+  className?: string;
 }
 
-export default function ReviewStars({ ratingValue, ratingRaw }: ReviewStarsProps) {
+const ReviewStars: React.FC<ReviewStarsProps> = ({
+  rating,
+  size = 16,
+  className = "",
+}) => {
+  const totalStars = 5;
+  const starRating = rating ?? 0;
+
   return (
-    <div className="flex items-center gap-1 mb-2">
-      {[...Array(5)].map((_, i) => (
-        <StarIcon
-          key={i}
-          fillLevel={i < ratingValue ? 1 : 0}
-          size={22}
-          className={i < ratingValue ? 'text-highlight drop-shadow' : 'text-gray-800'}
-        />
-      ))}
-      <span className="text-sm lg:text-base text-text-main ml-1 font-medium">
-        {typeof ratingRaw !== 'undefined' ? Number(ratingRaw).toFixed(1) : ratingValue.toFixed(1)}
-      </span>
+    <div className={`flex items-center ${className}`}>
+      {Array.from({ length: totalStars }, (_, index) => {
+        const starNumber = index + 1;
+        return (
+          <Star
+            key={index}
+            size={size}
+            className={`${
+              starRating >= starNumber ? "text-yellow-400 fill-yellow-400" : "text-gray-300"
+            }`}
+          />
+        );
+      })}
     </div>
   );
-} 
+};
+
+export default ReviewStars; 

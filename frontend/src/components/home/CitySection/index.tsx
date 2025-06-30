@@ -30,7 +30,6 @@ export default function CitySection() {
   const [selectedCity, setSelectedCity] = useState(INITIAL_CITY);
   const [zipCode, setZipCode] = useState("");
   const [searchZipCode, setSearchZipCode] = useState("");
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [loading, setLoading] = useState({ cities: true, businesses: true });
   const [error, setError] = useState<string | null>(null);
 
@@ -99,7 +98,6 @@ export default function CitySection() {
     setSelectedCity(city);
     setZipCode("");
     setSearchZipCode("");
-    setIsDropdownOpen(false);
   };
 
   const handleZipCodeSearchSubmit = (zip: string) => {
@@ -132,8 +130,6 @@ export default function CitySection() {
         selectedCity={selectedCity}
         onCitySelect={handleCitySelect}
         otherCities={otherCities}
-        isDropdownOpen={isDropdownOpen}
-        onDropdownToggle={() => setIsDropdownOpen(!isDropdownOpen)}
       />
 
       <ZipCodeSearch

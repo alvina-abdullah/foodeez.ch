@@ -18,6 +18,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import FoodeezReviewCard from "@/components/core/review/FoodeezReviewCard";
 import ReviewForm from "@/components/core/review/ReviewForm";
 import LoginRequiredModal from "@/components/core/LoginRequiredModal";
+import EditReviewModal from "@/components/core/review/EditReviewModal";
 
 export default function AllFoodeezReviewsPage() {
   const { data: session } = useSession();
@@ -30,6 +31,8 @@ export default function AllFoodeezReviewsPage() {
   const [loading, setLoading] = useState(true);
   const [showReviewForm, setShowReviewForm] = useState(false);
   const [showAuthModal, setShowAuthModal] = useState(false);
+  const [editingReview, setEditingReview] = useState<visitor_business_review_view | null>(null);
+  const [showEditModal, setShowEditModal] = useState(false);
 
   useEffect(() => {
     async function fetchBusiness() {
@@ -74,6 +77,58 @@ export default function AllFoodeezReviewsPage() {
       b.ADDRESS_COUNTRY,
     ].filter(Boolean);
     return parts.join(", ");
+  };
+
+  const handleEditReview = (review: visitor_business_review_view) => {
+    setEditingReview(review);
+    setShowEditModal(true);
+  };
+
+  const handleEditSuccess = () => {
+    setShowEditModal(false);
+    setEditingReview(null);
+    // Refresh the reviews data to show the updated review
+    window.location.reload();
+  };
+
+  const handleEditClose = () => {
+    setShowEditModal(false);
+    setEditingReview(null);
+  };
+
+  const handleReviewSuccess = (newReviewData?: any) => {
+    setShowReviewForm(false);
+    
+    if (newReviewData && session?.user) {
+      // Create a review object that matches the visitor_business_review_view structure
+      const newReview: visitor_business_review_view = {
+        VISITOR_BUSINESS_REVIEW_ID: newReviewData.VISITOR_BUSINESS_REVIEW_ID,
+        CREATION_DATETIME: new Date(newReviewData.CREATION_DATETIME),
+        VISITORS_ACCOUNT_ID: newReviewData.VISITORS_ACCOUNT_ID,
+        FIRST_NAME: session.user.name?.split(' ')[0] || null,
+        LAST_NAME: session.user.name?.split(' ').slice(1).join(' ') || null,
+        PIC: session.user.image || null,
+        BUSINESS_ID: newReviewData.BUSINESS_ID,
+        RATING: newReviewData.RATING,
+        REMARKS: newReviewData.REMARKS,
+        PIC_1: newReviewData.PIC_1,
+        PIC_2: newReviewData.PIC_2,
+        PIC_3: newReviewData.PIC_3,
+        PIC_4: newReviewData.PIC_4,
+        PIC_5: newReviewData.PIC_5,
+        PIC_6: newReviewData.PIC_6,
+        PIC_7: newReviewData.PIC_7,
+        PIC_8: newReviewData.PIC_8,
+        PIC_9: newReviewData.PIC_9,
+        PIC_10: newReviewData.PIC_10,
+        VIDEO_1: newReviewData.VIDEO_1,
+        LIKE_COUNT: newReviewData.LIKE_COUNT,
+        APPROVED: newReviewData.APPROVED,
+      };
+      
+      // Add the new review to the beginning of the list
+      setReviews(prev => [newReview, ...prev]);
+    }
   };
 
   return (
@@ -142,8 +197,11 @@ export default function AllFoodeezReviewsPage() {
             No reviews found.
           </div>
         ) : (
-          <div className="">
-            <div className="">
+          <div className="w-full pb-12">
+            <div className="flex items-center justify-between my-8 px-4 lg:px-0">
+              <h2 className="sub-heading">
+                Reviews
+              </h2>
               <button
                 className="inline-flex items-center px-5 py-2 text-sm font-medium text-primary border border-primary rounded-full hover:bg-primary/10 transition-colors"
                 onClick={() => {
@@ -156,37 +214,48 @@ export default function AllFoodeezReviewsPage() {
               >
                 {showReviewForm ? "Cancel" : "Write a Review"}
               </button>
-
-              {/* Animated Inline Review Form */}
-              <AnimatePresence>
-                {showReviewForm && (
-                  <motion.div
-                    key="review-form"
-                    initial={{ opacity: 0, y: -20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -20 }}
-                    transition={{ duration: 0.3 }}
-                    className="mb-8"
-                  >
-                    <ReviewForm
-                      businessId={business?.BUSINESS_ID ?? 0}
-                      onSuccess={() => setShowReviewForm(false)}
-                    />
-                  </motion.div>
-                )}
-              </AnimatePresence>
             </div>
 
-            <h1 className="py-12 main-heading text-center">{`${business?.BUSINESS_NAME || "Business"}-Reviews`}</h1>
+            {/* Animated Inline Review Form */}
+            <AnimatePresence>
+              {showReviewForm && (
+                <motion.div
+                  key="review-form"
+                  initial={{ opacity: 0, y: -20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -20 }}
+                  transition={{ duration: 0.3 }}
+                
+                >
+                  <ReviewForm
+                    businessId={business?.BUSINESS_ID ?? 0}
+                    onSuccess={handleReviewSuccess}
+                  />
+                </motion.div>
+              )}
+            </AnimatePresence>
 
-            <div className="flex-shrink-0 min-w-[250px] w-full sm:w-[350px] pb-12">
-              {reviews.map((review) => (
-                <FoodeezReviewCard
-                  key={review.VISITOR_BUSINESS_REVIEW_ID}
-                  review={review}
-                />
-              ))}
-            </div>
+            {/* Reviews Grid */}
+            {reviews.length === 0 ? (
+              <div className="text-center text-gray-500 text-lg py-20">
+                <div className="mb-4">
+                  <svg className="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                  </svg>
+                </div>
+                <p>No reviews yet. Be the first to share your experience!</p>
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                {reviews.map((review) => (
+                  <FoodeezReviewCard
+                    key={review.VISITOR_BUSINESS_REVIEW_ID}
+                    review={review}
+                    onEdit={() => handleEditReview(review)}
+                  />
+                ))}
+              </div>
+            )}
           </div>
         )}
       </div>
@@ -194,6 +263,12 @@ export default function AllFoodeezReviewsPage() {
         isOpen={showAuthModal}
         onClose={() => setShowAuthModal(false)}
         message="Please log in to write a review."
+      />
+      <EditReviewModal
+        isOpen={showEditModal}
+        onClose={handleEditClose}
+        onUpdate={handleEditSuccess}
+        review={editingReview}
       />
     </div>
   );

@@ -45,26 +45,26 @@ const ReviewCard: React.FC<ReviewCardProps> = ({
       .toUpperCase();
   };
 
-  const renderImages = () => {
-    const images = [review.PIC_1, review.PIC_2, review.PIC_3].filter(Boolean);
-    if (images.length === 0) return null;
+  // const renderImages = () => {
+  //   const images = [review.PIC_1, review.PIC_2, review.PIC_3].filter(Boolean);
+  //   if (images.length === 0) return null;
 
-    return (
-      <div className="flex gap-2 mt-3 overflow-x-auto pb-2">
-        {images.map((image, index) => (
-          <div key={index} className="flex-shrink-0">
-            <Image
-              src={image!}
-              alt={`Review image ${index + 1}`}
-              width={80}
-              height={80}
-              className="rounded-lg object-cover h-20 w-20"
-            />
-          </div>
-        ))}
-      </div>
-    );
-  };
+  //   return (
+  //     <div className="flex gap-2 mt-3 overflow-x-auto pb-2">
+  //       {images.map((image, index) => (
+  //         <div key={index} className="flex-shrink-0">
+  //           <Image
+  //             src={image!}
+  //             alt={`Review image ${index + 1}`}
+  //             width={80}
+  //             height={80}
+  //             className="rounded-lg object-cover h-20 w-20"
+  //           />
+  //         </div>
+  //       ))}
+  //     </div>
+  //   );
+  // };
 
   return (
     <motion.div
@@ -150,7 +150,7 @@ const ReviewCard: React.FC<ReviewCardProps> = ({
         </div>
 
         {/* Images */}
-        {renderImages()}
+        {/* {renderImages()} */}
 
         {/* Footer */}
         <div className="mt-4 pt-4 border-t border-gray-400">

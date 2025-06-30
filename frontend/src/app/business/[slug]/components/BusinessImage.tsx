@@ -13,13 +13,9 @@ const BusinessImage: React.FC<BusinessImageProps> = ({
   businessName,
   className = "",
 }) => {
-
   return (
     <div
-      className={clsx(
-        "relative w-full overflow-hidden shadow-lg",
-        className
-      )}
+      className={clsx("relative w-full overflow-hidden shadow-lg", className)}
     >
       {imageUrl ? (
         <Image
@@ -32,12 +28,12 @@ const BusinessImage: React.FC<BusinessImageProps> = ({
           priority
         />
       ) : (
-        <div className="flex items-center justify-center w-full h-full text-text-main text-lg font-medium">
-          No image available
+        <div className=" w-full h-[600px] aspect-video  flex items-center justify-center bg-gray-200">
+          <span className="text-4xl md:text-6xl text-wrap font-bold text-gray-600 uppercase">
+            {businessName}
+          </span>
         </div>
       )}
-
-      
     </div>
   );
 };

@@ -61,14 +61,14 @@ const BusinessCard: React.FC<BusinessCardProps> = ({ business }) => {
   );
 
   return (
-    <div className="group relative bg-background-card rounded-xl border shadow-sm hover:shadow-md transition-all duration-300 overflow-hidden w-full max-w-md h-[540px] flex flex-col">
+    <div className="group relative bg-background-card rounded-xl border shadow-sm hover:shadow-md transition-all duration-300 overflow-hidden w-full max-w-md h-[560px] flex flex-col">
       {/* Image */}
       <div className="">
         <Link
           href={`/business/${slug}`}
           target="_blank"
           rel="noopener noreferrer"
-          className="block relative w-full h-[200px] md:h-[220px] aspect-video overflow-hidden"
+          className="block relative w-full h-[200px] md:h-[200px] aspect-video overflow-hidden"
         >
           {IMAGE_URL ? (
             <Image
@@ -82,16 +82,16 @@ const BusinessCard: React.FC<BusinessCardProps> = ({ business }) => {
             />
           ) : (
             <div className="w-full h-full flex items-center justify-center bg-gray-200">
-              <span className="text-4xl md:text-6xl font-bold text-gray-600 uppercase">
-                {BUSINESS_NAME.charAt(0)}
-              </span>
+              <span className="text-4xl md:text-6xl text-wrap font-bold text-gray-600 uppercase">
+                {BUSINESS_NAME}
+              </span> 
             </div>
           )}
         </Link>
       </div>
 
       {/* Content */}
-      <div className="flex-1 flex flex-col justify-between p-4">
+      <div className="flex-1 flex flex-col justify-between p-4 lg:p-2">
         <div className="flex items-center justify-between gap-2">
           <FoodTypeBadges
             HALAL={HALAL || 0}

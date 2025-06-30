@@ -12,6 +12,9 @@ const OpeningHours: React.FC<OpeningHoursProps> = ({
   openingHours,
   isOpenNow,
 }) => {
+
+  if (!openingHours || openingHours.length === 0) return null;
+
   const currentDay = format(new Date(), "EEEE"); // Get current day as full name
 
   return (

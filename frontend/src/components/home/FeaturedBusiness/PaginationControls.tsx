@@ -1,7 +1,7 @@
 import { cn } from "@/lib/utils/cn";
 import { ChevronDown, Loader2 } from "lucide-react";
 
-export const PER_PAGE_OPTIONS: number[] = [30, 45, 60, 75, 90];
+export const PER_PAGE_OPTIONS: number[] = [20, 40, 60, 80, 100];
 
 export default function PaginationControls({
   hasMore,

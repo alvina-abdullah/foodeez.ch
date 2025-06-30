@@ -1,5 +1,5 @@
 "use client";
-import { Card } from "@/components/ui/card";
+
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useRef, useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
@@ -9,6 +9,7 @@ import { useSession } from "next-auth/react";
 import FoodeezReviewCard from "@/components/core/review/FoodeezReviewCard";
 import ReviewForm from "@/components/core/review/ReviewForm";
 import LoginRequiredModal from "@/components/core/LoginRequiredModal";
+import EditReviewModal from "@/components/core/review/EditReviewModal";
 
 interface FoodeezReviewsProps {
   reviews: visitor_business_review_view[];
@@ -28,15 +29,49 @@ export default function FoodeezReviews({
   const [showReviewForm, setShowReviewForm] = useState(false);
   const { data: session } = useSession();
   const [showAuthModal, setShowAuthModal] = useState(false);
+  const [editingReview, setEditingReview] = useState<visitor_business_review_view | null>(null);
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [filteredReviews, setFilteredReviews] = useState<
+    visitor_business_review_view[]
+  >([]);
+  const [displayedReviews, setDisplayedReviews] = useState<
+    visitor_business_review_view[]
+  >([]);
+
+  useEffect(() => {
+    const filtered = reviews.filter((review) => {
+      if (review.APPROVED) {
+        return true;
+      }
+      // if (session?.user?.email && review.EMAIL_ADDRESS === session.user.email) {
+      //   return true;
+      // }
+      return false;
+    });
+
+    // Sort by creation date descending
+    const sorted = filtered.sort((a, b) => {
+      const dateA = a.CREATION_DATETIME
+        ? new Date(a.CREATION_DATETIME).getTime()
+        : 0;
+      const dateB = b.CREATION_DATETIME
+        ? new Date(b.CREATION_DATETIME).getTime()
+        : 0;
+      return dateB - dateA;
+    });
+
+    setFilteredReviews(sorted);
+    setDisplayedReviews(sorted.slice(0, 5));
+  }, [reviews, session]);
 
   useEffect(() => {
     const initialLikes: { [id: number]: number } = {};
-    reviews.forEach((r) => {
+    displayedReviews.forEach((r) => {
       initialLikes[r.VISITOR_BUSINESS_REVIEW_ID] = r.LIKE_COUNT ?? 0;
     });
     setLikeCounts(initialLikes);
     checkScrollPosition();
-  }, [reviews]);
+  }, [displayedReviews]);
 
   const checkScrollPosition = () => {
     if (scrollRef.current) {
@@ -57,8 +92,25 @@ export default function FoodeezReviews({
     }
   };
 
+  const handleEditReview = (review: visitor_business_review_view) => {
+    setEditingReview(review);
+    setShowEditModal(true);
+  };
+
+  const handleEditSuccess = () => {
+    setShowEditModal(false);
+    setEditingReview(null);
+    window.location.reload();
+  };
+
+  const handleEditClose = () => {
+    setShowEditModal(false);
+    setEditingReview(null);
+  };
+
   return (
     <div className="relative w-full py-8 px-2 sm:px-4 lg:px-0">
+      {/* Heading & Write Button */}
       <div className="flex justify-between items-center mb-4">
         <h2 className="sub-heading">Foodeez Reviews</h2>
         <button
@@ -74,7 +126,8 @@ export default function FoodeezReviews({
           {showReviewForm ? "Cancel" : "Write a Review"}
         </button>
       </div>
-      {/* Animated Inline Review Form */}
+
+      {/* Review Form */}
       <AnimatePresence>
         {showReviewForm && (
           <motion.div
@@ -92,7 +145,8 @@ export default function FoodeezReviews({
           </motion.div>
         )}
       </AnimatePresence>
-      {/* Review Cards Carousel */}
+
+      {/* Carousel */}
       <div className="relative group">
         {showLeftButton && (
           <button
@@ -103,18 +157,19 @@ export default function FoodeezReviews({
             <ChevronLeft className="h-6 w-6 text-gray-700" />
           </button>
         )}
+
         <div
           id="no-scrollbar"
           ref={scrollRef}
           className="flex overflow-x-auto scroll-smooth space-x-4 py-2 scrollbar-hide"
           onScroll={checkScrollPosition}
         >
-          {reviews.length === 0 ? (
-            <Card className="w-full min-w-[250px] max-w-md mx-auto h-40 flex items-center justify-center text-gray-500 text-base">
-              No reviews available.
-            </Card>
+          {displayedReviews.length === 0 ? (
+            <p className="w-full  h-40 flex items-center justify-center text-text-main text-base">
+              No reviews found.
+            </p>
           ) : (
-            reviews.map((review) => (
+            displayedReviews.map((review) => (
               <motion.div
                 key={review.VISITOR_BUSINESS_REVIEW_ID}
                 whileHover={{ scale: 1.02 }}
@@ -123,12 +178,14 @@ export default function FoodeezReviews({
                 <FoodeezReviewCard
                   review={review}
                   likeCount={likeCounts[review.VISITOR_BUSINESS_REVIEW_ID]}
+                  onEdit={() => handleEditReview(review)}
                 />
               </motion.div>
             ))
           )}
         </div>
-        {showRightButton && reviews.length > 0 && (
+
+        {showRightButton && displayedReviews.length > 0 && (
           <button
             onClick={() => scroll("right")}
             className="absolute right-0 top-1/2 z-10 -translate-y-1/2 bg-white shadow-md rounded-full p-2 hover:bg-gray-100 transition"
@@ -138,19 +195,29 @@ export default function FoodeezReviews({
           </button>
         )}
       </div>
-      <Link
-        href={`/business/${genSlug}/reviews`}
-        target="_blank"
-        rel="noopener noreferrer"
-        className=""
-      >
-        <button className="btn-primary my-8">View more Foodeez reviews</button>
-      </Link>
+
+      {/* Conditionally show view more button */}
+      {filteredReviews.length > 5 && (
+        <Link
+          href={`/business/${genSlug}/reviews`}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <button className="btn-primary my-8">View all Reviews</button>
+        </Link>
+      )}
 
       <LoginRequiredModal
         isOpen={showAuthModal}
         onClose={() => setShowAuthModal(false)}
         message="Please log in to leave a review."
+      />
+
+      <EditReviewModal
+        isOpen={showEditModal}
+        onClose={handleEditClose}
+        onUpdate={handleEditSuccess}
+        review={editingReview}
       />
     </div>
   );

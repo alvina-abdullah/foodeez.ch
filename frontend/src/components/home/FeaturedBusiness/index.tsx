@@ -34,7 +34,6 @@ const MAIN_CITIES = [
 
 export default function FeaturedBusiness() {
   const [businesses, setBusinesses] = useState<BusinessDetail[]>([]);
-  const [isCategoryDropdownOpen, setIsCategoryDropdownOpen] = useState(false);
   const [isPaginationDropdownOpen, setIsPaginationDropdownOpen] =
     useState(false);
   const [selectedCategoryId, setSelectedCategoryId] = useState<
@@ -53,7 +52,6 @@ export default function FeaturedBusiness() {
   const [cities, setCities] = useState<{ CITY_NAME: string }[]>([]);
   const [selectedCity, setSelectedCity] = useState<string>("");
   const [zipCode, setZipCode] = useState<string>("");
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [searchZipCode, setSearchZipCode] = useState("");
 
   const [categories, setCategories] = useState<BusinessCategory[]>([]);
@@ -252,8 +250,6 @@ export default function FeaturedBusiness() {
         hiddenCategories={hiddenCategories}
         selectedCategory={selectedCategory}
         onSelect={handleCategorySelect}
-        isDropdownOpen={isCategoryDropdownOpen}
-        setIsDropdownOpen={setIsCategoryDropdownOpen}
         isPending={isPending}
       />
 
@@ -262,8 +258,6 @@ export default function FeaturedBusiness() {
         selectedCity={selectedCity}
         onCitySelect={handleCitySelect}
         otherCities={otherCities}
-        isDropdownOpen={isDropdownOpen}
-        onDropdownToggle={() => setIsDropdownOpen(!isDropdownOpen)}
       />
 
       <ZipCodeSearch

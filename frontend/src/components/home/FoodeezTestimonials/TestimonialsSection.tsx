@@ -4,10 +4,9 @@ import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { useSession } from "next-auth/react";
 import { Button } from "@/components/core/Button";
-import {  Plus, Award,  } from "lucide-react";
+import { Plus, Award } from "lucide-react";
 import { FoodeezReview } from "@/types/foodeez-review.types";
 import { FoodeezReviewService } from "@/services/FoodeezReviewService";
-// import { SortOption, FilterOption } from "./ReviewsFilter";
 import ReviewsGrid from "./ReviewsGrid";
 import ReviewForm from "./ReviewForm";
 import EditReviewModal from "./EditReviewModal";
@@ -16,29 +15,27 @@ import LoginRequiredModal from "@/components/core/LoginRequiredModal";
 
 const TestimonialsSection: React.FC = () => {
   const { data: session } = useSession();
-  
+
   const [reviews, setReviews] = useState<FoodeezReview[]>([]);
-  // const [filteredReviews, setFilteredReviews] = useState<FoodeezReview[]>([]);
+  const [filteredReviews, setFilteredReviews] = useState<FoodeezReview[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
   const [editingReview, setEditingReview] = useState<FoodeezReview | null>(
     null
   );
   const [deletingReviewId, setDeletingReviewId] = useState<string | null>(null);
-  // const [sortBy, setSortBy] = useState<SortOption>("newest");
-  // const [filterBy, setFilterBy] = useState<FilterOption>("all");
   // const [showAdminPanel, setShowAdminPanel] = useState(false);
   const [showAuthModal, setShowAuthModal] = useState(false);
-  
+
   // Load reviews on component mount
   useEffect(() => {
     loadReviews();
   }, []);
 
   // Filter and sort reviews when filters change
-  // useEffect(() => {
-  //   filterAndSortReviews();
-  // }, [reviews, sortBy, filterBy]);
+  useEffect(() => {
+    filterApprovedReviews();
+  }, [reviews]);
 
   const loadReviews = async () => {
     try {
@@ -52,48 +49,27 @@ const TestimonialsSection: React.FC = () => {
     }
   };
 
-  // const filterAndSortReviews = () => {
-  //   let filtered = [...reviews];
+  const filterApprovedReviews = () => {
+    let filtered = [...reviews];
 
-  //   // Apply filter
-  //   switch (filterBy) {
-  //     case "approved":
-  //       filtered = filtered.filter((review) => review.APPROVED === 1);
-  //       break;
-  //     case "pending":
-  //       filtered = filtered.filter((review) => review.APPROVED === 0);
-  //       break;
-  //     default:
-  //       // Show all reviews
-  //       break;
-  //   }
+    // Filter reviews based on approval status and ownership
+    filtered = filtered.filter((review) => {
+      // If review is approved, show it to everyone
+      if (review.APPROVED === 1) {
+        return true;
+      }
+      
+      // If user is logged in and is the review owner, show their unapproved reviews
+      if (session?.user?.email && review.REVIEWER_EMAIL === session.user.email) {
+        return true;
+      }
 
-  //   // Apply sort
-  //   switch (sortBy) {
-  //     case "newest":
-  //       filtered.sort(
-  //         (a, b) =>
-  //           new Date(b.CREATION_DATETIME || 0).getTime() -
-  //           new Date(a.CREATION_DATETIME || 0).getTime()
-  //       );
-  //       break;
-  //     case "oldest":
-  //       filtered.sort(
-  //         (a, b) =>
-  //           new Date(a.CREATION_DATETIME || 0).getTime() -
-  //           new Date(b.CREATION_DATETIME || 0).getTime()
-  //       );
-  //       break;
-  //     case "rating-high":
-  //       filtered.sort((a, b) => (b.RATING || 0) - (a.RATING || 0));
-  //       break;
-  //     case "rating-low":
-  //       filtered.sort((a, b) => (a.RATING || 0) - (b.RATING || 0));
-  //       break;
-  //   }
+      // Otherwise, don't show unapproved reviews
+      return false;
+    });
 
-  //   setFilteredReviews(filtered);
-  // };
+    setFilteredReviews(filtered);
+  };
 
   const handleReviewSubmit = async () => {
     await loadReviews();
@@ -118,20 +94,6 @@ const TestimonialsSection: React.FC = () => {
     setDeletingReviewId(null);
   };
 
-  // const getStats = () => {
-  //   const total = reviews.length;
-  //   const approved = reviews.filter((r) => r.APPROVED === 1).length;
-  //   const pending = reviews.filter((r) => r.APPROVED === 0).length;
-  //   const averageRating =
-  //     reviews.length > 0
-  //       ? reviews.reduce((sum, r) => sum + (r.RATING || 0), 0) / reviews.length
-  //       : 0;
-
-  //   return { total, approved, pending, averageRating };
-  // };
-
-  // const stats = getStats();
-
   return (
     <section className="py-16 ">
       <div className="px-4 lg:px-0">
@@ -143,9 +105,7 @@ const TestimonialsSection: React.FC = () => {
         >
           <div className="flex items-center justify-center gap-2 mb-4 sub-heading">
             <Award className="w-8 h-8 text-secondary" />
-            <h2 className="">
-              What Our Users Say
-            </h2>
+            <h2 className="">What Our Users Say</h2>
           </div>
           <p className="sub-heading-description mb-6">
             Discover what our community thinks about Foodeez. Real experiences
@@ -170,21 +130,9 @@ const TestimonialsSection: React.FC = () => {
           </div>
         </motion.div>
 
-
-        {/* Filter Section */}
-        {/* <ReviewsFilter
-          sortBy={sortBy}
-          filterBy={filterBy}
-          onSortChange={setSortBy}
-          onFilterChange={setFilterBy}
-          totalReviews={stats.total}
-          approvedReviews={stats.approved}
-          pendingReviews={stats.pending}
-        /> */}
-
         {/* Reviews Grid */}
         <ReviewsGrid
-          reviews={reviews}
+          reviews={filteredReviews}
           isLoading={isLoading}
           onEdit={handleReviewEdit}
           onDelete={handleReviewDelete}
@@ -197,7 +145,7 @@ const TestimonialsSection: React.FC = () => {
               initial={{ scale: 0.9, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.9, opacity: 0 }}
-              className="bg-white rounded-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto"
+              className="bg-white rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto"
             >
               <div className="p-6">
                 <ReviewForm
@@ -226,9 +174,9 @@ const TestimonialsSection: React.FC = () => {
         />
 
         {/* Login Required Modal */}
-        <LoginRequiredModal 
-          isOpen={showAuthModal} 
-          onClose={() => setShowAuthModal(false)} 
+        <LoginRequiredModal
+          isOpen={showAuthModal}
+          onClose={() => setShowAuthModal(false)}
           message="Please log in to share your experience with Foodeez."
         />
       </div>
