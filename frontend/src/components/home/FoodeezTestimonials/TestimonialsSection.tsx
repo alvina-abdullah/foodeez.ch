@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { motion } from "framer-motion";
 import { useSession } from "next-auth/react";
 import { Button } from "@/components/core/Button";
@@ -33,9 +33,27 @@ const TestimonialsSection: React.FC = () => {
   }, []);
 
   // Filter and sort reviews when filters change
+  const filterApprovedReviews = useCallback(() => {
+    let filtered = [...reviews];
+    // Filter reviews based on approval status and ownership
+    filtered = filtered.filter((review) => {
+      // If review is approved, show it to everyone
+      if (review.APPROVED === 1) {
+        return true;
+      }
+      // If user is logged in and is the review owner, show their unapproved reviews
+      if (session?.user?.email && review.REVIEWER_EMAIL === session.user.email) {
+        return true;
+      }
+      // Otherwise, don't show unapproved reviews
+      return false;
+    });
+    setFilteredReviews(filtered);
+  }, [reviews, session]);
+
   useEffect(() => {
     filterApprovedReviews();
-  }, [reviews]);
+  }, [filterApprovedReviews]);
 
   const loadReviews = async () => {
     try {
@@ -47,28 +65,6 @@ const TestimonialsSection: React.FC = () => {
     } finally {
       setIsLoading(false);
     }
-  };
-
-  const filterApprovedReviews = () => {
-    let filtered = [...reviews];
-
-    // Filter reviews based on approval status and ownership
-    filtered = filtered.filter((review) => {
-      // If review is approved, show it to everyone
-      if (review.APPROVED === 1) {
-        return true;
-      }
-      
-      // If user is logged in and is the review owner, show their unapproved reviews
-      if (session?.user?.email && review.REVIEWER_EMAIL === session.user.email) {
-        return true;
-      }
-
-      // Otherwise, don't show unapproved reviews
-      return false;
-    });
-
-    setFilteredReviews(filtered);
   };
 
   const handleReviewSubmit = async () => {

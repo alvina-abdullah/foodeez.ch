@@ -1,14 +1,10 @@
 "use client";
 
-import React, { useState, useRef } from "react";
-import { motion
-  } from "framer-motion";
+import React, { useState } from "react";
+import { motion } from "framer-motion";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/core/Button";
-import { Star,
-
-
-} from "lucide-react";
+import { Star } from "lucide-react";
 import { useSession } from "next-auth/react";
 import { FoodeezReviewService } from "@/services/FoodeezReviewService";
 import { ReviewFormData } from "@/types/foodeez-review.types";
@@ -35,7 +31,7 @@ const ReviewForm: React.FC<ReviewFormProps> = ({
   const [isSubmitting, setIsSubmitting] = useState(false);
   // const [uploadedImages, setUploadedImages] = useState<string[]>([]);
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
-  const fileInputRef = useRef<HTMLInputElement>(null);
+  // const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleRatingChange = (rating: number) => {
     setFormData((prev) => ({ ...prev, rating }));

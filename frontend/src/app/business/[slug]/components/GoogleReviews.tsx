@@ -16,9 +16,7 @@ export default function GoogleReviews({
   reviews,
   GOOGLE_PROFILE,
 }: GoogleReviewsProps) {
-  // 🔒 If no reviews, hide entire component
-  if (!reviews || reviews.length === 0) return null;
-
+  // Move hooks above early return
   const scrollRef = useRef<HTMLDivElement>(null);
   const [showLeftButton, setShowLeftButton] = useState(false);
   const [showRightButton, setShowRightButton] = useState(true);
@@ -45,6 +43,9 @@ export default function GoogleReviews({
       setTimeout(checkScrollPosition, 300);
     }
   };
+
+    // 🔒 If no reviews, hide entire component
+    if (!reviews || reviews.length === 0) return null;
 
   return (
     <div className="relative w-full py-8 px-2 sm:px-4 lg:px-0">

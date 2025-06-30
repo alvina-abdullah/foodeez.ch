@@ -23,7 +23,6 @@ import {
   getBusinessReviews,
 } from "@/services/BusinessProfilePageService";
 import { visitor_business_review_view } from "@prisma/client";
-import { Separator } from "@/components/ui/separator";
 
 const BusinessDetailPage = () => {
   const [business, setBusiness] = useState<BusinessDetail | null>(null);
@@ -170,8 +169,6 @@ const BusinessDetailPage = () => {
             openingHours={googleBusinessData?.openingHours || []}
             isOpenNow={googleBusinessData?.isOpenNow || false}
           />
-
-          <Separator className="h-2" />
 
           {/* Action Buttons */}
           {/* <ActionButtons
