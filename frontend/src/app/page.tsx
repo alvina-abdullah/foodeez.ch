@@ -17,6 +17,7 @@ import UpcomingEvents from "@/components/home/UpcomingEvents";
 // import BenefitsSection from "@/components/home/BenefitsSection";
 // import AboutSection from "@/components/home/AboutSection";
 import TestimonialsSection from "@/components/home/FoodeezTestimonials/TestimonialsSection";
+import Separator from "@/components/ui/separator";
 
 export default function Home() {
   return (
@@ -34,6 +35,8 @@ export default function Home() {
 
       {/* Featured Business Grid */}
       <FeaturedBusiness />
+
+      <Separator />
 
       {/* Business CTA */}
       <BusinessCTA />

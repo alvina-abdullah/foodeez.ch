@@ -23,6 +23,7 @@ import {
   getBusinessReviews,
 } from "@/services/BusinessProfilePageService";
 import { visitor_business_review_view } from "@prisma/client";
+import Separator from "@/components/ui/separator";
 
 const BusinessDetailPage = () => {
   const [business, setBusiness] = useState<BusinessDetail | null>(null);
@@ -159,6 +160,8 @@ const BusinessDetailPage = () => {
           {/* Info Section */}
           <BusinessInfoSection business={business} genSlug={genSlug} />
 
+          <Separator />
+
           <GooglePhotoGallery
             photos={googleBusinessData?.photos || []}
             businessName={googleBusinessData?.name || business.BUSINESS_NAME}
@@ -183,8 +186,12 @@ const BusinessDetailPage = () => {
             }}
           /> */}
 
+         <Separator />
+          
+
           {/* Reviews */}
-          <div className="">
+       
+            <div className="">
             <FoodeezReviews reviews={reviews} genSlug={genSlug} business={business} />
           </div>
           <div className="">
@@ -193,6 +200,8 @@ const BusinessDetailPage = () => {
               GOOGLE_PROFILE={business.GOOGLE_PROFILE || ""}
             />
           </div>
+
+          <Separator />
 
           {/* Google Map */}
           <MapCard placeId={placeId} />
