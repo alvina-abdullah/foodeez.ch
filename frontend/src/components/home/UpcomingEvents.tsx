@@ -69,8 +69,8 @@ export default function UpcomingEvents() {
 
   if (loading) {
     return (
-      <section className="py-16">
-        <div className="px-4">
+      <section className="py-16 px-4 lg:px-0">
+        <div className="">
           <h2 className="sub-heading text-center mb-10">Events</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             {Array(4)
@@ -103,8 +103,8 @@ export default function UpcomingEvents() {
   }
 
   return (
-    <section className="py-16 bg-background text-primary">
-      <div className="container mx-auto px-4">
+    <section className="py-16 bg-background text-primary px-4 lg:px-0">
+      <div className="container mx-auto ">
         <h2 className="main-heading text-center mb-10">Events</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           {events.map((event) => (

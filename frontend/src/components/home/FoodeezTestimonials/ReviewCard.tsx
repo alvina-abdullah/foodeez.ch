@@ -156,14 +156,14 @@ const ReviewCard: React.FC<ReviewCardProps> = ({
         <div className="mt-4 pt-4 border-t border-gray-400">
           <div className="flex items-center justify-between text-sm text-primary">
             <span>Foodeez Platform</span>
-            {review.APPROVED === 1 && (
+            {/* {review.APPROVED === 1 && (
               <span className="text-green-600 font-medium">✓ Approved</span>
             )}
             {review.APPROVED === 0 && (
               <span className="text-xs bg-highlight-light text-text-main px-2 py-1 rounded-full">
                 Pending Approval
               </span>
-            )}
+            )} */}
           </div>
         </div>
       </Card>

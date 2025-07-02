@@ -212,18 +212,18 @@ export default function MobileMenu({
                       Register Your Business
                     </DropdownItem>
                     <DropdownItem
-                      href="/coming-soon"
+                      href="/pricing"
                       onClick={handleNavLinkClick}
                       pathname={pathname} // Pass pathname for active link styling
                     >
-                      Pricing
+                      Pricing Plans
                     </DropdownItem>
                     <DropdownItem
                       href="/contact"
                       onClick={handleNavLinkClick}
                       pathname={pathname} // Pass pathname for active link styling
                     >
-                      Contact Us
+                      Contact
                     </DropdownItem>
                   </motion.div>
                 )}

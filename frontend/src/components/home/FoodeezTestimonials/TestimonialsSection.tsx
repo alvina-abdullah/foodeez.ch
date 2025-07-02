@@ -91,7 +91,7 @@ const TestimonialsSection: React.FC = () => {
   };
 
   return (
-    <section className="py-16 ">
+    <section className="py-16">
       <div className="px-4 lg:px-0">
         {/* Header */}
         <motion.div
@@ -100,16 +100,24 @@ const TestimonialsSection: React.FC = () => {
           className="text-center mb-12"
         >
           <div className="flex items-center justify-center gap-2 mb-4 sub-heading">
-            <Award className="w-8 h-8 text-secondary" />
-            <h2 className="">What Our Users Say</h2>
+            <Award className="w-8 h-8 lg:w-12 lg:h-12 text-secondary" />
+            <h2 className="">Discover what food lovers think about foodeez</h2>
           </div>
-          <p className="sub-heading-description mb-6">
-            Discover what our community thinks about Foodeez. Real experiences
-            from real people who love great food.
+          <p className="sub-heading-description">
+            Real experiance from real Peoples Who loves the great food
           </p>
+        </motion.div>
 
-          {/* Action Buttons */}
-          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+        {/* Reviews Grid */}
+        <ReviewsGrid
+          reviews={filteredReviews}
+          isLoading={isLoading}
+          onEdit={handleReviewEdit}
+          onDelete={handleReviewDelete}
+        />
+
+         {/* Action Buttons */}
+         <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mt-12">
             <Button
               onClick={() => {
                 if (!session) {
@@ -124,15 +132,6 @@ const TestimonialsSection: React.FC = () => {
               Share Your Experience With Foodeez
             </Button>
           </div>
-        </motion.div>
-
-        {/* Reviews Grid */}
-        <ReviewsGrid
-          reviews={filteredReviews}
-          isLoading={isLoading}
-          onEdit={handleReviewEdit}
-          onDelete={handleReviewDelete}
-        />
 
         {/* Review Form Modal */}
         {showForm && (

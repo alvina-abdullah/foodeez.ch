@@ -2,12 +2,11 @@
 
 import BusinessCTA from "@/components/home/CTAs/BusinessCTA";
 import ShareExperience from "@/components/home/CTAs/ShareExperience";
-import CtaSection from "@/components/home/CTAs/CtaSection";
+// import CtaSection from "@/components/home/CTAs/CtaSection";
 import FaqSection from "@/components/home/FaqSection";
 import HeroSection from "@/components/home/HeroSection";
 import FeaturedBusiness from "@/components/home/FeaturedBusiness";
 import QuickSearch from "@/components/home/QuickSearch";
-import CitySection from "@/components/home/CitySection/index";
 // import ScrollingBusinessBar from "@/components/home/ScrollingBusinessBar";
 import MapSection from "@/components/home/MapSection";
 import GoogleMapsProvider from "@/components/providers/GoogleMapsProvider";
@@ -18,6 +17,7 @@ import UpcomingEvents from "@/components/home/UpcomingEvents";
 // import AboutSection from "@/components/home/AboutSection";
 import TestimonialsSection from "@/components/home/FoodeezTestimonials/TestimonialsSection";
 import Separator from "@/components/ui/separator";
+import CommunitySection from "@/components/home/CommunitySection";
 
 export default function Home() {
   return (
@@ -42,7 +42,7 @@ export default function Home() {
       <BusinessCTA />
 
       {/* Cities Section */}
-      <CitySection/>
+      {/* <CitySection/> */}
 
       {/* About Section - We Are Foodeez */}
       {/* <AboutSection /> */}
@@ -63,7 +63,10 @@ export default function Home() {
 
       {/* Main CTA Section */}
       <UpcomingEvents />
-      <CtaSection />
+      {/* <CtaSection /> */}
+
+      {/* Community Section */}
+      <CommunitySection />
 
       {/* Map  Section */}
       <GoogleMapsProvider>

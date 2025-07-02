@@ -73,9 +73,8 @@ export const Navbar = () => {
             label="Be Foodeez Partner"
             items={[
               { label: "Register Your Business", href: "/business/register" },
-              // { label: "Pricing Plans", href: "/pricing" },
-              { label: "Pricing Plans", href: "/coming-soon" },
-              { label: "Contact Sales", href: "/contact" },
+              { label: "Pricing Plans", href: "/pricing" },
+              { label: "Contact", href: "/contact" },
             ]}
           />
           {navLinks.map((link) => (

@@ -1,191 +1,178 @@
-'use client';
+"use client";
 
-import { Check } from 'lucide-react';
-import { Button } from '@/components/core/Button';
-
-const tiers = [
-  {
-    name: 'Starter',
-    price: '$29',
-    billing: 'per month',
-    description: 'Perfect for small businesses just getting started',
-    features: [
-      'Up to 3 business profiles',
-      'Basic analytics',
-      'Email support',
-      'Standard integrations',
-      'Basic SEO tools',
-    ],
-    cta: 'Start with Starter',
-    highlighted: false,
-  },
-  {
-    name: 'Professional',
-    price: '$79',
-    billing: 'per month',
-    description: 'Best for growing businesses',
-    features: [
-      'Up to 10 business profiles',
-      'Advanced analytics',
-      'Priority email & chat support',
-      'Advanced integrations',
-      'Advanced SEO tools',
-      'Custom branding',
-      'Team collaboration',
-    ],
-    cta: 'Go Professional',
-    highlighted: true,
-  },
-  {
-    name: 'Enterprise',
-    price: '$199',
-    billing: 'per month',
-    description: 'For large organizations with multiple businesses',
-    features: [
-      'Unlimited business profiles',
-      'Enterprise analytics',
-      '24/7 priority support',
-      'Custom integrations',
-      'Enterprise SEO suite',
-      'White-label solution',
-      'Advanced team management',
-      'API access',
-      'Custom reporting',
-    ],
-    cta: 'Contact Sales',
-    highlighted: false,
-  },
-];
+import { Check } from "lucide-react";
+import { Button } from "@/components/core/Button";
+import { motion } from "framer-motion"; // Import motion
 
 export default function PricingPage() {
+  // Animation variants
+  const containerVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        delayChildren: 0.2,
+        staggerChildren: 0.1,
+      },
+    },
+  };
+
+  const itemVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: { opacity: 1, y: 0 },
+  };
+
   return (
-    <div className="bg-white">
+    <motion.div
+      className="py-12 px-4 lg:px-0 flex flex-col items-center"
+      variants={containerVariants}
+      initial="hidden"
+      animate="visible"
+    >
       {/* Header */}
-      <div className="relative isolate overflow-hidden">
-        <div className="mx-auto max-w-7xl px-6 pb-32 pt-16 sm:pt-20 lg:px-8 lg:pt-24">
-          <div className="mx-auto max-w-2xl text-center">
-            <h1 className="text-4xl font-bold tracking-tight text-secondary-900 sm:text-6xl">
-              Simple, transparent pricing
-            </h1>
-            <p className="mt-6 text-lg leading-8 text-secondary-600">
-              Choose the perfect plan for your business. All plans include a 14-day free trial.
-            </p>
-          </div>
-        </div>
-      </div>
+      <motion.div
+        className="max-w-2xl text-center mb-10"
+        variants={itemVariants}
+      >
+        <h1 className="sub-heading">
+          Subscribe to foodeez – grow your audience
+        </h1>
+        <p className="sub-heading-description">
+          Start free, upgrade later with bonus services
+        </p>
+      </motion.div>
 
-      {/* Pricing Section */}
-      <div className="relative isolate -mt-16">
-        <div className="mx-auto max-w-7xl px-6 lg:px-8">
-          <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
-            {tiers.map((tier) => (
-              <div
-                key={tier.name}
-                className={`relative flex flex-col rounded-3xl ${
-                  tier.highlighted
-                    ? 'bg-primary-600 text-white ring-1 ring-primary-500'
-                    : 'bg-white ring-1 ring-secondary-200'
-                } p-8 shadow-lg`}
-              >
-                <div className="mb-8">
-                  <h3
-                    className={`text-lg font-semibold leading-8 ${
-                      tier.highlighted ? 'text-white' : 'text-secondary-900'
-                    }`}
-                  >
-                    {tier.name}
-                  </h3>
-                  <p
-                    className={`mt-4 text-sm leading-6 ${
-                      tier.highlighted ? 'text-primary-100' : 'text-secondary-600'
-                    }`}
-                  >
-                    {tier.description}
-                  </p>
-                  <p className="mt-6 flex items-baseline gap-x-1">
-                    <span
-                      className={`text-4xl font-bold tracking-tight ${
-                        tier.highlighted ? 'text-white' : 'text-secondary-900'
-                      }`}
-                    >
-                      {tier.price}
-                    </span>
-                    <span
-                      className={`text-sm font-semibold leading-6 ${
-                        tier.highlighted ? 'text-primary-100' : 'text-secondary-600'
-                      }`}
-                    >
-                      {tier.billing}
-                    </span>
-                  </p>
-                </div>
-
-                <div className="mt-2 space-y-4 flex-grow">
-                  {tier.features.map((feature) => (
-                    <div key={feature} className="flex gap-x-3">
-                      <Check
-                        className={`h-6 w-5 flex-none ${
-                          tier.highlighted ? 'text-white' : 'text-primary-600'
-                        }`}
-                      />
-                      <span
-                        className={`text-sm leading-6 ${
-                          tier.highlighted ? 'text-primary-100' : 'text-secondary-600'
-                        }`}
-                      >
-                        {feature}
-                      </span>
-                    </div>
-                  ))}
-                </div>
-
-                <Button
-                  className="mt-8"
-                  variant={tier.highlighted ? 'secondary' : 'primary'}
-                  fullWidth
-                >
-                  {tier.cta}
-                </Button>
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
-
-      {/* FAQ Section */}
-      <div className="mx-auto max-w-7xl px-6 py-24 sm:py-32 lg:px-8">
-        <div className="mx-auto max-w-4xl divide-y divide-secondary-200">
-          <h2 className="text-2xl font-bold leading-10 tracking-tight text-secondary-900">
-            Frequently asked questions
+      {/* Plans Section */}
+      <motion.div
+        className="w-full max-w-6xl grid grid-cols-1 md:grid-cols-2 gap-8 mb-10"
+        variants={containerVariants}
+      >
+        {/* Basic Plan */}
+        <motion.div
+          className="rounded-3xl border border-secondary-light bg-secondary-light/5 shadow-md p-8 flex flex-col "
+          variants={itemVariants}
+          whileHover={{ translateY: -5, boxShadow: "0 10px 15px rgba(0,0,0,0.1)" }}
+          transition={{ type: "spring", stiffness: 300 }}
+        >
+          <h2 className="text-xl lg:text-2xl font-semibold text-primary mb-1">
+            Basic{" "}
+            <span className="font-normal text-secondary">
+              - Visibility to Food Lovers
+            </span>
           </h2>
-          <dl className="mt-10 space-y-6 divide-y divide-secondary-200">
-            <div className="pt-6">
-              <dt className="text-lg font-semibold leading-7 text-secondary-900">
-                What&apos;s included in the free trial?
-              </dt>
-              <dd className="mt-2 text-base leading-7 text-secondary-600">
-                During your 14-day free trial, you&apos;ll have access to all features in the Professional plan. No credit card required.
-              </dd>
-            </div>
-            <div className="pt-6">
-              <dt className="text-lg font-semibold leading-7 text-secondary-900">
-                Can I switch plans later?
-              </dt>
-              <dd className="mt-2 text-base leading-7 text-secondary-600">
-                Yes, you can upgrade or downgrade your plan at any time. Changes will be reflected in your next billing cycle.
-              </dd>
-            </div>
-            <div className="pt-6">
-              <dt className="text-lg font-semibold leading-7 text-secondary-900">
-                Do you offer custom solutions?
-              </dt>
-              <dd className="mt-2 text-base leading-7 text-secondary-600">
-                Yes, our Enterprise plan can be customized to meet your specific needs. Contact our sales team to discuss your requirements.
-              </dd>
-            </div>
-          </dl>
-        </div>
-      </div>
-    </div>
+          <p className="text-lg lg:text-xl text-center font-bold text-primary-dark my-6">
+            <motion.span
+              className="highlight-text" // Highlight class
+              initial={{ scale: 1 }}
+              animate={{ scale: [1, 1.05, 1] }}
+              transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
+            >
+              Free forever
+            </motion.span>
+          </p>
+
+          <ul className="space-y-3 mb-4 text-base lg:text-lg">
+            {[
+              "Free Business listing on Foodeez",
+              "Appear in organic searches",
+              "Integration with Google Business profile",
+              "Link to Social media",
+              "Reviews & Feedback",
+              "Possibility to get contacted via email & phone",
+            ].map((feature) => (
+              <motion.li
+                key={feature}
+                className="flex items-start gap-2 text-secondary"
+                variants={itemVariants}
+              >
+                <Check className="w-5 h-5 text-primary mt-1" />
+                <span>{feature}</span>
+              </motion.li>
+            ))}
+          </ul>
+          <span className="text-xs lg:text-base text-secondary mt-auto">
+            Contacted via email & phone
+          </span>
+        </motion.div>
+
+        {/* Premium Plan */}
+        <motion.div
+          className="rounded-3xl border-2 border-primary bg-primary/10 shadow-lg p-8 flex flex-col"
+          variants={itemVariants}
+          whileHover={{ translateY: -5, boxShadow: "0 10px 15px rgba(0,0,0,0.1)" }}
+          transition={{ type: "spring", stiffness: 300 }}
+        >
+          <h2 className="text-xl lg:text-2xl font-semibold text-primary-dark mb-1">
+            Premium{" "}
+            <span className="font-normal text-secondary">
+              - Foodeez visibility
+            </span>
+          </h2>
+          <p className=" text-lg lg:text-xl font-bold text-primary-dark mt-6 text-center">
+            <motion.span
+              className="highlight-text" // Highlight class
+              initial={{ scale: 1 }}
+              animate={{ scale: [1, 1.05, 1] }}
+              transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut", delay: 0.5 }}
+            >
+              First 3 Months free – Then CHF 9/month
+            </motion.span>
+          </p>
+          <ul className="space-y-3 mb-4 mt-6 text-base lg:text-lg">
+            {[
+              "Everything in Basic",
+              "Priority listing and featured placement",
+              "Access to Foodeez ad slots",
+              "Organic links in Foodeez Blogs and Forums",
+              "Menu card management & visibility",
+              "Refer another restaurant & get extra Premium month",
+            ].map((feature) => (
+              <motion.li
+                key={feature}
+                className="flex items-start gap-2 text-secondary"
+                variants={itemVariants}
+              >
+                <Check className="w-5 h-5 text-primary-600 mt-1" />
+                <span>{feature}</span>
+              </motion.li>
+            ))}
+          </ul>
+          <Button className="mt-4" variant="primary" size="lg">
+            Get Premium
+          </Button>
+        </motion.div>
+      </motion.div>
+
+      {/* Setup Service Section */}
+      <motion.div
+        className="w-full max-w-6xl rounded-2xl border border-secondary bg-secondary/5  p-6 mb-8 flex flex-col items-start"
+        variants={itemVariants}
+      >
+        <p className="font-medium text-lg lg:text-xl text-secondary mb-2">
+          Not yet visible on Google Map & Social Media?{" "}
+          <span className="font-normal">
+            No worries - We can do that – One time setup cost,{" "}
+            <span className="font-bold text-primary">CHF 49.-</span>
+          </span>
+        </p>
+        <ul className="space-y-2 text-base lg:text-lg ml-4 list-disc text-secondary">
+          <motion.li variants={itemVariants}>Setup Google Business Profile</motion.li>
+          <motion.li variants={itemVariants}>Setup Facebook & Instagram Page</motion.li>
+          <motion.li variants={itemVariants}>Integrate with foodeez Business profile</motion.li>
+        </ul>
+      </motion.div>
+
+      {/* Coming Soon Section */}
+      <motion.div
+        className="w-full max-w-5xl text-center mt-4"
+        variants={itemVariants}
+      >
+        <p className="text-lg lg:text-3xl text-secondary-dark italic animate-pulse">
+          Foodeez Food Ordering –{" "}
+          <span className="font-semibold text-primary">Coming soon ...</span>
+        </p>
+      </motion.div>
+    </motion.div>
   );
-} 
+}
