@@ -24,6 +24,8 @@ export default function PaginationControls({
     <div className="flex items-center justify-between mt-12 gap-4 flex-wrap">
       {hasMore && (
         <button
+        type="button"
+          aria-label="View More Business Listings"
           onClick={handleViewMoreBusiness}
           className={cn(
             "btn-primary",

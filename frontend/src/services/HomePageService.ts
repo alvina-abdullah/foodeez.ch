@@ -124,16 +124,17 @@ export async function getBusinessCategories() {
 
 export async function getUpcomingEvents() {
   try {
-    const events = await prisma.upcoming_events.findMany({
+    const events = await prisma.top_events_view.findMany({
       where: {
-        EVENT_DATE_FROM: {
+        DATE_1: {
           gte: new Date(),
         },
       },
       orderBy: {
-        EVENT_DATE_FROM: 'asc',
+        DATE_1: 'asc',
       },
       take: 4,
+
     });
     return events;
   } catch (error) {
@@ -250,5 +251,30 @@ export async function getFoodeezReview() {
   } catch (error) {
     console.error('Error fetching Foodeez reviews:', error);
     return [];
+  }
+}
+
+export async function getFoodJourney() {
+  try {
+    const journey = await prisma.visitor_food_journey_view.findMany({});
+    return journey;
+  } catch (error) {
+    console.error('Error fetching food journey:', error);
+    return [];
+  }
+}
+
+export async function submitFoodJourney(data: any) {
+  try {
+    const res = await fetch("/api/food-journey", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(data),
+    });
+    if (!res.ok) throw new Error("Failed to submit food journey");
+    return await res.json();
+  } catch (error) {
+    console.error("Error submitting food journey:", error);
+    throw error;
   }
 }

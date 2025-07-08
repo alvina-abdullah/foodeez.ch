@@ -9,7 +9,7 @@ interface BannerComponentProps {
 
 const Banner: React.FC<BannerComponentProps> = ({ src, alt }) => {
   return (
-    <div className="w-full">
+    <div className="px-0 w-full">
       <Image
         src={src}
         alt={alt}

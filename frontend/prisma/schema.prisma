@@ -204,31 +204,6 @@ model visitors_account {
   RESET_TOKEN_EXPIRY  DateTime? @db.DateTime(0)
 }
 
-model business_2_business_category2 {
-  BUSINESS_BUSINESS_CATEGORY_ID Int       @id @default(0)
-  CREATION_DATETIME             DateTime? @db.DateTime(0)
-  BUSINESS_ID                   BigInt?
-  BUSINESS_CATEGORY_ID          BigInt?
-  STATUS                        Int?      @db.TinyInt
-  DISPLAY_SEQ                   Int?
-}
-
-model upcoming_events {
-  UPCOMING_EVENTS_ID Int       @id
-  CREATION_DATETIME  DateTime? @db.DateTime(0)
-  EVENT_DATE_FROM    DateTime? @db.Date
-  EVENT_DATE_TO      DateTime? @db.Date
-  EVENT_TIME_FROM    String?   @db.VarChar(45)
-  EVENT_TIME_TO      String?   @db.VarChar(45)
-  EVENT_TITLE        String?   @db.VarChar(100)
-  EVENT_DESCRIPTION  String?   @db.VarChar(255)
-  ADDRESS_CITY       String?   @db.VarChar(45)
-  ADDRESS_ZIPCODE    String?   @db.VarChar(10)
-  ADDRESS_STREET     String?   @db.VarChar(100)
-  ADDRESS_HOUSE_NO   Int?
-  ADDRESS_TOWN       String?   @db.VarChar(100)
-}
-
 model visitor_business_review {
   VISITOR_BUSINESS_REVIEW_ID Int       @id @default(autoincrement())
   CREATION_DATETIME          DateTime? @db.DateTime(0)
@@ -454,6 +429,45 @@ model visitor_product_review {
   APPROVED                  Int?      @default(0) @db.TinyInt
 }
 
+model top_events {
+  TOP_EVENTS_ID     Int       @id @default(autoincrement())
+  CREATION_DATETIME DateTime? @db.DateTime(0)
+  TITLE             String?   @db.VarChar(100)
+  ADDRESS           String?   @db.VarChar(100)
+  DATE_1            DateTime? @db.Date
+  TIME_1_FROM       String?   @db.VarChar(45)
+  TIME_1_TO         String?   @db.VarChar(45)
+  DATE_2            DateTime? @db.Date
+  TIME_2_FROM       String?   @db.VarChar(45)
+  TIME_2_TO         String?   @db.VarChar(45)
+  DATE_3            DateTime? @db.Date
+  TIME_3_FROM       String?   @db.VarChar(45)
+  TIME_3_TO         String?   @db.VarChar(45)
+  DATE_4            DateTime? @db.Date
+  TIME_4_FROM       String?   @db.VarChar(45)
+  TIME_4_TO         String?   @db.VarChar(45)
+  DATE_5            DateTime? @db.Date
+  TIME_5_FROM       String?   @db.VarChar(45)
+  TIME_5_TO         String?   @db.VarChar(45)
+  HREF              String?   @db.VarChar(255)
+}
+
+model visitor_food_journey {
+  VISITOR_FOOD_JOURNEY_ID Int       @id @default(autoincrement())
+  CREATION_DATETIME       DateTime? @db.DateTime(0)
+  VISITOR_ID              Int?      @default(0)
+  VISITOR_NAME            String?   @db.VarChar(100)
+  VISITOR_PIC             String?   @db.VarChar(100)
+  VISITOR_EMAIL_ADDRESS   String?   @db.VarChar(100)
+  TITLE                   String?   @db.VarChar(255)
+  DESCRIPTION             String?   @db.VarChar(1000)
+  RESTAURANT_NAME         String?   @db.VarChar(100)
+  ADDRESS_GOOGLE_URL      String?   @db.VarChar(255)
+  PIC_1                   String?   @db.VarChar(255)
+  PIC_2                   String?   @db.VarChar(255)
+  PIC_4                   String?   @db.VarChar(255)
+}
+
 view adlink_view {
   ADLINK_ID     Int     @id @default(0)
   BUSINESS_NAME String? @db.VarChar(255)
@@ -650,21 +664,10 @@ view visitor_favorite_restaurants_view {
 }
 
 view business_food_menu_card_view {
-  BUSINESS_ID                  Int      @default(0)
-  BUSINESS_NAME                String?  @db.VarChar(255)
-  BUSINESS_FOOD_MENU_CARD_ID   Int     @id @default(0)
-  MENU_NAME                    String?  @db.VarChar(45)
-  BUSINESS_PRODUCT_CATEGORY_ID Int?
-  CATEGORY                     String?  @db.VarChar(45)
-  PRODUCT_NAME                 String   @db.VarChar(100)
-  PRODUCT_DESCRIPTION          String   @db.Text
-  PRODUCT_PRICE                Decimal  @db.Decimal(6, 2)
-  COMPARE_AS_PRICE             Decimal? @default(0.00) @db.Decimal(6, 2)
-  PIC                          String   @default("") @db.VarChar(255)
-}
-
-view business_having_active_menu_card_view {
-  BUSINESS_ID Int  @id @default(0)
+  BUSINESS_ID                Int     @default(0)
+  BUSINESS_NAME              String? @db.VarChar(255)
+  BUSINESS_FOOD_MENU_CARD_ID Int     @id @default(0)
+  MENU_NAME                  String? @db.VarChar(45)
 }
 
 view foodeez_review_view {
@@ -679,5 +682,65 @@ view foodeez_review_view {
   PIC_2             String?   @db.VarChar(255)
   PIC_3             String?   @db.VarChar(255)
   APPROVED          Int?      @default(0) @db.TinyInt
+}
 
+view business_food_menu_card_detail_view {
+  BUSINESS_ID                  Int      @default(0)
+  BUSINESS_NAME                String?  @db.VarChar(255)
+  BUSINESS_FOOD_MENU_CARD_ID   Int      @default(0)
+  MENU_NAME                    String?  @db.VarChar(45)
+  BUSINESS_PRODUCT_CATEGORY_ID Int?
+  CATEGORY                     String?  @db.VarChar(45)
+  BUSINESS_PRODUCT_ID          Int      @default(0)
+  PRODUCT_NAME                 String   @db.VarChar(100)
+  PRODUCT_DESCRIPTION          String   @db.Text
+  PRODUCT_PRICE                Decimal  @db.Decimal(6, 2)
+  COMPARE_AS_PRICE             Decimal? @default(0.00) @db.Decimal(6, 2)
+  PIC                          String   @default("") @db.VarChar(255)
+
+  @@ignore
+}
+
+view top_events_view {
+  TOP_EVENTS_ID Int       @id @default(0)
+  TITLE         String?   @db.VarChar(100)
+  ADDRESS       String?   @db.VarChar(100)
+  DATE_1        DateTime? @db.Date
+  TIME_1_FROM   String?   @db.VarChar(45)
+  TIME_1_TO     String?   @db.VarChar(45)
+  DATE_2        DateTime? @db.Date
+  TIME_2_FROM   String?   @db.VarChar(45)
+  TIME_2_TO     String?   @db.VarChar(45)
+  DATE_3        DateTime? @db.Date
+  TIME_3_FROM   String?   @db.VarChar(45)
+  TIME_3_TO     String?   @db.VarChar(45)
+  DATE_4        DateTime? @db.Date
+  TIME_4_FROM   String?   @db.VarChar(45)
+  TIME_4_TO     String?   @db.VarChar(45)
+  DATE_5        DateTime? @db.Date
+  TIME_5_FROM   String?   @db.VarChar(45)
+  TIME_5_TO     String?   @db.VarChar(45)
+  HREF          String?   @db.VarChar(255)
+}
+
+view visitor_food_journey_view {
+  VISITOR_FOOD_JOURNEY_ID Int     @id @default(0)
+  VISITOR_ID              Int?    @default(0)
+  VISITOR_NAME            String  @default("") @db.VarChar(100)
+  VISITOR_PIC             String? @db.VarChar(100)
+  VISITOR_EMAIL_ADDRESS   String  @default("") @db.VarChar(100)
+  TITLE                   String? @db.VarChar(255)
+  DESCRIPTION             String? @db.VarChar(1000)
+  RESTAURANT_NAME         String  @default("") @db.VarChar(100)
+  ADDRESS_GOOGLE_URL      String? @db.VarChar(255)
+  PIC_1                   String? @db.VarChar(255)
+  PIC_2                   String? @db.VarChar(255)
+  PIC_4                   String? @db.VarChar(255)
+}
+
+/// The underlying view does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+view business_having_active_menu_card_view {
+  BUSINESS_ID Int
+
+  @@ignore
 }

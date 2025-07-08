@@ -199,8 +199,8 @@ export default function FeaturedBusiness() {
     setPerPage(PER_PAGE_OPTIONS[0]);
   };
 
-  const handleViewMoreBusiness = (e: React.MouseEvent<HTMLButtonElement>) => {
-    e.preventDefault();
+  const handleViewMoreBusiness = () => {
+    // e.preventDefault();
     const nextBatch = currentBatch + 1;
     setCurrentBatch(nextBatch);
     fetchBusinesses(nextBatch);
