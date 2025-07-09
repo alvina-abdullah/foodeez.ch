@@ -263,18 +263,3 @@ export async function getFoodJourney() {
     return [];
   }
 }
-
-export async function submitFoodJourney(data: any) {
-  try {
-    const res = await fetch("/api/food-journey", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(data),
-    });
-    if (!res.ok) throw new Error("Failed to submit food journey");
-    return await res.json();
-  } catch (error) {
-    console.error("Error submitting food journey:", error);
-    throw error;
-  }
-}

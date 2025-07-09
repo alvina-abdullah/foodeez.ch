@@ -2,6 +2,10 @@ import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
+import { writeFile, mkdir } from 'fs/promises';
+import { join } from 'path';
+import { existsSync } from 'fs';
+
 
 // Helper function to serialize BigInt values
 const serializeBigInt = (obj: any): any => {
@@ -18,45 +22,54 @@ const serializeBigInt = (obj: any): any => {
   return obj;
 };
 
-export async function GET(request: NextRequest) {
-  try {
-    const { searchParams } = new URL(request.url);
-    const limit = searchParams.get('limit');
-    const offset = searchParams.get('offset');
-    const approved = searchParams.get('approved');
-    const whereClause: any = {};
-    if (approved !== null) {
-      whereClause.APPROVED = parseInt(approved);
-    } else {
-      whereClause.APPROVED = 1; // Only show approved by default
-    }
-    const stories = await prisma.visitor_food_journey.findMany({
-      where: whereClause,
-      orderBy: { CREATION_DATETIME: 'desc' },
-      take: limit ? parseInt(limit) : 5,
-      skip: offset ? parseInt(offset) : undefined,
-    });
-    return NextResponse.json(serializeBigInt(stories));
-  } catch (error) {
-    console.error('Error fetching food journeys:', error);
-    return NextResponse.json({ error: 'Failed to fetch food journeys' }, { status: 500 });
-  }
-}
-
 export async function POST(request: NextRequest) {
   try {
     const session = await getServerSession(authOptions);
     if (!session?.user?.email) {
       return NextResponse.json({ error: 'Authentication required' }, { status: 401 });
     }
-    const body = await request.json();
+
+
     // Get user details from database
     const user = await prisma.visitors_account.findUnique({
       where: { EMAIL_ADDRESS: session.user.email }
     });
+
     if (!user) {
       return NextResponse.json({ error: 'User not found' }, { status: 404 });
     }
+
+
+
+    const body = await request.json();
+    const images = body.images
+
+    // Handle file uploads
+    const imageUrls: string[] = [];
+    if (images && images.length > 0) {
+      for (const img of images) {
+        if (typeof img === 'object' && 'arrayBuffer' in img) {
+          const buffer = Buffer.from(await img.arrayBuffer());
+          const uploadDir = join(process.cwd(), 'public', 'uploads', 'food-journey-images');
+          if (!existsSync(uploadDir)) {
+            await mkdir(uploadDir, { recursive: true });
+          }
+          const filename = `${Date.now()}-${Math.random().toString(36).substring(2, 8)}.jpg`;
+          const filePath = join(uploadDir, filename);
+          await writeFile(filePath, buffer);
+          imageUrls.push(`/uploads/food-journey-images/${filename}`);
+        }
+      }
+    }
+
+    // Map images to PIC_1...PIC_10
+    const picFields: { [key: string]: string | undefined } = {};
+    for (let i = 0; i < 3; i++) {
+      picFields[`PIC_${i + 1}`] = imageUrls[i] || undefined;
+    }
+
+
+
     const journeyData = {
       VISITOR_NAME: body.VISITOR_NAME || `${user.FIRST_NAME} ${user.LAST_NAME}`,
       VISITOR_EMAIL_ADDRESS: body.VISITOR_EMAIL_ADDRESS || session.user.email,
@@ -65,15 +78,14 @@ export async function POST(request: NextRequest) {
       DESCRIPTION: body.DESCRIPTION,
       RESTAURANT_NAME: body.RESTAURANT_NAME,
       ADDRESS_GOOGLE_URL: body.ADDRESS_GOOGLE_URL,
-      PIC_1: body.PIC_1 || null,
-      PIC_2: body.PIC_2 || null,
-      PIC_4: body.PIC_4 || null,
+      ...picFields,
       CREATION_DATETIME: new Date(),
-      APPROVED: 0, // Default to pending approval
     };
+
     const newJourney = await prisma.visitor_food_journey.create({
       data: journeyData,
     });
+
     return NextResponse.json(serializeBigInt(newJourney), { status: 201 });
   } catch (error) {
     console.error('Error creating food journey:', error);

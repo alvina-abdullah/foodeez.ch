@@ -2,7 +2,7 @@ import Banner from "@/components/core/Banner";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import { getFoodJourney } from "@/services/HomePageService";
-import FoodJourneyCard from "../FoodJourneyCard";
+import FoodJourneyCard from "../../core/food-journey/FoodJourneyCard";
 import { visitor_food_journey_view } from "@prisma/client";
 
 const ShareExperience = () => {
@@ -12,43 +12,47 @@ const ShareExperience = () => {
   useEffect(() => {
     async function fetchJourneys() {
       const data = await getFoodJourney();
-      setJourneys(data);
-      setHasMore(data.length === 5); // If 5, there may be more
+      setHasMore(data.length > 6);
+      setJourneys(data); // Fetch only the first 6 journeys
     }
     fetchJourneys();
   }, []);
 
   return (
-    <section className=" w-full text-center">
-      {/* Banner */}
+    <section className="w-full">
+      <h2 className="sub-heading my-10 text-center">
+        Be a food Explorer - Earn <b>POINTS & BADGES</b>
+      </h2>
 
       <Banner
         src="/images/banners/CTAs/shareExperiance.png"
         alt="Share Your Experience"
       />
 
-      {/* CTA Button Below Banner */}
-      <div className="mt-12 mb-8">
-        <Link href="/share-experience" passHref>
-          <button className="px-6 sm:px-8 py-3 rounded-full bg-primary text-white font-semibold shadow-lg hover:bg-secondary transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary">
-            Share Now
-          </button>
-        </Link>
-      </div>
-
       {/* Top Food Journey Stories */}
-      <div className="px-4 lg:px-0 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 mb-6">
-        {journeys.map((j) => (
+      <div className="px-4 lg:px-0 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 my-6">
+        {journeys.slice(0,6).map((j) => (
           <FoodJourneyCard key={j.VISITOR_FOOD_JOURNEY_ID} journey={j} />
         ))}
       </div>
-      {hasMore && (
-        <Link href="/share-experience#stories" passHref>
-          <button className="btn-primary">
-            See More Food Journey Stories
+      {/* CTA Button Below Banner */}
+     <div className="text-center">
+     <div className="my-12 inline-flex items-center justify-center gap-4">
+        {hasMore && (
+          <Link href="/food-journey" passHref>
+            <button className="btn-primary">
+              See More Food Journey Stories
+            </button>
+          </Link>
+        )}
+
+        <Link href="/food-journey#shareFoodJourneyStory" passHref>
+          <button className="btn-secondary">
+            Share Your Food Journey Experience
           </button>
         </Link>
-      )}
+      </div>
+     </div>
     </section>
   );
 };

@@ -1,5 +1,7 @@
+import { generateSlug } from "@/lib/utils/genSlug";
 import { visitor_food_journey_view } from "@prisma/client";
 import Image from "next/image";
+import Link from "next/link";
 import React from "react";
 
 interface FoodJourneyCardProps {
@@ -14,6 +16,11 @@ const getInitials = (name?: string) => {
 };
 
 const FoodJourneyCard: React.FC<FoodJourneyCardProps> = ({ journey }) => {
+  const slug = generateSlug(
+    journey.TITLE || "food-journey",
+    journey.VISITOR_FOOD_JOURNEY_ID
+  );
+
   const foodImages = [journey.PIC_1, journey.PIC_2, journey.PIC_4].filter(
     Boolean
   );
@@ -28,7 +35,6 @@ const FoodJourneyCard: React.FC<FoodJourneyCardProps> = ({ journey }) => {
       <div className="flex items-center gap-3 mb-4">
         {journey.VISITOR_PIC ? (
           <Image
-
             width={48}
             height={48}
             src={journey.VISITOR_PIC}
@@ -53,10 +59,14 @@ const FoodJourneyCard: React.FC<FoodJourneyCardProps> = ({ journey }) => {
       </div>
 
       {/* Journey Title */}
-      <h3 className="text-lg font-bold text-secondary mb-2 line-clamp-2">
-        {journey.TITLE || "Untitled Journey"}
-      </h3>
-
+      <Link
+        href={`/food-journey/${slug}`}
+        className="text-xl font-bold text-secondary mb-2 hover:underline focus:underline line-clamp-2"
+        aria-label={`View food journey: ${journey.TITLE}`}
+      >
+        {journey.TITLE || "Untitled Food Journey"}
+      </Link>
+        
       {/* Description */}
       <p className="text-sm text-gray-700 mb-4 line-clamp-4">
         {journey.DESCRIPTION || "No description available."}

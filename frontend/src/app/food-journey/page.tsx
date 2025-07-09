@@ -2,8 +2,11 @@
 import React, { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
 import LoginRequiredModal from "@/components/core/LoginRequiredModal";
-import FoodJourneyCard from "@/components/home/FoodJourneyCard";
-import { getFoodJourney, submitFoodJourney } from "@/services/HomePageService";
+import { getFoodJourney } from "@/services/FoodJourney";
+import FoodJourneyForm from "@/components/core/food-journey/FoodJourneyForm";
+import FoodJourneyGrid from "@/components/core/food-journey/FoodJourneyGrid";
+import FoodJourneyPagination from "@/components/core/food-journey/FoodJourneyPagination";
+import FoodJourneyGridSkeleton from "@/components/core/food-journey/FoodJourneyGridSkeleton";
 
 const initialForm = {
   TITLE: "",
@@ -13,73 +16,84 @@ const initialForm = {
   images: [] as File[],
 };
 
-const ShareExperiencePage = () => {
-  const { data: session } = useSession();
+const foodJourneyPage = () => {
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [form, setForm] = useState(initialForm);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
-  const [stories, setStories] = useState<any[]>([]);
-  const [offset, setOffset] = useState(0);
-  const [hasMore, setHasMore] = useState(false);
-
+  const [allStories, setAllStories] = useState<any[]>([]);
+  const [page, setPage] = useState(1);
+  const [images, setImages] = useState<File[]>([]);
+  const [imagePreviews, setImagePreviews] = useState<string[]>([]);
+  const limit = 9;
+  
+  const { data: session } = useSession();
   useEffect(() => {
-    fetchStories(0);
+    fetchStories();
   }, []);
 
-  const fetchStories = async (offsetVal: number) => {
+  // Generate image previews when images change
+  useEffect(() => {
+    if (images.length === 0) {
+      setImagePreviews([]);
+      return;
+    }
+    const urls = images.map((file) => URL.createObjectURL(file));
+    setImagePreviews(urls);
+    // Cleanup
+    return () => urls.forEach((url) => URL.revokeObjectURL(url));
+  }, [images]);
+
+  const fetchStories = async () => {
     const data = await getFoodJourney();
-    setStories(offsetVal === 0 ? data : [...stories, ...data]);
-    setHasMore(data.length === 5);
-    setOffset(offsetVal + 5);
+    setAllStories(data);
   };
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleInputChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
     const { name, value } = e.target;
     setForm((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files) {
-      // setForm((prev) => ({ ...prev, images: Array.from(e.target.files) }))
-      // ;
-    }
+    if (!e.target.files) return;
+    const files = Array.from(e.target.files);
+    // Only allow up to 3 images
+    const newImages = [...images, ...files].slice(0, 3);
+    setImages(newImages);
+  };
+
+  const handleRemoveImage = (idx: number) => {
+    setImages((prev) => prev.filter((_, i) => i !== idx));
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
     setSuccess("");
+
     if (!session) {
       setShowLoginModal(true);
       return;
     }
     setSubmitting(true);
+
     try {
-      // Upload images to /api/food-journey/upload (to be implemented)
-      let uploadedImages = [];
-      if (form.images.length > 0) {
-        const formData = new FormData();
-        form.images.forEach((file, idx) => formData.append(`image${idx+1}`, file));
-        const res = await fetch("/api/food-journey/upload", {
-          method: "POST",
-          body: formData,
-        });
-        if (!res.ok) throw new Error("Image upload failed");
-        uploadedImages = await res.json(); // { PIC_1, PIC_2, PIC_4 }
-      }
-      const payload = {
-        TITLE: form.TITLE,
-        DESCRIPTION: form.DESCRIPTION,
-        RESTAURANT_NAME: form.RESTAURANT_NAME,
-        ADDRESS_GOOGLE_URL: form.ADDRESS_GOOGLE_URL,
-        ...uploadedImages,
-      };
-      await submitFoodJourney(payload);
+      const res = await fetch("/api/food-journey", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(form),
+      });
+
+      if (!res.ok) throw new Error("Failed to submit food journey");
+
       setSuccess("Your food journey has been submitted for review!");
       setForm(initialForm);
-      fetchStories(0);
+      setImages([]);
+      fetchStories();
+      
     } catch (err: any) {
       setError(err.message || "Failed to submit food journey");
     } finally {
@@ -87,89 +101,49 @@ const ShareExperiencePage = () => {
     }
   };
 
+  const total = allStories.length;
+  const paginatedStories = allStories.slice((page - 1) * limit, page * limit);
+
   return (
-    <div className="max-w-3xl mx-auto py-12 px-4">
-      <h1 className="text-3xl md:text-5xl font-extrabold text-primary mb-8 text-center">Share Your Food Journey</h1>
-      <form className="bg-white rounded-lg shadow-md p-6 mb-10" onSubmit={handleSubmit}>
-        <div className="mb-4">
-          <label className="block font-semibold mb-1">Title</label>
-          <input
-            type="text"
-            name="TITLE"
-            value={form.TITLE}
-            onChange={handleInputChange}
-            className="w-full border rounded px-3 py-2"
-            required
-          />
-        </div>
-        <div className="mb-4">
-          <label className="block font-semibold mb-1">Description</label>
-          <textarea
-            name="DESCRIPTION"
-            value={form.DESCRIPTION}
-            onChange={handleInputChange}
-            className="w-full border rounded px-3 py-2"
-            rows={4}
-            required
-          />
-        </div>
-        <div className="mb-4">
-          <label className="block font-semibold mb-1">Restaurant Name</label>
-          <input
-            type="text"
-            name="RESTAURANT_NAME"
-            value={form.RESTAURANT_NAME}
-            onChange={handleInputChange}
-            className="w-full border rounded px-3 py-2"
-            required
-          />
-        </div>
-        <div className="mb-4">
-          <label className="block font-semibold mb-1">Google Maps URL (optional)</label>
-          <input
-            type="url"
-            name="ADDRESS_GOOGLE_URL"
-            value={form.ADDRESS_GOOGLE_URL}
-            onChange={handleInputChange}
-            className="w-full border rounded px-3 py-2"
-          />
-        </div>
-        <div className="mb-4">
-          <label className="block font-semibold mb-1">Upload Images (up to 3)</label>
-          <input
-            type="file"
-            accept="image/*"
-            multiple
-            onChange={handleImageChange}
-          />
-        </div>
-        {error && <div className="text-red-600 mb-2">{error}</div>}
-        {success && <div className="text-green-600 mb-2">{success}</div>}
-        <button
-          type="submit"
-          className="bg-primary text-white font-semibold px-6 py-2 rounded hover:bg-primary-dark transition-colors"
-          disabled={submitting}
-        >
-          {submitting ? "Submitting..." : "Share My Journey"}
-        </button>
-      </form>
-      <h2 className="text-2xl font-bold text-secondary mb-6" id="stories">Food Journey Stories</h2>
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-8">
-        {stories.map((j) => (
-          <FoodJourneyCard key={j.VISITOR_FOOD_JOURNEY_ID} journey={j} />
-        ))}
-      </div>
-      {hasMore && (
-        <button
-          className="px-6 py-2 rounded bg-secondary text-white font-semibold hover:bg-primary transition-all duration-300"
-          onClick={() => fetchStories(offset)}
-        >
-          See More Food Journey Stories
-        </button>
+    <div className="px-4 lg:px-0 py-12">
+      <h1 className="main-heading text-center mb-10" id="stories">
+        Food Journey Stories
+      </h1>
+      {allStories.length === 0 && !submitting ? (
+        <FoodJourneyGridSkeleton />
+      ) : (
+        <>
+          <FoodJourneyGrid stories={paginatedStories} />
+          {total > limit && (
+            <FoodJourneyPagination
+              page={page}
+              limit={limit}
+              total={total}
+              onPageChange={setPage}
+            />
+          )}
+        </>
       )}
-      <LoginRequiredModal isOpen={showLoginModal} onClose={() => setShowLoginModal(false)} />
+      <h2 className="sub-heading text-center mb-10" id="shareFoodJourneyStory">
+        Share Your Food Journey
+      </h2>
+      <FoodJourneyForm
+        form={form}
+        onInputChange={handleInputChange}
+        onImageChange={handleImageChange}
+        onRemoveImage={handleRemoveImage}
+        imagePreviews={imagePreviews}
+        onSubmit={handleSubmit}
+        submitting={submitting}
+        error={error}
+        success={success}
+      />
+      <LoginRequiredModal
+        isOpen={showLoginModal}
+        onClose={() => setShowLoginModal(false)}
+      />
     </div>
   );
 };
 
-export default ShareExperiencePage;
+export default foodJourneyPage;

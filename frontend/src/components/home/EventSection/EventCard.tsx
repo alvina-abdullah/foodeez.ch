@@ -69,13 +69,13 @@ export default function EventCard({ event }: EventCardProps) {
     >
       {/* Date Box */}
       <div className="hidden md:flex flex-shrink-0 text-center mr-6 mb-4 md:mb-0 relative">
-        <div className="bg-background-card border-2 rounded-lg w-20 h-20 flex flex-col items-center justify-center">
-          <span className="text-2xl font-bold text-secondary">
+        <div className="bg-primary-dark border-2 rounded-lg w-20 h-20 flex flex-col items-center justify-center">
+          <span className="text-2xl font-bold text-white">
             {validDates[0]
               ? validDates[0].date?.getDate().toString().padStart(2, "0")
               : "00"}
           </span>
-          <span className="text-sm text-text-main">
+          <span className="text-sm text-white">
             {validDates[0]
               ? validDates[0].date?.toLocaleString("default", {
                   month: "short",
@@ -119,10 +119,17 @@ export default function EventCard({ event }: EventCardProps) {
             <div key={index} className="flex items-center gap-2">
               <Calendar size={14} />
               <span>{formatDate(d.date)}</span>
-              <Clock size={14} className="ml-2" />
-              <span>
-                {d.from} - {d.to || "To Be Decided."}
-              </span>
+
+              {/* Only show time if either from or to is available */}
+              {(d.from || d.to) && (
+                <>
+                  <Clock size={14} className="ml-2" />
+                  <span>
+                    {d.from}
+                    {d.from && d.to ? ` - ${d.to}` : d.to ? d.to : ""}
+                  </span>
+                </>
+              )}
             </div>
           ))}
         </div>

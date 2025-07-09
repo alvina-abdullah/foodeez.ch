@@ -6,18 +6,18 @@ import ShareExperience from "@/components/home/CTAs/ShareExperience";
 import FaqSection from "@/components/home/FaqSection";
 import HeroSection from "@/components/home/HeroSection";
 import FeaturedBusiness from "@/components/home/FeaturedBusiness";
-import QuickSearch from "@/components/home/QuickSearch";
+// import QuickSearch from "@/components/home/QuickSearch";
 // import ScrollingBusinessBar from "@/components/home/ScrollingBusinessBar";
 import MapSection from "@/components/home/MapSection";
 import GoogleMapsProvider from "@/components/providers/GoogleMapsProvider";
 import AdsBar1 from "@/components/home/AdsBar1";
 import AdsBar2 from "@/components/home/AdsBar2";
-import UpcomingEvents from "@/components/home/UpcomingEvents";
 // import BenefitsSection from "@/components/home/BenefitsSection";
 // import AboutSection from "@/components/home/AboutSection";
 import TestimonialsSection from "@/components/home/FoodeezTestimonials/TestimonialsSection";
 import Separator from "@/components/ui/separator";
 import CommunitySection from "@/components/home/CommunitySection";
+import UpcomingEvents from "@/components/home/EventSection/UpcomingEvents";
 
 export default function Home() {
   return (
@@ -47,26 +47,27 @@ export default function Home() {
       {/* About Section - We Are Foodeez */}
       {/* <AboutSection /> */}
 
+      {/* Share Experience CTA */}
+      <ShareExperience />
+
       {/* Testimonials from Google Reviews */}
       <TestimonialsSection />
 
-      <QuickSearch />
-
-      {/* Share Experience CTA */}
-      <ShareExperience />
+      {/* <QuickSearch /> */}
 
       {/* Benefits Section */}
       {/* <BenefitsSection />/ */}
 
-      {/* FAQ Section */}
-      <FaqSection />
 
       {/* Main CTA Section */}
       <UpcomingEvents />
-      {/* <CtaSection /> */}
+
 
       {/* Community Section */}
       <CommunitySection />
+
+      {/* FAQ Section */}
+      <FaqSection />
 
       {/* Map  Section */}
       <GoogleMapsProvider>
