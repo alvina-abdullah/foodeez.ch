@@ -112,7 +112,7 @@ export default function SearchBar({ onSearch, isLoading , query , zipcode }: Sea
         strategy="beforeInteractive"
       />
 
-      <div className="pb-12 px-4 lg:px-0">
+      <div className="pb-12">
         {" "}
         {/* Adjusted padding for overall section */}
         <motion.form
@@ -121,7 +121,7 @@ export default function SearchBar({ onSearch, isLoading , query , zipcode }: Sea
           transition={{ duration: 0.6 }}
           onSubmit={handleSubmit}
           // Centralized, elevated search block styling
-          className="w-full mx-auto bg-white rounded-3xl shadow-xl p-6 md:p-8 border border-gray-100 max-w-4xl" // Added max-width, shadow, border, and padding
+          className="w-full  bg-secondary-light rounded-3xl shadow-xl p-2 md:p-3 border border-gray-100" // Added max-width, shadow, border, and padding
         >
           <div className="flex flex-col md:flex-row items-center gap-4 transition-all duration-300">
             {/* Restaurant Search Input */}

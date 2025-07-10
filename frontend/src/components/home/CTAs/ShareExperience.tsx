@@ -31,28 +31,28 @@ const ShareExperience = () => {
 
       {/* Top Food Journey Stories */}
       <div className="px-4 lg:px-0 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 my-6">
-        {journeys.slice(0,6).map((j) => (
+        {journeys.slice(0, 6).map((j) => (
           <FoodJourneyCard key={j.VISITOR_FOOD_JOURNEY_ID} journey={j} />
         ))}
       </div>
       {/* CTA Button Below Banner */}
-     <div className="text-center">
-     <div className="my-12 inline-flex items-center justify-center gap-4">
-        {hasMore && (
-          <Link href="/food-journey" passHref>
-            <button className="btn-primary">
-              See More Food Journey Stories
+      <div className="px-4 lg:px-0 text-center">
+        <div className="my-12 inline-flex items-center justify-center gap-4">
+          {hasMore && (
+            <Link href="/food-journey" passHref>
+              <button className="btn-primary">
+                See More Food Journey Stories
+              </button>
+            </Link>
+          )}
+
+          <Link href="/food-journey#shareFoodJourneyStory" passHref>
+            <button className="btn-secondary">
+              Share Your Food Journey Experience
             </button>
           </Link>
-        )}
-
-        <Link href="/food-journey#shareFoodJourneyStory" passHref>
-          <button className="btn-secondary">
-            Share Your Food Journey Experience
-          </button>
-        </Link>
+        </div>
       </div>
-     </div>
     </section>
   );
 };

@@ -51,10 +51,10 @@ export const Navbar = () => {
       className={`z-50 sticky top-0 transition-all duration-300 bg-white/80 backdrop-blur-lg border-b border-gray-100 ${isScrolled ? "shadow-lg" : ""}`}
       aria-label="Main Navigation"
 
-      // className={`z-50 h-auto sticky top-0 transition-all duration-300 bg-background 
+      // className={`z-50 h-auto sticky top-0 transition-all duration-300 bg-background
       //   ${isScrolled ? "shadow-md" : ""}`}
     >
-      <div className="px-6 flex items-center justify-between">
+      <div className=" px-0 lg:px-4 flex items-center justify-between">
         {/* Logo */}
         <Link href="/">
           <Image
@@ -122,7 +122,11 @@ export const Navbar = () => {
             className="p-2 text-text-muted hover:text-primary focus:outline-none"
             aria-label="Toggle Menu"
           >
-            {isMenuOpen ? <X className="w-8 h-8" /> : <Menu className="w-8 h-8" />}
+            {isMenuOpen ? (
+              <X className="w-8 h-8" />
+            ) : (
+              <Menu className="w-8 h-8" />
+            )}
           </button>
         </div>
       </div>
