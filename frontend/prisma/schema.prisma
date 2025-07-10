@@ -685,6 +685,7 @@ view foodeez_review_view {
 }
 
 view business_food_menu_card_detail_view {
+  ROW_NUMBER                   BigInt   @id @default(0) @db.UnsignedBigInt
   BUSINESS_ID                  Int      @default(0)
   BUSINESS_NAME                String?  @db.VarChar(255)
   BUSINESS_FOOD_MENU_CARD_ID   Int      @default(0)
@@ -697,8 +698,6 @@ view business_food_menu_card_detail_view {
   PRODUCT_PRICE                Decimal  @db.Decimal(6, 2)
   COMPARE_AS_PRICE             Decimal? @default(0.00) @db.Decimal(6, 2)
   PIC                          String   @default("") @db.VarChar(255)
-
-  @@ignore
 }
 
 view top_events_view {
@@ -738,9 +737,8 @@ view visitor_food_journey_view {
   PIC_4                   String? @db.VarChar(255)
 }
 
-/// The underlying view does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
 view business_having_active_menu_card_view {
-  BUSINESS_ID Int
+  BUSINESS_ID Int?
 
   @@ignore
 }

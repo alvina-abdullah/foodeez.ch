@@ -17,7 +17,8 @@ import EmptyState from "./EmptyState";
 import BusinessGrid from "./BusinessGrid";
 import PaginationControls, { PER_PAGE_OPTIONS } from "./PaginationControls";
 import CitySelectionButtons from "../CitySection/CitySelectionButtons";
-import ZipCodeSearch from "../CitySection/ZipCodeSearch";
+import SearchBar from "./SearchBar";
+import LoadingSpinner from "@/components/core/LoadingSpinner"; // Use your spinner or fallback
 
 const FOOD_TYPES = ["All", "Halal", "Vegetarian", "Vegan"] as const;
 const INITIAL_FOOD_TYPE = "All";
@@ -46,36 +47,31 @@ export default function FeaturedBusiness() {
     useState<string>(INITIAL_FOOD_TYPE);
   const [selectedCategory, setSelectedCategory] = useState<string>("");
   const [isPending, startTransition] = useTransition();
+  const [isLoadingMore, setIsLoadingMore] = useState(false); // For bottom spinner
   const [error, setError] = useState<string | null>(null);
   const [perPage, setPerPage] = useState(PER_PAGE_OPTIONS[0]);
   const [totalCountofBusiness, setTotalCountOfBusiness] = useState(0);
   const [cities, setCities] = useState<{ CITY_NAME: string }[]>([]);
   const [selectedCity, setSelectedCity] = useState<string>("");
-  const [zipCode, setZipCode] = useState<string>("");
   const [searchZipCode, setSearchZipCode] = useState("");
+  const [query, setQuery] = useState("");
 
   const [categories, setCategories] = useState<BusinessCategory[]>([]);
-  const [visibleCategories, setVisibleCategories] = useState<BusinessCategory[]>([]);
+  const [visibleCategories, setVisibleCategories] = useState<
+    BusinessCategory[]
+  >([]);
   const [hiddenCategories, setHiddenCategories] = useState<BusinessCategory[]>(
     []
   );
 
-
   // Handler for city selection
   const handleCitySelect = (city: string) => {
+    setSearchZipCode('');
     setSelectedCity(city);
-    setZipCode("");
+    
   };
 
-  // Handler for zip code search submit
-  const handleZipCodeSearchSubmit = (zip: string) => {
-    setZipCode(zip);
-    setSelectedCity("");
-    setSearchZipCode(zip);
-    // Optionally trigger fetchBusinesses here if you want instant search
-    // fetchBusinesses(1, perPage);
-  };
-
+  
   // Update selected category ID when category changes
   useEffect(() => {
     if (selectedCategory) {
@@ -119,62 +115,52 @@ export default function FeaturedBusiness() {
     });
   }, []);
 
-  // Fetch businesses based on filters and perPage
+  // Efficient fetchBusinesses: uses skip/limit for pagination
   const fetchBusinesses = useCallback(
-    async (batch: number = 1, perPageOverride?: number) => {
+    async (batch: number = 1, perPageOverride?: number, append = false) => {
       try {
         setError(null);
-        startTransition(async () => {
-          const limit = (perPageOverride ?? perPage) * batch;
-          const response = await getBusinessByFoodtypeCategoryLocation({
-            foodType: selectedFoodType,
-            categoryId: selectedCategoryId,
-            city: searchZipCode ? undefined : selectedCity, // city only if zipCode is empty
-            zipCode: searchZipCode || undefined,
-            limit,
-          });
-
-          const data = response.businesses;
-
-          setTotalCountOfBusiness(response.totalCount);
-
-          if (Array.isArray(data)) {
-            setBusinesses(data);
-            setHasMore(data.length >= limit);
-          } else {
-            console.error("Invalid business data format:", data);
-            setError("Could not load businesses");
-          }
-
-          setInitialLoading(false);
+        if (append) setIsLoadingMore(true);
+        else setInitialLoading(true);
+        const limit = perPageOverride ?? perPage;
+        const skip = append ? businesses.length : 0;
+        const response = await getBusinessByFoodtypeCategoryLocation({
+          foodType: selectedFoodType,
+          categoryId: selectedCategoryId,
+          city: searchZipCode ? undefined : selectedCity, // city only if zipCode is empty
+          businessName: query,
+          zipCode: searchZipCode || undefined,
+          limit,
+          skip,
         });
+        const data = response.businesses;
+        setTotalCountOfBusiness(response.totalCount);
+        if (Array.isArray(data)) {
+          if (append) {
+            setBusinesses((prev) => [...prev, ...data]);
+          } else {
+            setBusinesses(data);
+          }
+          setHasMore(businesses.length + data.length < response.totalCount);
+        } else {
+          setError("Could not load businesses");
+        }
+        setInitialLoading(false);
+        setIsLoadingMore(false);
       } catch (err) {
-        console.error("Error fetching businesses:", err);
         setError("Could not load businesses");
         setInitialLoading(false);
+        setIsLoadingMore(false);
       }
     },
-    [
-      selectedFoodType,
-      selectedCategoryId,
-      selectedCity,
-      searchZipCode,
-      perPage,
-      startTransition,
-    ]
+    [selectedFoodType, selectedCategoryId, selectedCity, searchZipCode, perPage, query, businesses.length]
   );
 
-  // Handle filter changes
+  // Handle filter changes (reset businesses)
   useEffect(() => {
     setCurrentBatch(1); // Reset batch when filters change
-    fetchBusinesses(1, perPage);
-  }, [
-    selectedFoodType,
-    selectedCategoryId,
-    selectedCity,
-    perPage,
-    fetchBusinesses,
-  ]);
+    fetchBusinesses(1, perPage, false);
+  }, [selectedFoodType, selectedCategoryId, selectedCity, perPage, fetchBusinesses]);
 
   // Handlers
   const handleFoodTypeSelect = (type: string) => {
@@ -194,28 +180,37 @@ export default function FeaturedBusiness() {
     setSelectedFoodType(INITIAL_FOOD_TYPE);
     setSelectedCategory("");
     setSelectedCity("");
-    setZipCode("");
     setSearchZipCode("");
+    setQuery("")
     setPerPage(PER_PAGE_OPTIONS[0]);
   };
 
+  // Efficient lazy loading: only fetch next page
   const handleViewMoreBusiness = () => {
-    // e.preventDefault();
-    const nextBatch = currentBatch + 1;
-    setCurrentBatch(nextBatch);
-    fetchBusinesses(nextBatch);
+    setCurrentBatch((prev) => prev + 1);
+    fetchBusinesses(currentBatch + 1, perPage, true);
   };
 
   const handleRetry = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
-    fetchBusinesses(currentBatch);
+    fetchBusinesses(currentBatch, perPage, false);
   };
 
   // Handle per page change
   const handlePerPageChange = (value: number) => {
     setPerPage(value);
     setCurrentBatch(1);
-    fetchBusinesses(1, value);
+    fetchBusinesses(1, value, false);
+  };
+
+  // Handle search query change
+  const handleSearch = (query: string, zipcode: string) => {
+    setQuery(query);
+    setSearchZipCode(zipcode);
+    // Reset all other filters when search is used
+    setSelectedCity("");
+    setSelectedCategory("");
+    setSelectedFoodType(INITIAL_FOOD_TYPE);
   };
 
   const otherCities = cities
@@ -260,12 +255,8 @@ export default function FeaturedBusiness() {
         otherCities={otherCities}
       />
 
-      <ZipCodeSearch
-        zipCode={zipCode}
-        setZipCode={setZipCode}
-        setSearchZipCode={setSearchZipCode}
-        onSearchSubmit={handleZipCodeSearchSubmit}
-      />
+      {/* Hero with Search */}
+      <SearchBar query={query} zipcode={searchZipCode} onSearch={handleSearch} isLoading={isPending} />
 
       <ResultCountInfo
         visibleCount={businesses.length}
@@ -288,6 +279,13 @@ export default function FeaturedBusiness() {
         isPending={isPending}
         error={error}
       />
+
+      {/* Show spinner only at the bottom when loading more */}
+      {isLoadingMore && (
+        <div className="flex justify-center py-4" aria-label="Loading more businesses">
+          <LoadingSpinner />
+        </div>
+      )}
 
       <PaginationControls
         hasMore={hasMore}

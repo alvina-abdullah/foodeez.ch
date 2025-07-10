@@ -33,12 +33,12 @@ const FoodJourneyForm: React.FC<FoodJourneyFormProps> = ({
   success,
 }) => {
   return (
-    <div className="max-w-3xl mx-auto px-4 lg:px-0">
+    <div className=" px-4 lg:px-0">
       <form
         onSubmit={onSubmit}
         className="bg-primary/10 rounded-2xl shadow-lg p-8 sm:p-10 space-y-6"
       >
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="space-y-10">
           {/* Title */}
           <div className="flex flex-col">
             <label className="font-semibold mb-1">Title</label>
@@ -94,7 +94,9 @@ const FoodJourneyForm: React.FC<FoodJourneyFormProps> = ({
 
           {/* Image Upload */}
           <div className="flex flex-col md:col-span-2">
-            <label className="font-semibold mb-1">Upload Images (up to 3)</label>
+            <label className="font-semibold mb-1">
+              Upload Images (up to 3)
+            </label>
             <input
               type="file"
               accept="image/*"

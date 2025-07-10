@@ -148,22 +148,28 @@ export async function getBusinessByFoodtypeCategoryLocation(params: {
   categoryId?: number;
   city?: string;
   zipCode?: string;
+  businessName?: string;
   limit?: number;
   skip?: number;
 }) {
-  const { foodType, categoryId, city, zipCode, limit = 12, skip = 0 } = params;
+  const { foodType, categoryId, city, zipCode, businessName, limit = 12, skip = 0 } = params;
   const normalizedType = foodType.toLowerCase();
 
   try {
-    let whereClause: Prisma.business_detail_view_allWhereInput | undefined;
+    let whereClause: Prisma.business_detail_view_allWhereInput = {};
 
+    // Combine filters instead of overwriting
     if (zipCode) {
       const numericZip = Number(zipCode);
       if (!isNaN(numericZip)) {
-        whereClause = { ADDRESS_ZIP: { equals: numericZip } };
+        whereClause.ADDRESS_ZIP = { equals: numericZip };
       }
-    } else if (city) {
-      whereClause = { CITY_NAME: { equals: city } };
+    }
+    if (city && !zipCode) { // Only use city if zipCode is not present
+      whereClause.CITY_NAME = { equals: city };
+    }
+    if (businessName) {
+      whereClause.BUSINESS_NAME = { contains: businessName };
     }
 
     if (categoryId !== undefined) {
@@ -185,10 +191,7 @@ export async function getBusinessByFoodtypeCategoryLocation(params: {
         return { businesses: [], totalCount: 0 };
       }
 
-      whereClause = {
-        ...whereClause,
-        BUSINESS_ID: { in: businessIdsInCategory }
-      };
+      whereClause.BUSINESS_ID = { in: businessIdsInCategory };
     }
 
     let businesses: BusinessDetail[] = [];
