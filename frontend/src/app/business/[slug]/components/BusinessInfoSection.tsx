@@ -4,7 +4,7 @@ import { BusinessDetail } from "@/types/business.types";
 import Link from "next/link";
 import FoodTypeBadges from "@/components/core/FoodTypeBadges";
 
-const BusinessInfoSection: React.FC<{ business: BusinessDetail , genSlug: string }> = ({
+const BusinessInfoSection: React.FC<{ business: BusinessDetail, genSlug: string }> = ({
   business,
   genSlug,
 }) => {
@@ -61,19 +61,33 @@ const BusinessInfoSection: React.FC<{ business: BusinessDetail , genSlug: string
       </div>
 
       {/* Social & Reserve */}
-      <div className="flex items-center justify-between border-t pt-8">
-        {business.EMAIL_ADDRESS ? (
-          <Link href={`/business/${genSlug}/reservation`} target="_blank">
-            <button className="btn-primary">Reserve Table</button>
-          </Link>
-        ) : (
-          <button
-            className="btn-primary opacity-50 cursor-not-allowed"
-            disabled
-          >
-            Reserve Table
-          </button>
-        )}
+      <div className="flex flex-col md:flex-row gap-10 justify-between border-t pt-8">
+        <div className="flex items-center gap-2">
+          {business.EMAIL_ADDRESS ? (
+            <Link href={`/business/${genSlug}/reservation`} target="_blank">
+              <button className="btn-primary">Reserve Table</button>
+            </Link>
+          ) : (
+            <button
+              className="btn-primary opacity-50 cursor-not-allowed"
+              disabled
+            >
+              Reserve Table
+            </button>
+          )}
+          {business.HAVING_ACTIVE_MENU_CARD ? (
+            <Link href={`/business/${genSlug}/menu`} target="_blank">
+              <button className="btn-primary">See Menu</button>
+            </Link>
+          ) : (
+            <button
+              className="btn-primary opacity-50 cursor-not-allowed"
+              disabled
+            >
+              See Menu
+            </button>
+          )}
+        </div>
 
         <SocialLinks
           facebook={business.FACEBOOK_LINK}

@@ -32,7 +32,7 @@ export default function CommunitySection() {
 
   return (
     <motion.section
-      className="w-full flex flex-col items-center py-20 px-4 lg:px-0"
+      className="w-full flex flex-col items-center py-10 px-4 lg:px-0"
       variants={containerVariants}
       initial="hidden"
       whileInView="visible"
@@ -53,7 +53,7 @@ export default function CommunitySection() {
 
       {/* Divider */}
       <motion.div
-        className="w-full border-t-4 border-highlight mb-14 opacity-80"
+        className="w-full border-t-4 border-dotted border-highlight mb-14 opacity-80"
         variants={itemVariants}
       />
 
@@ -69,7 +69,7 @@ export default function CommunitySection() {
           cards <span className="text-primary font-bold mx-2">|</span> Access to
           authenticated supplier list
         </p>
-        <p className="text-xl sm:text-2xl font-bold text-primary-dark leading-relaxed hover:underline underline-offset-8">
+        <p className="text-xl sm:text-2xl font-bold text-primary-dark leading-relaxed ">
           Are you a Food Blogger, traveler, influencer?{" "}
           <span className="text-accent">Join now to share & help others!</span>
         </p>
@@ -150,7 +150,9 @@ export default function CommunitySection() {
 
       {/* Final CTA */}
       <motion.div className="mt-6" variants={itemVariants}>
-        <Button className="bg-primary hover:bg-primary-dark text-white text-xl px-10 py-4 rounded-full shadow-xl border border-primary-dark transform transition-all hover:scale-105">
+        <Button className="bg-primary hover:bg-primary-dark text-white text-xl px-10 py-4 rounded-full shadow-xl border border-primary-dark transform transition-all hover:scale-105"
+        disabled
+        >
           Join Foodeez Community Now!
         </Button>
       </motion.div>

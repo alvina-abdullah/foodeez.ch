@@ -16,7 +16,7 @@ const initialForm = {
   images: [] as File[],
 };
 
-const foodJourneyPage = () => {
+const FoodJourneyPage = () => {
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [form, setForm] = useState(initialForm);
   const [submitting, setSubmitting] = useState(false);
@@ -146,4 +146,4 @@ const foodJourneyPage = () => {
   );
 };
 
-export default foodJourneyPage;
+export default FoodJourneyPage;

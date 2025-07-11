@@ -91,7 +91,7 @@ const TestimonialsSection: React.FC = () => {
   };
 
   return (
-    <section className="py-16">
+    <section className="py-10">
       <div className="px-4 lg:px-0">
         {/* Header */}
         <motion.div

@@ -31,6 +31,8 @@ export interface BusinessDetail {
   VEGAN: number;
   VEGETARIAN: number;
   HALAL: number;
+  CAN_RESERVE_TABLE: number;
+  HAVING_ACTIVE_MENU_CARD: number;
 }
 
 export type BusinessCategory = {
@@ -70,5 +72,7 @@ export type BusinessResult = Prisma.business_detail_view_allGetPayload<{
     VEGAN: true;
     VEGETARIAN: true;
     HALAL: true;
+    CAN_RESERVE_TABLE: true;
+    HAVING_ACTIVE_MENU_CARD: true;
   }
 }>[];

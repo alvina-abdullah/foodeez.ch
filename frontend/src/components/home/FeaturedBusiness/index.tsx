@@ -46,7 +46,7 @@ export default function FeaturedBusiness() {
   const [selectedFoodType, setSelectedFoodType] =
     useState<string>(INITIAL_FOOD_TYPE);
   const [selectedCategory, setSelectedCategory] = useState<string>("");
-  const [isPending, startTransition] = useTransition();
+  const [isPending] = useTransition();
   const [isLoadingMore, setIsLoadingMore] = useState(false); // For bottom spinner
   const [error, setError] = useState<string | null>(null);
   const [perPage, setPerPage] = useState(PER_PAGE_OPTIONS[0]);
@@ -66,12 +66,10 @@ export default function FeaturedBusiness() {
 
   // Handler for city selection
   const handleCitySelect = (city: string) => {
-    setSearchZipCode('');
+    setSearchZipCode("");
     setSelectedCity(city);
-    
   };
 
-  
   // Update selected category ID when category changes
   useEffect(() => {
     if (selectedCategory) {
@@ -123,7 +121,8 @@ export default function FeaturedBusiness() {
         if (append) setIsLoadingMore(true);
         else setInitialLoading(true);
         const limit = perPageOverride ?? perPage;
-        const skip = append ? businesses.length : 0;
+        const skip = (batch - 1) * limit;
+
         const response = await getBusinessByFoodtypeCategoryLocation({
           foodType: selectedFoodType,
           categoryId: selectedCategoryId,
@@ -147,20 +146,34 @@ export default function FeaturedBusiness() {
         }
         setInitialLoading(false);
         setIsLoadingMore(false);
-      } catch (err) {
+      } catch {
         setError("Could not load businesses");
         setInitialLoading(false);
         setIsLoadingMore(false);
       }
     },
-    [selectedFoodType, selectedCategoryId, selectedCity, searchZipCode, perPage, query, businesses.length]
+    [
+      selectedFoodType,
+      selectedCategoryId,
+      selectedCity,
+      searchZipCode,
+      perPage,
+      query,
+      businesses.length,
+    ]
   );
 
   // Handle filter changes (reset businesses)
   useEffect(() => {
     setCurrentBatch(1); // Reset batch when filters change
     fetchBusinesses(1, perPage, false);
-  }, [selectedFoodType, selectedCategoryId, selectedCity, perPage, fetchBusinesses]);
+  }, [
+    selectedFoodType,
+    selectedCategoryId,
+    selectedCity,
+    perPage,
+    fetchBusinesses,
+  ]);
 
   // Handlers
   const handleFoodTypeSelect = (type: string) => {
@@ -181,7 +194,7 @@ export default function FeaturedBusiness() {
     setSelectedCategory("");
     setSelectedCity("");
     setSearchZipCode("");
-    setQuery("")
+    setQuery("");
     setPerPage(PER_PAGE_OPTIONS[0]);
   };
 
@@ -224,14 +237,14 @@ export default function FeaturedBusiness() {
   // const visibleBusinesses = businesses.slice(0, perPage * currentBatch);
 
   return (
-    <section className="py-20 px-4 lg:px-0">
-      <div className="text-center mb-10">
+    <section className="pb-10 px-4 lg:px-0">
+      {/* <div className="text-center mb-10">
         <h2 className="main-heading">Foodeez's Top Selection</h2>
         <p className="main-heading-description">
           Discover restaurants by dietary preferences and food categories and
           Location
         </p>
-      </div>
+      </div> */}
 
       <FoodTypeFilter
         foodTypes={FOOD_TYPES as unknown as string[]}
@@ -256,7 +269,12 @@ export default function FeaturedBusiness() {
       />
 
       {/* Hero with Search */}
-      <SearchBar query={query} zipcode={searchZipCode} onSearch={handleSearch} isLoading={isPending} />
+      <SearchBar
+        query={query}
+        zipcode={searchZipCode}
+        onSearch={handleSearch}
+        isLoading={isPending}
+      />
 
       <ResultCountInfo
         visibleCount={businesses.length}
@@ -282,7 +300,10 @@ export default function FeaturedBusiness() {
 
       {/* Show spinner only at the bottom when loading more */}
       {isLoadingMore && (
-        <div className="flex justify-center py-4" aria-label="Loading more businesses">
+        <div
+          className="flex justify-center py-4"
+          aria-label="Loading more businesses"
+        >
           <LoadingSpinner />
         </div>
       )}

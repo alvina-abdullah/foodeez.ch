@@ -54,7 +54,7 @@ export default function FaqSection() {
   };
 
   return (
-    <section className="pt-16 px-4 lg:px-0">
+    <section className="py-16 px-4 lg:px-0">
       <div className="">
         <div className="text-center mb-14">
           <h2 className="sub-heading">

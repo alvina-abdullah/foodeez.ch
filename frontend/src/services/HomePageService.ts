@@ -87,7 +87,9 @@ export async function getBusinessesByLocation({
         RANKING: true,
         VEGAN: true,
         VEGETARIAN: true,
-        HALAL: true
+        HALAL: true,
+        CAN_RESERVE_TABLE : true,
+        HAVING_ACTIVE_MENU_CARD : true
       }
     });
 
@@ -156,7 +158,7 @@ export async function getBusinessByFoodtypeCategoryLocation(params: {
   const normalizedType = foodType.toLowerCase();
 
   try {
-    let whereClause: Prisma.business_detail_view_allWhereInput = {};
+    const whereClause: Prisma.business_detail_view_allWhereInput = {};
 
     // Combine filters instead of overwriting
     if (zipCode) {

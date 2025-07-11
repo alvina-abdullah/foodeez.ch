@@ -28,9 +28,9 @@ export default function Home() {
       <HeroSection />
 
       <AdsBar2 />
-
+      <Separator />
       {/* Scrolling Business Bar */}
-    
+
       {/* <ScrollingBusinessBar /> */}
 
       {/* Featured Business Grid */}
@@ -41,6 +41,8 @@ export default function Home() {
       {/* Business CTA */}
       <BusinessCTA />
 
+      <Separator />
+
       {/* Cities Section */}
       {/* <CitySection/> */}
 
@@ -50,8 +52,11 @@ export default function Home() {
       {/* Share Experience CTA */}
       <ShareExperience />
 
+      <Separator />
+
       {/* Testimonials from Google Reviews */}
       <TestimonialsSection />
+      <Separator />
 
       {/* <QuickSearch /> */}
 
@@ -62,10 +67,10 @@ export default function Home() {
       {/* Main CTA Section */}
       <UpcomingEvents />
 
-
+      <Separator />
       {/* Community Section */}
       <CommunitySection />
-
+      <Separator />
       {/* FAQ Section */}
       <FaqSection />
 

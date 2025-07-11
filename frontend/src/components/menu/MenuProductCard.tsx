@@ -7,7 +7,7 @@ interface MenuProductCardProps {
 }
 
 export default function MenuProductCard({ product }: MenuProductCardProps) {
-  const isSoldOut = product.STATUS === 0;
+  // const isSoldOut = product.STATUS === 0;
   return (
     <div className="bg-background rounded-2xl shadow-md border border-gray-200 flex flex-col h-full">
       <div className="aspect-w-4 aspect-h-3 bg-background-card rounded-t-2xl overflow-hidden">
@@ -27,17 +27,15 @@ export default function MenuProductCard({ product }: MenuProductCardProps) {
         )}
       </div>
       <div className="p-4 flex flex-col flex-1">
-        <div className="flex items-center justify-between mb-3">
+       
           <h3
             className="font-semibold text-lg lg:text-xl text-primary mb-1 truncate"
             title={product.PRODUCT_NAME}
           >
             {product.PRODUCT_NAME}
           </h3>
-          <div className="text-xs lg:text-sm text-accent ">
-            {product.CATEGORY}
-          </div>
-        </div>
+         
+       
         <p className="text-sm lg:text-base text-text-muted mb-2 line-clamp-2">
           {product.PRODUCT_DESCRIPTION}
         </p>

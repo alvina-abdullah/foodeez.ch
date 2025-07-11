@@ -663,13 +663,6 @@ view visitor_favorite_restaurants_view {
   PHONE_NUMBER_SHORT              String?   @db.VarChar(45)
 }
 
-view business_food_menu_card_view {
-  BUSINESS_ID                Int     @default(0)
-  BUSINESS_NAME              String? @db.VarChar(255)
-  BUSINESS_FOOD_MENU_CARD_ID Int     @id @default(0)
-  MENU_NAME                  String? @db.VarChar(45)
-}
-
 view foodeez_review_view {
   FOODEEZ_REVIEW_ID BigInt    @id @default(0)
   CREATION_DATETIME DateTime? @db.DateTime(0)
@@ -682,6 +675,25 @@ view foodeez_review_view {
   PIC_2             String?   @db.VarChar(255)
   PIC_3             String?   @db.VarChar(255)
   APPROVED          Int?      @default(0) @db.TinyInt
+}
+
+view business_food_menu_card_view {
+  ROW_NUMBER                 BigInt  @id @default(0) @db.UnsignedBigInt
+  BUSINESS_ID                Int     @default(0)
+  BUSINESS_NAME              String? @db.VarChar(255)
+  DESCRIPTION                String? @db.VarChar(1000)
+  ADDRESS_STREET             String? @db.VarChar(100)
+  ADDRESS_ZIP                BigInt?
+  ADDRESS_TOWN               String? @db.VarChar(100)
+  PHONE_NUMBER_SHORT         String? @db.VarChar(45)
+  EMAIL_ADDRESS              String? @db.VarChar(255)
+  WHATSAPP_NUMBER            String? @db.VarChar(45)
+  WEB_ADDRESS                String? @db.VarChar(1000)
+  LOGO                       String? @db.VarChar(255)
+  GOOGLE_PROFILE             String? @db.VarChar(1000)
+  IMAGE_URL                  String? @db.VarChar(1000)
+  BUSINESS_FOOD_MENU_CARD_ID Int?    @default(0)
+  MENU_NAME                  String? @db.VarChar(45)
 }
 
 view business_food_menu_card_detail_view {

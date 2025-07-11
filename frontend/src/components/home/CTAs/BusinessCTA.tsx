@@ -4,7 +4,7 @@ import React from "react";
 
 const ShareExperience = () => {
   return (
-    <section className="w-full text-center py-16 px-4 lg:px-0">
+    <section className="w-full text-center py-10 px-4 lg:px-0">
       {/* Heading Section */}
       <div className=" mb-12 space-y-6">
         <h2 className="text-xl sm:text-2xl text-text-muted font-medium">

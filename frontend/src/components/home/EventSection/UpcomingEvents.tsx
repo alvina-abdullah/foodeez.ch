@@ -120,8 +120,8 @@ export default function UpcomingEvents() {
     >
       <div className="container mx-auto">
         <h2 className="main-heading text-center flex items-center justify-center gap-2 mb-10">
-          <Sparkles className="text-secondary animate-bounce" size={28} />
-          Amazing Events Await
+          {/* <Sparkles className="text-secondary animate-bounce" size={28} /> */}
+          Events
         </h2>
         <motion.div
           className="grid grid-cols-1 md:grid-cols-2 gap-8"
