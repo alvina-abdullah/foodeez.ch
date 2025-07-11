@@ -138,7 +138,7 @@ export default function SearchBar({ onSearch, isLoading , query , zipcode }: Sea
                 <input
                   id="search-input"
                   type="text"
-                  placeholder="Search Your Restaurant"
+                  placeholder="Search by Restaurant Name"
                   value={searchValue}
                   onChange={(e) => setSearchValue(e.target.value)}
                   onFocus={() => setIsSearchInputFocused(true)}
@@ -177,7 +177,7 @@ export default function SearchBar({ onSearch, isLoading , query , zipcode }: Sea
                   onChange={(e) => setLocation(e.target.value)}
                   onFocus={() => setIsLocationInputFocused(true)}
                   onBlur={() => setIsLocationInputFocused(false)}
-                  placeholder="Enter your location"
+                  placeholder="Search by Region or Postal Code or Zip Code"
                   className="w-full py-3.5 pl-12 pr-4 rounded-full border border-gray-300 bg-white focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary text-base placeholder:text-gray-500 transition shadow-sm"
                   aria-label="Location"
                 />

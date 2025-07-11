@@ -18,7 +18,6 @@ import BusinessGrid from "./BusinessGrid";
 import PaginationControls, { PER_PAGE_OPTIONS } from "./PaginationControls";
 import CitySelectionButtons from "../CitySection/CitySelectionButtons";
 import SearchBar from "./SearchBar";
-import LoadingSpinner from "@/components/core/LoadingSpinner"; // Use your spinner or fallback
 
 const FOOD_TYPES = ["All", "Halal", "Vegetarian", "Vegan"] as const;
 const INITIAL_FOOD_TYPE = "All";
@@ -35,19 +34,14 @@ const MAIN_CITIES = [
 
 export default function FeaturedBusiness() {
   const [businesses, setBusinesses] = useState<BusinessDetail[]>([]);
-  const [isPaginationDropdownOpen, setIsPaginationDropdownOpen] =
-    useState(false);
-  const [selectedCategoryId, setSelectedCategoryId] = useState<
-    number | undefined
-  >(undefined);
+  const [isPaginationDropdownOpen, setIsPaginationDropdownOpen] = useState(false);
+  const [selectedCategoryId, setSelectedCategoryId] = useState<number | undefined>(undefined);
   const [initialLoading, setInitialLoading] = useState(true);
   const [currentBatch, setCurrentBatch] = useState(1);
   const [hasMore, setHasMore] = useState(true);
-  const [selectedFoodType, setSelectedFoodType] =
-    useState<string>(INITIAL_FOOD_TYPE);
+  const [selectedFoodType, setSelectedFoodType] = useState<string>(INITIAL_FOOD_TYPE);
   const [selectedCategory, setSelectedCategory] = useState<string>("");
-  const [isPending] = useTransition();
-  const [isLoadingMore, setIsLoadingMore] = useState(false); // For bottom spinner
+  const [isPending, startTransition] = useTransition();
   const [error, setError] = useState<string | null>(null);
   const [perPage, setPerPage] = useState(PER_PAGE_OPTIONS[0]);
   const [totalCountofBusiness, setTotalCountOfBusiness] = useState(0);
@@ -57,12 +51,8 @@ export default function FeaturedBusiness() {
   const [query, setQuery] = useState("");
 
   const [categories, setCategories] = useState<BusinessCategory[]>([]);
-  const [visibleCategories, setVisibleCategories] = useState<
-    BusinessCategory[]
-  >([]);
-  const [hiddenCategories, setHiddenCategories] = useState<BusinessCategory[]>(
-    []
-  );
+  const [visibleCategories, setVisibleCategories] = useState<BusinessCategory[]>([]);
+  const [hiddenCategories, setHiddenCategories] = useState<BusinessCategory[]>([]);
 
   // Handler for city selection
   const handleCitySelect = (city: string) => {
@@ -113,43 +103,41 @@ export default function FeaturedBusiness() {
     });
   }, []);
 
-  // Efficient fetchBusinesses: uses skip/limit for pagination
   const fetchBusinesses = useCallback(
-    async (batch: number = 1, perPageOverride?: number, append = false) => {
+    async (batch: number = 1, perPageOverride?: number) => {
       try {
         setError(null);
-        if (append) setIsLoadingMore(true);
-        else setInitialLoading(true);
-        const limit = perPageOverride ?? perPage;
-        const skip = (batch - 1) * limit;
 
-        const response = await getBusinessByFoodtypeCategoryLocation({
-          foodType: selectedFoodType,
-          categoryId: selectedCategoryId,
-          city: searchZipCode ? undefined : selectedCity, // city only if zipCode is empty
-          businessName: query,
-          zipCode: searchZipCode || undefined,
-          limit,
-          skip,
-        });
-        const data = response.businesses;
-        setTotalCountOfBusiness(response.totalCount);
-        if (Array.isArray(data)) {
-          if (append) {
-            setBusinesses((prev) => [...prev, ...data]);
+        startTransition(async () => {
+          const limit = (perPageOverride ?? perPage) * batch;
+          const response = await getBusinessByFoodtypeCategoryLocation({
+            foodType: selectedFoodType,
+            categoryId: selectedCategoryId,
+            city: searchZipCode ? undefined : selectedCity, // city only if zipCode is empty
+            businessName: query,
+            zipCode: searchZipCode || undefined,
+            limit,
+          });
+          const data = response.businesses;
+          setTotalCountOfBusiness(response.totalCount);
+
+          if (Array.isArray(data)) {
+            setBusinesses(data);
+            setHasMore(data.length >= limit);
+
           } else {
+            console.error("Invalid business data format:", data);
+            setError("Could not load businesses");
             setBusinesses(data);
           }
-          setHasMore(businesses.length + data.length < response.totalCount);
-        } else {
-          setError("Could not load businesses");
-        }
-        setInitialLoading(false);
-        setIsLoadingMore(false);
-      } catch {
+
+          setInitialLoading(false);
+        });
+
+      } catch (err) {
+        console.error("Error fetching businesses:", err);
         setError("Could not load businesses");
         setInitialLoading(false);
-        setIsLoadingMore(false);
       }
     },
     [
@@ -159,14 +147,14 @@ export default function FeaturedBusiness() {
       searchZipCode,
       perPage,
       query,
-      businesses.length,
+      startTransition
     ]
   );
 
   // Handle filter changes (reset businesses)
   useEffect(() => {
     setCurrentBatch(1); // Reset batch when filters change
-    fetchBusinesses(1, perPage, false);
+    fetchBusinesses(1, perPage);
   }, [
     selectedFoodType,
     selectedCategoryId,
@@ -200,20 +188,20 @@ export default function FeaturedBusiness() {
 
   // Efficient lazy loading: only fetch next page
   const handleViewMoreBusiness = () => {
-    setCurrentBatch((prev) => prev + 1);
-    fetchBusinesses(currentBatch + 1, perPage, true);
+    setCurrentBatch(currentBatch + 1);
+    fetchBusinesses(currentBatch + 1);
   };
 
   const handleRetry = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
-    fetchBusinesses(currentBatch, perPage, false);
+    fetchBusinesses(currentBatch);
   };
 
   // Handle per page change
   const handlePerPageChange = (value: number) => {
     setPerPage(value);
     setCurrentBatch(1);
-    fetchBusinesses(1, value, false);
+    fetchBusinesses(1, value);
   };
 
   // Handle search query change
@@ -297,16 +285,6 @@ export default function FeaturedBusiness() {
         isPending={isPending}
         error={error}
       />
-
-      {/* Show spinner only at the bottom when loading more */}
-      {isLoadingMore && (
-        <div
-          className="flex justify-center py-4"
-          aria-label="Loading more businesses"
-        >
-          <LoadingSpinner />
-        </div>
-      )}
 
       <PaginationControls
         hasMore={hasMore}
